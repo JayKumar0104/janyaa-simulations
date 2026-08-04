@@ -30,8 +30,8 @@ function heroSection() {
 
       <nav class="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6">
         <div class="flex items-center gap-3">
-          <img src="${asset('janyaa-logo.png')}" alt="Janyaa" class="h-9 w-auto" />
-          <span class="text-sm font-semibold tracking-tight text-ink-100">Interactive</span>
+          <img src="${asset('janyaa-mark.png')}" alt="" class="h-9 w-auto" />
+          <span class="text-sm font-semibold tracking-tight text-ink-100">Janyaa Interactive</span>
         </div>
         <a href="#simulations"
            class="rounded-lg border border-ink-700 px-3.5 py-2 text-sm text-ink-300 transition hover:border-green-500 hover:text-green-400">
