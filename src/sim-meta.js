@@ -8,20 +8,20 @@
  * <title> and <meta name="description">.
  *
  * Titles are set here because each sim's own <title> carries a
- * "— Janyaa Sim Lab" suffix that is redundant on this page.
+ * "— Janyaa Interactive" suffix that is redundant on this page.
  */
 export const simMeta = {
-  'cable-heat': {
+  Cable_Heat: {
     title: 'Cable Heat',
     description:
-      "Sets a copper cable's conductor diameter, length, and current, then reports the resistance, the voltage lost on the round trip, and the power dissipated as heat before it reaches the phone.",
+      "Sets a charging cable's wire thickness, length, and current, then shows how much of the charger's 5 V actually reaches the phone and how warm the cable gets along the way.",
     tags: ['Electronics', 'Physics'],
   },
 
-  'capacitor-discharge': {
+  Capacitor_Discharge: {
     title: 'Capacitor Discharge',
     description:
-      'Charges a 470 µF capacitor to 400 V and tracks its voltage and stored energy after the plug is pulled, with a bleed resistor that can be switched in or out mid-discharge.',
+      'Charges a power-supply capacitor to 400 V and tracks how much charge is left after the plug is pulled, with a bleed resistor that can be switched in or out mid-discharge.',
     tags: ['Electronics', 'Computers'],
   },
 
@@ -60,10 +60,10 @@ export const simMeta = {
     tags: ['Maths', 'Physics'],
   },
 
-  'series-parallel': {
+  Series_vs_Parallel: {
     title: 'Series vs Parallel',
     description:
-      'Fails one bulb in a series strand and in a parallel strand, with a shunt switch that closes the series loop again and raises the survivors to n²/(n−1)² of their original brightness.',
+      'Fails one bulb in a series strand and in a parallel strand, with a shunt switch that closes the series loop again and makes every surviving bulb burn brighter than before.',
     tags: ['Electronics', 'Physics'],
   },
 
@@ -74,7 +74,7 @@ export const simMeta = {
     tags: ['Computers'],
   },
 
-  'usb-charging': {
+  USB_Charging: {
     title: 'USB Charging',
     description:
       'Charges two phone batteries from a 2.4 A wall charger and a 0.5 A laptop port held at the same 5 V, so the fill rates differ only by the current each port allows.',

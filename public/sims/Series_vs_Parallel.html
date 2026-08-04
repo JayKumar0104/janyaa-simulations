@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Compares series and parallel bulb strands to show why one failed bulb doesn't always turn off the rest.">
+<title>Why one dead bulb doesn't kill the strand anymore — Janyaa Interactive</title>
+<style>
+  :root{
+    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
+    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:1060px;margin:0 auto;padding:36px 20px 80px}
+
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+          color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
+     margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
+  .stand b{color:var(--ink)}
+
+  .decks{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:880px){ .decks{grid-template-columns:1fr} }
+
+  .deck{border:3px solid var(--ink);background:#fff}
+  .deck-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
+             justify-content:space-between;align-items:baseline;gap:10px}
+  .deck-head h2{font-family:var(--display);font-size:19px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .deck-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  .scene{background:#EAE7DE;padding:16px}
+  .frame{border:2px solid var(--ink);background:#fff}
+  .frame svg{display:block;width:100%;height:auto}
+
+  .status{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7}
+  .status .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+               color:var(--dim);margin:0 0 6px}
+  .status .big{font-family:var(--display);font-size:clamp(24px,4.4vw,36px);line-height:1;letter-spacing:-.03em}
+  .status .big.up{color:var(--red)}
+  .status .big.same{color:var(--green)}
+  .status .big.dark{color:var(--dim)}
+
+  .panel{border:3px solid var(--ink);background:#fff;margin:26px 0 0;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--dim);margin:0 0 12px}
+  .ctlgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+  @media (max-width:700px){ .ctlgrid{grid-template-columns:1fr} }
+  .slab{font-family:var(--label);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--dim);display:flex;justify-content:space-between;margin-bottom:6px}
+  .slab b{font-family:var(--display);font-size:15px;color:var(--ink);letter-spacing:-.01em}
+  input[type=range]{width:100%;accent-color:var(--red);height:26px}
+  .resbox{border:2px solid var(--ink);padding:12px 14px}
+  .resbox .cap{font-family:var(--label);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+               color:var(--dim);margin:0 0 6px;line-height:1.5}
+  .resbox .val{font-family:var(--display);font-size:26px;line-height:1;letter-spacing:-.02em;color:var(--red)}
+  .resbox .hint{font-size:12.5px;line-height:1.45;color:#4A473F;margin-top:7px}
+
+  .runrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+               background:transparent;border:2px solid var(--ink);padding:13px 16px;cursor:pointer}
+  button.ghost[aria-pressed="true"]{background:var(--ink);color:#fff}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;
+           line-height:1.55;min-height:4.4em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
+        font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+  .foot b{color:var(--ink)}
+
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
+  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.advanced summary::-webkit-details-marker{display:none}
+  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
+  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  details.advanced th,details.advanced td{border:1px solid var(--gray);padding:6px 8px;text-align:left}
+  details.advanced th{background:#F0EDE4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+
+  svg text{font-family:var(--label);font-size:10px;letter-spacing:.06em;fill:var(--ink)}
+  .bulb{cursor:pointer}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Interactive · Electronics · Physics workshop</p>
+  <h1>One bulb dies.<br>Who <em>else</em> goes dark?</h1>
+  <p class="stand">Old string lights had one famous flaw: a single dead bulb killed the whole strand.
+  Modern ones mostly don't — and the reason is <b>a tiny hidden wire inside every bulb's base</b>.
+  Click any bulb below to break it, and watch what happens to its neighbours.</p>
+
+  <div class="decks">
+    <section class="deck">
+      <div class="deck-head">
+        <h2>Series strand</h2>
+        <span class="tag">one loop</span>
+      </div>
+      <div class="scene"><div class="frame">
+        <svg id="seriesScene" viewBox="0 0 320 250" role="img"
+             aria-label="A series strand: bulbs wired in a single loop, so current must pass through every one of them in turn."></svg>
+      </div></div>
+      <div class="status">
+        <p class="cap">Surviving bulbs now burn</p>
+        <div class="big same" id="seriesBig">100%</div>
+      </div>
+    </section>
+
+    <section class="deck">
+      <div class="deck-head">
+        <h2>Parallel strand</h2>
+        <span class="tag">one path each</span>
+      </div>
+      <div class="scene"><div class="frame">
+        <svg id="parallelScene" viewBox="0 0 320 250" role="img"
+             aria-label="A parallel strand: every bulb has its own private path back to the supply, like rungs on a ladder."></svg>
+      </div></div>
+      <div class="status">
+        <p class="cap">Surviving bulbs now burn</p>
+        <div class="big same" id="parallelBig">100%</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="panel">
+    <h3>Set up the strand</h3>
+    <div class="ctlgrid">
+      <div>
+        <div class="slab"><span>How many bulbs</span><b id="nLabel">6</b></div>
+        <input type="range" id="nSlider" min="3" max="20" step="1" value="6"
+               aria-label="Number of bulbs in each strand">
+        <div class="runrow">
+          <button class="ghost" id="shuntToggle" aria-pressed="false">Shunt: OFF</button>
+          <button class="ghost" id="resetBtn">Fix all bulbs</button>
+        </div>
+      </div>
+      <div class="resbox">
+        <p class="cap">With the shunt on, if one bulb dies the rest burn</p>
+        <div class="val" id="nResult">144% as bright</div>
+        <p class="hint" id="nHint">A short strand gets a big jump. A long one barely notices.</p>
+      </div>
+    </div>
+    <div class="readout" id="readout">Click any bulb to break it. Try it once with the shunt off, then
+    switch the shunt on and try again.</div>
+  </div>
+
+  <p class="foot"><b>Simplified:</b> assumes a perfect power supply and identical bulbs within each
+  strand — real series-strand bulbs and parallel-strand bulbs are actually built for different
+  voltages by design, which this sim doesn't model. Because the supply here is treated as perfect, the
+  parallel bulbs stay at exactly 100%; a real one would dip a hair. The shunt described here is how
+  real miniature string lights are built — look for the small coated wire wrapped around the base of a
+  spare bulb sometime.</p>
+
+  <details class="advanced">
+    <summary>For the curious — the general rule</summary>
+    <div class="adv-body">
+      <p>Take an ideal voltage source <code>V</code> and <code>n</code> identical bulbs of resistance
+      <code>R</code>. Baseline brightness is normalised to 100% in both topologies, because the demo is
+      about <i>relative change on failure</i>, not absolute wattage.</p>
+      <p><b>Series.</b> Total resistance is <code>nR</code>, so current is <code>I = V/(nR)</code> and
+      each bulb dissipates <code>P = I&sup2;R = V&sup2;/(n&sup2;R)</code>. If one filament opens with no
+      shunt, the circuit breaks: <code>I = 0</code> everywhere and all <code>n</code> bulbs go dark.</p>
+      <p>If a <b>shunt</b> is present, the dead bulb becomes a short (&asymp; 0 &Omega;) instead of a
+      break, so the loop stays closed through <code>n&minus;1</code> bulbs. Each survivor now
+      dissipates <code>P' = V&sup2;/((n&minus;1)&sup2;R)</code>, so:</p>
+      <p style="text-align:center"><code>brightness multiplier = P'/P = n&sup2; / (n&minus;1)&sup2;</code></p>
+      <table>
+        <tr><th>Strand length n</th><th>Survivor brightness</th></tr>
+        <tr><td>3</td><td>3&sup2;/2&sup2; = 9/4 = <b>225.0%</b></td></tr>
+        <tr><td>6</td><td>6&sup2;/5&sup2; = 36/25 = <b>144.0%</b></td></tr>
+        <tr><td>20</td><td>20&sup2;/19&sup2; = 400/361 = <b>110.8%</b></td></tr>
+      </table>
+      <p>Shorter strands surge much harder per failure. That surge is also cumulative: after
+      <code>k</code> failures the survivors run at <code>n&sup2;/(n&minus;k)&sup2;</code> of original
+      power, which is why an old string dies faster and faster — each loss raises the stress on
+      everything left, driving the next failure sooner.</p>
+      <p><b>The shunt mechanism.</b> A wire is wrapped around the bulb base and coated in insulating
+      enamel, so it normally carries nothing. When the filament opens, the full supply voltage appears
+      across that one gap; the resulting spike punches through the enamel and the shunt begins
+      conducting, restoring the loop.</p>
+      <p><b>Parallel.</b> Each bulb sits directly across the source with its own path, so
+      <code>P = V&sup2;/R</code> for each, independent of <code>n</code>. Removing one path leaves the
+      others' voltage untouched, so survivors stay at exactly 100%. This holds only because the source
+      is modelled as ideal — with a real internal resistance <code>r</code>, removing a load slightly
+      raises terminal voltage and the survivors would brighten by a small amount.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var NS = 'http://www.w3.org/2000/svg';
+  function mk(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag), k;
+    for(k in attrs){ if(Object.prototype.hasOwnProperty.call(attrs,k)) e.setAttribute(k, attrs[k]); }
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+  function label(x, y, str, attrs, parent){
+    var a = attrs || {}, o = {}, k;
+    for(k in a){ if(Object.prototype.hasOwnProperty.call(a,k)) o[k] = a[k]; }
+    o.x = x; o.y = y;
+    var t = mk('text', o, parent);
+    t.textContent = str;
+    return t;
+  }
+  function clear(node){ while(node.firstChild) node.removeChild(node.firstChild); }
+
+  /* ---------------- model ------------------------------------------------- */
+  var ICON_MAX = 12;                 // draw individual bulbs up to this many
+  var n = 6;
+  var shunt = false;
+  var deadSeries = null, deadParallel = null;
+
+  // exact: n^2 / (n-1)^2, as a percentage
+  function surgePercent(count){ return 100 * (count*count) / ((count-1)*(count-1)); }
+
+  // at most one decimal on screen, and no trailing ".0"
+  function pct(v){
+    var r = Math.round(v * 10) / 10;
+    return (r % 1 === 0 ? String(Math.round(r)) : r.toFixed(1)) + '%';
+  }
+
+  function seriesBrightness(i){
+    if(deadSeries === null) return 100;
+    if(i === deadSeries) return 0;
+    return shunt ? surgePercent(n) : 0;
+  }
+  function parallelBrightness(i){
+    if(deadParallel === null) return 100;
+    return i === deadParallel ? 0 : 100;
+  }
+
+  /* ---------------- drawing ------------------------------------------------ */
+  var seriesSvg   = document.getElementById('seriesScene');
+  var parallelSvg = document.getElementById('parallelScene');
+
+  function glowOpacity(b){
+    // 0% dark, 100% normal, 150%+ blazing — kept legible, never blown out
+    return Math.max(0.12, Math.min(1, 0.12 + 0.88 * (b / 150)));
+  }
+
+  function drawBulb(parent, cx, cy, r, brightness, isDead, onClick, name){
+    var g = mk('g',{'class':'bulb',role:'button',tabindex:'0','aria-label':name},parent);
+    if(!isDead && brightness > 105){
+      mk('circle',{cx:cx,cy:cy,r:r+5,fill:'#F5B335',opacity:Math.min(0.5,(brightness-100)/100)},g);
+    }
+    mk('circle',{cx:cx,cy:cy,r:r,
+                 fill:isDead ? '#EFECE3' : '#F5B335',
+                 'fill-opacity':isDead ? 1 : glowOpacity(brightness),
+                 stroke:isDead ? '#6E6A60' : '#15171A',
+                 'stroke-width':isDead ? 2 : 2.5},g);
+    if(isDead){
+      mk('line',{x1:cx-r*0.5,y1:cy-r*0.5,x2:cx+r*0.5,y2:cy+r*0.5,stroke:'#6E6A60','stroke-width':2},g);
+      mk('line',{x1:cx+r*0.5,y1:cy-r*0.5,x2:cx-r*0.5,y2:cy+r*0.5,stroke:'#6E6A60','stroke-width':2},g);
+    } else {
+      mk('path',{d:'M'+(cx-r*0.4)+','+(cy+r*0.25)+' L'+cx+','+(cy-r*0.3)+' L'+(cx+r*0.4)+','+(cy+r*0.25),
+                 fill:'none',stroke:'#15171A','stroke-width':1.6},g);
+    }
+    mk('rect',{x:cx-r*0.45,y:cy+r*0.85,width:r*0.9,height:r*0.5,fill:'#15171A'},g);
+    g.addEventListener('click', onClick);
+    g.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); onClick(); }
+    });
+    return g;
+  }
+
+  function battery(parent, x, y, vertical){
+    var g = mk('g',{},parent);
+    if(vertical){
+      mk('line',{x1:x-9,y1:y-5,x2:x+9,y2:y-5,stroke:'#15171A','stroke-width':4},g);
+      mk('line',{x1:x-5,y1:y+5,x2:x+5,y2:y+5,stroke:'#15171A','stroke-width':4},g);
+    } else {
+      mk('line',{x1:x-5,y1:y-9,x2:x-5,y2:y+9,stroke:'#15171A','stroke-width':4},g);
+      mk('line',{x1:x+5,y1:y-5,x2:x+5,y2:y+5,stroke:'#15171A','stroke-width':4},g);
+    }
+    return g;
+  }
+
+  function xs(count){
+    var L = 40, R = 286, out = [], i;
+    if(count === 1) return [(L+R)/2];
+    for(i=0;i<count;i++) out.push(L + i*(R-L)/(count-1));
+    return out;
+  }
+
+  function drawSeries(){
+    clear(seriesSvg);
+    var g = mk('g',{id:'seriesBulbs'},seriesSvg);
+    var Y = 104, useIcons = n <= ICON_MAX;
+    var wire = {stroke:'#15171A','stroke-width':3,fill:'none','stroke-linecap':'round'};
+
+    // the loop
+    mk('line',{x1:40,y1:Y,x2:286,y2:Y,stroke:'#15171A','stroke-width':3},g);
+    mk('polyline',{points:'286,'+Y+' 300,'+Y+' 300,200 20,200 20,'+Y+' 40,'+Y,
+                   fill:'none',stroke:'#15171A','stroke-width':3,'stroke-linejoin':'round'},g);
+    battery(g, 20, 152, false);
+    label(160, 224, 'ONE LOOP THROUGH EVERY BULB', {'text-anchor':'middle',fill:'#6E6A60'}, g);
+
+    if(useIcons){
+      xs(n).forEach(function(x, i){
+        drawBulb(g, x, Y, Math.min(11, 120/n), seriesBrightness(i), deadSeries === i,
+          function(){ deadSeries = (deadSeries === i ? null : i); update('series'); },
+          'Bulb ' + (i+1) + ' of ' + n + ' in the series strand');
+      });
+    } else {
+      // schematic: one clickable bulb plus a block standing for the rest
+      var b = seriesBrightness(0), dead = deadSeries === 0;
+      drawBulb(g, 66, Y, 13, b, dead,
+        function(){ deadSeries = (deadSeries === 0 ? null : 0); update('series'); },
+        'The one bulb that fails, in the series strand');
+      var restB = deadSeries === null ? 100 : (shunt ? surgePercent(n) : 0);
+      mk('rect',{x:104,y:Y-15,width:170,height:30,fill:'#F5B335',
+                 'fill-opacity':glowOpacity(restB),stroke:'#15171A','stroke-width':2.5},g);
+      label(189, Y+4, '+ ' + (n-1) + ' MORE BULBS', {'text-anchor':'middle'}, g);
+      label(66, Y+34, 'CLICK ME', {'text-anchor':'middle',fill:'#6E6A60'}, g);
+    }
+  }
+
+  function drawParallel(){
+    clear(parallelSvg);
+    var g = mk('g',{id:'parallelBulbs'},parallelSvg);
+    var TOP = 62, BOT = 190, MID = 126, useIcons = n <= ICON_MAX;
+
+    mk('line',{x1:34,y1:TOP,x2:296,y2:TOP,stroke:'#15171A','stroke-width':3},g);
+    mk('line',{x1:34,y1:BOT,x2:296,y2:BOT,stroke:'#15171A','stroke-width':3},g);
+    mk('line',{x1:20,y1:TOP,x2:34,y2:TOP,stroke:'#15171A','stroke-width':3},g);
+    mk('line',{x1:20,y1:BOT,x2:34,y2:BOT,stroke:'#15171A','stroke-width':3},g);
+    mk('line',{x1:20,y1:TOP,x2:20,y2:BOT,stroke:'#15171A','stroke-width':3},g);
+    battery(g, 20, MID, false);
+    label(160, 224, 'A PRIVATE PATH FOR EVERY BULB', {'text-anchor':'middle',fill:'#6E6A60'}, g);
+
+    if(useIcons){
+      xs(n).forEach(function(x, i){
+        mk('line',{x1:x,y1:TOP,x2:x,y2:BOT,stroke:'#15171A','stroke-width':2.5},g);
+        drawBulb(g, x, MID, Math.min(11, 120/n), parallelBrightness(i), deadParallel === i,
+          function(){ deadParallel = (deadParallel === i ? null : i); update('parallel'); },
+          'Bulb ' + (i+1) + ' of ' + n + ' in the parallel strand');
+      });
+    } else {
+      var dead = deadParallel === 0;
+      mk('line',{x1:66,y1:TOP,x2:66,y2:BOT,stroke:'#15171A','stroke-width':2.5},g);
+      drawBulb(g, 66, MID, 13, parallelBrightness(0), dead,
+        function(){ deadParallel = (deadParallel === 0 ? null : 0); update('parallel'); },
+        'The one bulb that fails, in the parallel strand');
+      mk('rect',{x:104,y:MID-15,width:170,height:30,fill:'#F5B335',
+                 'fill-opacity':glowOpacity(100),stroke:'#15171A','stroke-width':2.5},g);
+      label(189, MID+4, '+ ' + (n-1) + ' MORE BULBS', {'text-anchor':'middle'}, g);
+      label(66, MID+34, 'CLICK ME', {'text-anchor':'middle',fill:'#6E6A60'}, g);
+    }
+  }
+
+  /* ---------------- readouts ---------------------------------------------- */
+  var elRead   = document.getElementById('readout');
+  var elResult = document.getElementById('nResult');
+  var elHint   = document.getElementById('nHint');
+  var elNLabel = document.getElementById('nLabel');
+  var elSeriesBig   = document.getElementById('seriesBig');
+  var elParallelBig = document.getElementById('parallelBig');
+  var btnShunt = document.getElementById('shuntToggle');
+
+  function setBig(el, text, kind){
+    el.textContent = text;
+    el.className = 'big ' + kind;
+  }
+
+  function update(source){
+    drawSeries();
+    drawParallel();
+
+    elNLabel.textContent = String(n);
+    elResult.textContent = pct(surgePercent(n)) + ' as bright';
+    elHint.textContent = n <= 5
+      ? 'A short strand takes a big jump — few survivors share all the work.'
+      : (n >= 15
+        ? 'A long strand barely notices — the extra load is spread thin.'
+        : 'Shorter strands jump more per failure than longer ones.');
+
+    btnShunt.textContent = 'Shunt: ' + (shunt ? 'ON' : 'OFF');
+    btnShunt.setAttribute('aria-pressed', String(shunt));
+
+    // series status
+    if(deadSeries === null) setBig(elSeriesBig, '100%', 'same');
+    else if(shunt)          setBig(elSeriesBig, pct(surgePercent(n)), 'up');
+    else                    setBig(elSeriesBig, 'All dark', 'dark');
+
+    // parallel status
+    setBig(elParallelBig, '100%', deadParallel === null ? 'same' : 'same');
+
+    if(source === 'series'){
+      if(deadSeries === null){
+        elRead.textContent = 'Bulb fixed. Click any bulb to break it again.';
+      } else if(!shunt){
+        elRead.innerHTML = '<b>All ' + n + ' went dark.</b> A series strand is one loop — break it ' +
+          'anywhere and current has nowhere to go, for any of them.';
+      } else {
+        elRead.innerHTML = '<b>Only that one went dark — and the rest got brighter.</b> A tiny shunt ' +
+          'wire inside the base kicks in when the filament fails, so the loop stays closed. The other ' +
+          (n-1) + ' bulbs now share the same electricity that used to be split ' + n + ' ways, so they ' +
+          'burn ' + pct(surgePercent(n)) + ' as bright as before. This is also why old strings fail ' +
+          'faster and faster over time — every failure makes it harder on the survivors.';
+      }
+    } else if(source === 'parallel'){
+      if(deadParallel === null){
+        elRead.textContent = 'Bulb fixed. Click any bulb to break it again.';
+      } else {
+        elRead.innerHTML = '<b>Only that one went dark. The rest didn’t even notice.</b> Each bulb ' +
+          'has its own private path back to the supply — losing one path changes nothing for the others.';
+      }
+    }
+  }
+
+  /* ---------------- controls ----------------------------------------------- */
+  document.getElementById('nSlider').addEventListener('input', function(e){
+    n = parseInt(e.target.value, 10);
+    if(deadSeries !== null && deadSeries >= n) deadSeries = null;
+    if(deadParallel !== null && deadParallel >= n) deadParallel = null;
+    update(null);
+  });
+
+  btnShunt.addEventListener('click', function(){
+    shunt = !shunt;
+    update(deadSeries === null ? null : 'series');
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    deadSeries = null; deadParallel = null;
+    update(null);
+    elRead.textContent = 'All fixed. Click any bulb to break it. Try it once with the shunt off, ' +
+      'then switch the shunt on and try again.';
+  });
+
+  update(null);
+})();
+</script>
+</body>
+</html>

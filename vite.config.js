@@ -11,7 +11,7 @@ const titleOf = (html) => html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1].tr
 const descriptionOf = (html) =>
   html
     .match(/<meta[^>]+name=["']description["'][^>]*>/i)?.[0]
-    .match(/content=["']([\s\S]*?)["']/i)?.[1]
+    .match(/content=(["'])([\s\S]*?)\1/i)?.[2]
     .trim()
 
 const titleCase = (slug) =>
