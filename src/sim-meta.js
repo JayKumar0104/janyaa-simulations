@@ -11,6 +11,20 @@
  * "— Janyaa Sim Lab" suffix that is redundant on this page.
  */
 export const simMeta = {
+  'cable-heat': {
+    title: 'Cable Heat',
+    description:
+      "Sets a copper cable's conductor diameter, length, and current, then reports the resistance, the voltage lost on the round trip, and the power dissipated as heat before it reaches the phone.",
+    tags: ['Electronics', 'Physics'],
+  },
+
+  'capacitor-discharge': {
+    title: 'Capacitor Discharge',
+    description:
+      'Charges a 470 µF capacitor to 400 V and tracks its voltage and stored energy after the plug is pulled, with a bleed resistor that can be switched in or out mid-discharge.',
+    tags: ['Electronics', 'Computers'],
+  },
+
   CPU_vs_GPU: {
     title: 'CPU vs GPU',
     description:
@@ -46,10 +60,24 @@ export const simMeta = {
     tags: ['Maths', 'Physics'],
   },
 
+  'series-parallel': {
+    title: 'Series vs Parallel',
+    description:
+      'Fails one bulb in a series strand and in a parallel strand, with a shunt switch that closes the series loop again and raises the survivors to n²/(n−1)² of their original brightness.',
+    tags: ['Electronics', 'Physics'],
+  },
+
   SSD_vs_HDD: {
     title: 'SSD vs HDD',
     description:
       'Applies a desk nudge, a knock off a chair, and a waist-height drop to a powered hard drive and an SSD, comparing a head flying 5 nm above the platter with a drive that has no moving parts.',
     tags: ['Computers'],
+  },
+
+  'usb-charging': {
+    title: 'USB Charging',
+    description:
+      'Charges two phone batteries from a 2.4 A wall charger and a 0.5 A laptop port held at the same 5 V, so the fill rates differ only by the current each port allows.',
+    tags: ['Electronics', 'Computers'],
   },
 }
