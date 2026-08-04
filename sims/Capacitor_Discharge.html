@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Simulates a charged capacitor after unplugging to show why a power supply can still be dangerous even when disconnected.">
+<title>Why an unplugged PSU can still shock you — Janyaa Interactive</title>
+<style>
+  :root{
+    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
+    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 20px 80px}
+
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+          color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
+     margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
+  .stand b{color:var(--ink)}
+
+  .board{border:3px solid var(--ink);background:#fff}
+  .board-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
+              justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .board-head h2{font-family:var(--display);font-size:20px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .board-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  .scene{background:#EAE7DE;padding:16px}
+  .frame{border:2px solid var(--ink);background:#fff}
+  .frame svg{display:block;width:100%;height:auto}
+
+  .status{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7;
+          display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+  .status .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+               color:var(--dim);margin:0 0 4px}
+  .status .big{font-family:var(--display);font-size:clamp(26px,5vw,40px);line-height:1;letter-spacing:-.03em}
+  .status .sub{font-size:13.5px;line-height:1.4;color:#4A473F;margin-top:6px;max-width:34ch}
+  .badge{font-family:var(--display);text-transform:uppercase;font-size:13px;letter-spacing:-.01em;
+         border:3px solid var(--ink);padding:8px 14px;margin-left:auto;white-space:nowrap}
+  .badge.danger{background:var(--red);color:#fff}
+  .badge.safe{background:var(--green);color:#fff}
+
+  .panel{border:3px solid var(--ink);background:#fff;margin:26px 0 0;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--dim);margin:0 0 12px}
+  .runrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
+            background:var(--red);color:#fff;border:3px solid var(--ink);padding:13px 24px;cursor:pointer}
+  button.go:hover{background:var(--ink)}
+  button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+               background:transparent;border:2px solid var(--ink);padding:13px 16px;cursor:pointer}
+  button.ghost[aria-pressed="true"]{background:var(--ink);color:#fff}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;
+           line-height:1.55;min-height:3.4em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
+        font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+  .foot b{color:var(--ink)}
+
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
+  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.advanced summary::-webkit-details-marker{display:none}
+  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
+  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  details.advanced th,details.advanced td{border:1px solid var(--gray);padding:6px 8px;text-align:left}
+  details.advanced th{background:#F0EDE4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+
+  svg text{font-family:var(--label);font-size:10px;letter-spacing:.07em;fill:var(--ink)}
+  svg text.big{font-family:var(--display);font-size:15px;letter-spacing:-.01em}
+  svg .hit{cursor:pointer}
+  #touchProbe{cursor:pointer}
+  #voltageFill{transition:height .08s linear,y .08s linear,fill .12s linear}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Interactive · Electronics · Computer workshop</p>
+  <h1>Unplugged.<br>And still <em>ready to bite</em>.</h1>
+  <p class="stand">Inside every computer's power supply is a part whose whole job is
+  <b>holding onto electricity</b>. Pulling the plug does not empty it. Watch the meter after you
+  unplug, then try touching the test point and see what happens.</p>
+
+  <div class="board">
+    <div class="board-head">
+      <h2>Inside the power supply</h2>
+      <span class="tag">Clock runs 15&times; faster than real life</span>
+    </div>
+    <div class="scene">
+      <div class="frame">
+        <svg id="scene" viewBox="0 0 480 306" role="img"
+             aria-label="A wall plug feeding a switch and an AC to DC box, then a capacitor drawn as two plates with a fill bar showing how much charge is left. A bleed resistor branch runs underneath, and a test point near the capacitor can be touched."></svg>
+      </div>
+    </div>
+    <div class="status">
+      <div>
+        <p class="cap">Electricity still in there</p>
+        <div class="big" id="voltageLabel">0 V</div>
+        <div class="sub" id="energyLabel">Empty. Nothing stored yet.</div>
+      </div>
+      <span class="badge safe" id="safetyBadge">Safe to touch</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Try it</h3>
+    <div class="runrow">
+      <button class="go" id="plugToggle">Plug in</button>
+      <button class="ghost" id="bleedToggle" aria-pressed="false">Bleed resistor: OFF</button>
+      <button class="ghost" id="touchBtn">Touch the test point</button>
+      <button class="ghost" id="reset">Reset</button>
+    </div>
+    <div class="readout" id="readout">Press Plug in. This is what's inside every computer's power
+    supply — and why you never open one, even unplugged.</div>
+  </div>
+
+  <p class="foot"><b>Simplified:</b> real bulk capacitors, bleed resistors, and safety standards vary
+  by supply — 400 V, the capacitor size used here, and the 50 V threshold are realistic round numbers
+  for teaching, not a spec for any specific power supply. The discharge clock here runs 15&times; real
+  time so the lesson fits a workshop; real power-supply capacitors can take minutes to tens of minutes
+  to bleed down, which is exactly why the label says "no user-serviceable parts inside." It does
+  eventually leak down on its own — just not on a timescale you would ever wait out. Never open a power
+  supply, even unplugged — this sim is why.</p>
+
+  <details class="advanced">
+    <summary>For the curious — the actual numbers</summary>
+    <div class="adv-body">
+      <p>The part being drawn is the <b>bulk capacitor</b> on the high-voltage side of a switched-mode
+      power supply. It charges to roughly the rectified mains voltage and stores energy in the electric
+      field between its plates. This sim models it as:</p>
+      <ul>
+        <li>Supply voltage <code>Vs = 400 V</code></li>
+        <li>Capacitance <code>C = 470 &micro;F = 470 &times; 10&#8315;&#8310; F</code></li>
+        <li>Stored energy <code>E = &frac12;CV&sup2;</code> &rarr; at 400 V that is <b>37.6 joules</b>,
+        comparable to a 1 kg mass dropped from about 3.8 m</li>
+        <li>Safety threshold: <b>50 V DC</b>, a widely used rounded teaching figure for the boundary of
+        hazardous DC voltage</li>
+      </ul>
+      <p>Discharge through a resistance follows exponential decay,
+      <code>V(t) = V&#8320; e^(&minus;t/&tau;)</code>, with time constant <code>&tau; = RC</code>:</p>
+      <table>
+        <tr><th>Path</th><th>Resistance</th><th>&tau; = RC</th><th>Half-life (&tau;&nbsp;ln&nbsp;2)</th></tr>
+        <tr><td>Leakage only (bleed off)</td><td>10 M&Omega;</td><td>4700 s</td><td>3258 s &asymp; 54 min</td></tr>
+        <tr><td>Bleed resistor on</td><td>100 k&Omega;</td><td>47 s</td><td>32.6 s</td></tr>
+      </table>
+      <p>The "cuts in half every so often" language on the main screen is exactly the half-life
+      <code>t&#189; = &tau;&nbsp;ln&nbsp;2</code>. The sim clock runs at 15 simulated seconds per real
+      second, so with the bleed resistor in circuit one halving takes 32.6&nbsp;/&nbsp;15 = 2.17 real
+      seconds. Going 400&nbsp;&rarr;&nbsp;200&nbsp;&rarr;&nbsp;100&nbsp;&rarr;&nbsp;50 V is three
+      halvings, so the safe threshold arrives at about 6.5 real seconds — which agrees with solving the
+      exponential directly: <code>t = &tau;&nbsp;ln(400/50) = 97.7 s</code> simulated, or 6.52 s real.</p>
+      <p>With no bleed resistor, one halving takes 3258&nbsp;/&nbsp;15 = 217 real seconds, and reaching
+      50 V takes <code>4700&nbsp;ln(8) = 9773 s</code> simulated — 651.6 real seconds, about 10.9
+      minutes. That is why the meter appears frozen during a short demo.</p>
+      <table>
+        <tr><th>Real time after unplug</th><th>Bleed off</th><th>Bleed on</th><th>Energy (bleed on)</th></tr>
+        <tr><td>0 s</td><td>400.0 V</td><td>400.0 V</td><td>37.60 J</td></tr>
+        <tr><td>8 s (120 s simulated)</td><td>389.9 V</td><td>31.1 V</td><td>0.228 J</td></tr>
+        <tr><td>20 s (300 s simulated)</td><td>375.3 V</td><td>0.7 V</td><td>&asymp; 0 J</td></tr>
+      </table>
+      <p>Note that energy falls with the <i>square</i> of voltage, so it drops far faster than the
+      voltage reading does — by 31 V the stored energy is already down to about 0.6% of its peak.
+      Switching the bleed resistor in mid-discharge does not restart the clock; it changes
+      <code>&tau;</code> from that instant onward, which is why the curve visibly kinks rather than
+      jumping.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- physical model (exact; only display is rounded) ------- */
+  var VS      = 400;      // supply voltage, volts
+  var CAP     = 470e-6;   // farads
+  var TAU_OFF = 4700;     // seconds, leakage path only (10 MOhm)
+  var TAU_ON  = 47;       // seconds, bleed resistor in circuit (100 kOhm)
+  var SAFE_V  = 50;       // volts; rounded teaching threshold
+  var ACCEL   = 15;       // simulated seconds per real second
+  var CHARGE_SECONDS = 1.2;
+
+  var NS = 'http://www.w3.org/2000/svg';
+  function mk(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag), k;
+    for(k in attrs){ if(Object.prototype.hasOwnProperty.call(attrs,k)) e.setAttribute(k, attrs[k]); }
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+  function label(x, y, str, attrs, parent){
+    var a = attrs || {}, o = {}, k;
+    for(k in a){ if(Object.prototype.hasOwnProperty.call(a,k)) o[k] = a[k]; }
+    o.x = x; o.y = y;
+    var t = mk('text', o, parent);
+    t.textContent = str;
+    return t;
+  }
+
+  /* ---------------- geometry --------------------------------------------- */
+  var RAIL = 96;
+  var CAP_L = 268, CAP_R = 316, PLATE_W = 8;
+  var CAP_TOP = 46, CAP_BOT = 146;
+  var FILL_X = 278, FILL_W = 36, FILL_BOT = 146, FILL_MAX = 96;
+  var TEST_X = 392;
+  var LOOP_L = 272, LOOP_R = 420, LOOP_Y = 266;
+
+  var svg = document.getElementById('scene');
+
+  // static wiring
+  function line(x1,y1,x2,y2,parent){
+    return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#15171A','stroke-width':3,
+                      'stroke-linecap':'round'}, parent||svg);
+  }
+
+  // --- wall plug ---
+  var plugG = mk('g',{},svg);
+  mk('rect',{x:16,y:78,width:36,height:36,rx:4,fill:'#fff',stroke:'#15171A','stroke-width':3},plugG);
+  mk('rect',{x:24,y:88,width:7,height:6,fill:'#15171A'},plugG);
+  mk('rect',{x:24,y:100,width:7,height:6,fill:'#15171A'},plugG);
+  line(52,86,64,86,plugG); line(52,106,64,106,plugG);
+  line(64,86,64,RAIL,plugG); line(64,106,64,RAIL,plugG);
+  line(64,RAIL,90,RAIL,plugG);
+  label(34,130,'WALL',{'text-anchor':'middle'},plugG);
+
+  // --- main switch (plug state) ---
+  mk('circle',{cx:92,cy:RAIL,r:4,fill:'#15171A'},svg);
+  mk('circle',{cx:132,cy:RAIL,r:4,fill:'#15171A'},svg);
+  var lever = mk('line',{x1:92,y1:RAIL,x2:128,y2:70,stroke:'#15171A','stroke-width':4,
+                         'stroke-linecap':'round'},svg);
+  var plugState = label(112,130,'UNPLUGGED',{'text-anchor':'middle',fill:'#6E6A60'},svg);
+
+  line(132,RAIL,152,RAIL);
+
+  // --- rectifier box ---
+  var boxG = mk('g',{},svg);
+  mk('rect',{x:152,y:76,width:60,height:40,fill:'#fff',stroke:'#15171A','stroke-width':3},boxG);
+  label(182,101,'AC → DC',{'text-anchor':'middle'},boxG);
+
+  line(212,RAIL,CAP_L,RAIL);
+
+  // --- capacitor ---
+  var capG = mk('g',{},svg);
+  mk('rect',{x:CAP_L,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#15171A'},capG);
+  mk('rect',{x:CAP_R,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#15171A'},capG);
+  // empty channel behind the fill
+  mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'#EFECE3'},capG);
+  var voltageFill = mk('rect',{id:'voltageFill',x:FILL_X,y:FILL_BOT,width:FILL_W,height:0,
+                               fill:'#3E8E5A'},capG);
+  mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'none',
+             stroke:'#15171A','stroke-width':1.5},capG);
+  label(332,170,'CAPACITOR',{'text-anchor':'start'},capG);
+  // danger line at 50 V
+  var dangerY = FILL_BOT - (SAFE_V/VS)*FILL_MAX;
+  mk('line',{x1:FILL_X-8,y1:dangerY,x2:FILL_X+FILL_W+8,y2:dangerY,stroke:'#15171A',
+             'stroke-width':2,'stroke-dasharray':'5 4'},capG);
+  label(FILL_X-14,dangerY+3.5,'SAFE LINE',{fill:'#E0453E','font-size':8.5,'text-anchor':'end'},capG);
+
+  // --- right rail to test point ---
+  line(CAP_R+PLATE_W,RAIL,LOOP_R,RAIL);
+  mk('circle',{cx:TEST_X,cy:RAIL,r:5,fill:'#15171A'},svg);
+  label(412,124,'TEST POINT',{'text-anchor':'end',fill:'#6E6A60'},svg);
+
+  // --- bleed branch ---
+  var bleedG = mk('g',{},svg);
+  line(LOOP_L,CAP_BOT,LOOP_L,LOOP_Y,bleedG);
+  line(LOOP_L,LOOP_Y,292,LOOP_Y,bleedG);
+  mk('circle',{cx:292,cy:LOOP_Y,r:4,fill:'#15171A'},bleedG);
+  mk('circle',{cx:332,cy:LOOP_Y,r:4,fill:'#15171A'},bleedG);
+  var bleedLever = mk('line',{x1:292,y1:LOOP_Y,x2:328,y2:LOOP_Y-26,stroke:'#15171A',
+                              'stroke-width':4,'stroke-linecap':'round'},bleedG);
+  line(332,LOOP_Y,344,LOOP_Y,bleedG);
+  mk('polyline',{points:'344,266 350,254 362,278 374,254 386,278 398,254 404,266',
+                 fill:'none',stroke:'#15171A','stroke-width':3,'stroke-linejoin':'round'},bleedG);
+  line(404,LOOP_Y,LOOP_R,LOOP_Y,bleedG);
+  line(LOOP_R,LOOP_Y,LOOP_R,RAIL,bleedG);
+  var bleedState = label(348,292,'BLEED RESISTOR: OFF',{'text-anchor':'middle',fill:'#6E6A60'},bleedG);
+
+  // --- zap flash ---
+  var zap = mk('polygon',{points:'392,60 380,92 392,92 384,124 408,86 394,86 404,60',
+                          fill:'#F5B335',stroke:'#15171A','stroke-width':2,opacity:0},svg);
+
+  // --- touch probe (clickable) ---
+  var probe = mk('g',{id:'touchProbe',role:'button',tabindex:'0','aria-label':'Touch the test point'},svg);
+  mk('rect',{x:376,y:18,width:32,height:40,rx:8,fill:'#fff',stroke:'#15171A','stroke-width':3},probe);
+  mk('polygon',{points:'384,58 400,58 392,82',fill:'#15171A'},probe);
+  label(392,12,'TOUCH',{'text-anchor':'middle'},probe);
+  mk('rect',{x:366,y:4,width:52,height:86,fill:'transparent','class':'hit'},probe);
+
+  /* ---------------- state ------------------------------------------------- */
+  var STATE_IDLE = 0, STATE_CHARGING = 1, STATE_CHARGED = 2, STATE_DISCHARGING = 3;
+  var state   = STATE_IDLE;
+  var V       = 0;      // live voltage
+  var bleedOn = false;
+  var chargeT = 0;      // real seconds into the charge ramp
+  var tReal   = 0;      // real seconds since unplug
+  var v0      = 0;      // voltage at the last tau change
+  var t0Sim   = 0;      // simulated seconds at the last tau change
+  var announced = false;
+  var bleedAllDischarge = false; // bleed was on for the whole discharge
+
+  var elVolt   = document.getElementById('voltageLabel');
+  var elEnergy = document.getElementById('energyLabel');
+  var elBadge  = document.getElementById('safetyBadge');
+  var elRead   = document.getElementById('readout');
+  var btnPlug  = document.getElementById('plugToggle');
+  var btnBleed = document.getElementById('bleedToggle');
+
+  function say(html){ elRead.innerHTML = html; }
+  function tau(){ return bleedOn ? TAU_ON : TAU_OFF; }
+
+  /* Plain-language stand-in for stored energy — the fill bar carries the real
+     "how much is left" signal, so no joules are ever printed on screen. */
+  function chargeWords(v){
+    if(v >= 380) return 'Completely full of electricity.';
+    if(v >= 200) return 'Still full of electricity.';
+    if(v >= SAFE_V) return 'Draining — but still enough to hurt you.';
+    if(v >= 5)  return 'Nearly empty now.';
+    if(v >= 0.5) return 'Almost nothing left.';
+    return 'Empty. Nothing stored yet.';
+  }
+
+  function render(){
+    var frac = Math.max(0, Math.min(1, V/VS));
+    var h = frac * FILL_MAX;
+    voltageFill.setAttribute('height', h);
+    voltageFill.setAttribute('y', FILL_BOT - h);
+
+    // green well below the safety line, red at or above it
+    var t = Math.max(0, Math.min(1, (V - 30) / (SAFE_V - 30)));
+    var r = Math.round(62  + (224-62)  * t);
+    var g = Math.round(142 + (69-142)  * t);
+    var b = Math.round(90  + (62-90)   * t);
+    voltageFill.setAttribute('fill', 'rgb(' + r + ',' + g + ',' + b + ')');
+
+    elVolt.textContent = Math.round(V) + ' V';
+    elEnergy.textContent = chargeWords(V);
+
+    var danger = V >= SAFE_V;
+    elBadge.textContent = danger ? 'Dangerous' : 'Safe to touch';
+    elBadge.className = 'badge ' + (danger ? 'danger' : 'safe');
+
+    var plugged = (state === STATE_CHARGING || state === STATE_CHARGED);
+    lever.setAttribute('x2', plugged ? 132 : 128);
+    lever.setAttribute('y2', plugged ? RAIL : 70);
+    plugState.textContent = plugged ? 'PLUGGED IN' : 'UNPLUGGED';
+    btnPlug.textContent = plugged ? 'Unplug' : 'Plug in';
+
+    bleedLever.setAttribute('x2', bleedOn ? 332 : 328);
+    bleedLever.setAttribute('y2', bleedOn ? LOOP_Y : LOOP_Y - 26);
+    bleedState.textContent = 'BLEED RESISTOR: ' + (bleedOn ? 'ON' : 'OFF');
+    btnBleed.textContent = 'Bleed resistor: ' + (bleedOn ? 'ON' : 'OFF');
+    btnBleed.setAttribute('aria-pressed', String(bleedOn));
+  }
+
+  /* ---------------- actions ---------------------------------------------- */
+  btnPlug.addEventListener('click', function(){
+    if(state === STATE_CHARGING || state === STATE_CHARGED){
+      state = STATE_DISCHARGING;
+      tReal = 0; t0Sim = 0; v0 = V;
+      announced = false;
+      bleedAllDischarge = bleedOn;
+      say(bleedOn
+        ? 'Unplugged! The bleed resistor is draining it fast now.'
+        : 'Unplugged! Watch the meter... it’s barely moving.');
+    } else {
+      state = STATE_CHARGING;
+      chargeT = 0;
+      say('Charging up…');
+    }
+    render();
+  });
+
+  btnBleed.addEventListener('click', function(){
+    bleedOn = !bleedOn;
+    if(state === STATE_DISCHARGING){
+      // Keep the clock running; just change the rate from this instant on.
+      v0 = V; t0Sim = tReal * ACCEL;
+      if(!bleedOn) bleedAllDischarge = false;
+    }
+    render();
+  });
+
+  function touch(){
+    if(V >= SAFE_V){
+      say('<b>ZAP!</b> Still full of electricity in there. This is exactly why a repair tech treats ' +
+          'it as live, even unplugged.');
+      flashZap();
+    } else {
+      say('<b>Safe now.</b> Most of the charge has drained away.');
+    }
+  }
+  document.getElementById('touchBtn').addEventListener('click', touch);
+  probe.addEventListener('click', touch);
+  probe.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); touch(); }
+  });
+
+  var zapUntil = 0;
+  function flashZap(){ zapUntil = performance.now() + 420; }
+
+  document.getElementById('reset').addEventListener('click', function(){
+    state = STATE_IDLE; V = 0; bleedOn = false;
+    chargeT = 0; tReal = 0; v0 = 0; t0Sim = 0;
+    announced = false; bleedAllDischarge = false; zapUntil = 0;
+    zap.setAttribute('opacity', 0);
+    say('Press Plug in. This is what’s inside every computer’s power supply — and why you ' +
+        'never open one, even unplugged.');
+    render();
+  });
+
+  /* ---------------- loop --------------------------------------------------- */
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    if(state === STATE_CHARGING){
+      chargeT += dt;
+      var p = Math.min(1, chargeT / CHARGE_SECONDS);
+      V = VS * (1 - Math.pow(1 - p, 3));
+      if(p >= 1){
+        V = VS; state = STATE_CHARGED;
+        say('Full. Totally normal — and totally safe as long as the case stays closed.');
+      }
+    } else if(state === STATE_DISCHARGING){
+      tReal += dt;
+      V = v0 * Math.exp(-((tReal * ACCEL) - t0Sim) / tau());
+      if(!announced && V < SAFE_V){
+        announced = true;
+        say(bleedAllDischarge
+          ? 'Safe now — that only took about 6 seconds, because the bleed resistor cuts the charge ' +
+            'in half every couple of seconds. Without it, one halving alone would take almost 4 minutes.'
+          : 'Safe now — it finally dropped below the danger line. With no bleed resistor this takes ' +
+            'over ten minutes, which is why nobody waits for it.');
+      }
+    }
+
+    zap.setAttribute('opacity', now < zapUntil ? 1 : 0);
+    render();
+    requestAnimationFrame(frame);
+  }
+
+  render();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

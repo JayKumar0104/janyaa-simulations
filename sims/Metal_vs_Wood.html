@@ -3,21 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Compares heat flow between metal and wood blocks at the same temperature to show why metal feels colder to the touch.">
 <title>Metal is not colder than wood — Janyaa Interactive</title>
 <style>
-    :root{
-    /* Dark palette matching the Janyaa Interactive hub. Token names are kept
-       from the original light theme so every existing rule still resolves;
-       --red now holds the orange accent and --blue the green one, preserving
-       the two-way colour distinction the diagrams rely on. */
-    --paper:#000000; --surface:#0F0F0F; --surface-2:#141414; --sunken:#0A0A0A;
-    --ink:#EDEDED; --line:#2A2A2A; --line-strong:#3A3A3A;
-    --red:#F97316; --blue:#22C55E; --amber:#FDBA74; --green:#22C55E;
-    --gray:#3A3A3A; --dim:#8B8B8B; --muted:#B4B4B4;
+  :root{
+    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
+    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
-    color-scheme:dark;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
@@ -25,28 +19,28 @@
   .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#B4B4B4}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
   .stand b{color:var(--ink)}
 
-  .banner{border:3px solid var(--line);background:var(--amber);color:#000;padding:15px 20px;margin-bottom:24px}
+  .banner{border:3px solid var(--ink);background:var(--amber);padding:15px 20px;margin-bottom:24px}
   .banner p{margin:0;font-size:16px;line-height:1.5}
   .banner strong{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
   .decks{display:grid;grid-template-columns:1fr 1fr;gap:22px}
   @media (max-width:820px){ .decks{grid-template-columns:1fr} }
-  .deck{border:3px solid var(--line);background:var(--surface);display:flex;flex-direction:column}
-  .deck-head{border-bottom:3px solid var(--line);padding:12px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .deck{border:3px solid var(--ink);background:#fff;display:flex;flex-direction:column}
+  .deck-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
   .deck-head h2{font-family:var(--display);font-size:21px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
   .deck-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-  .stage{background:#0A0A0A;padding:14px;flex:1}
-  .stage .frame{border:2px solid var(--line);background:var(--surface)}
+  .stage{background:#EAE7DE;padding:14px;flex:1}
+  .stage .frame{border:2px solid var(--ink);background:#fff}
   svg{display:block;width:100%;height:auto}
-  .feel{border-top:3px solid var(--line);padding:14px 16px;background:#141414}
+  .feel{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7}
   .feel .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
   .feel .val{font-family:var(--display);font-size:clamp(24px,4.6vw,34px);line-height:1;letter-spacing:-.03em}
   .feel .word{font-family:var(--label);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:9px}
 
-  .panel{border:3px solid var(--line);background:var(--surface);margin-top:24px;padding:18px 20px}
+  .panel{border:3px solid var(--ink);background:#fff;margin-top:24px;padding:18px 20px}
   .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
   .ctrls{display:grid;grid-template-columns:1fr 1fr;gap:20px}
   @media (max-width:700px){ .ctrls{grid-template-columns:1fr} }
@@ -54,18 +48,29 @@
               text-transform:uppercase;color:var(--dim);margin-bottom:8px}
   .ctrl label b{color:var(--ink);font-family:var(--display);font-size:16px}
   input[type=range]{width:100%;accent-color:var(--red);height:26px}
-  select{width:100%;border:2px solid var(--line);background:var(--surface);padding:10px;font-family:var(--body);font-size:14px}
+  select{width:100%;border:2px solid var(--ink);background:#fff;padding:10px;font-family:var(--body);font-size:14px}
   .runrow{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
   button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
-            background:var(--red);color:#000;border:3px solid var(--line);padding:13px 24px;cursor:pointer}
-  button.go:hover{background:var(--green)}
+            background:var(--red);color:#fff;border:3px solid var(--ink);padding:13px 24px;cursor:pointer}
+  button.go:hover{background:var(--ink)}
   button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-               background:transparent;border:2px solid var(--line);padding:13px 16px;cursor:pointer}
+               background:transparent;border:2px solid var(--ink);padding:13px 16px;cursor:pointer}
   :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-  .readout{margin-top:16px;border-top:2px solid var(--line);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.6em}
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.6em}
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
-  .foot{margin-top:30px;border-top:2px solid var(--line);padding-top:16px;font-size:13.5px;line-height:1.6;color:#B4B4B4;max-width:76ch}
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
   .foot b{color:var(--ink)}
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
+  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.advanced summary::-webkit-details-marker{display:none}
+  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
+  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  details.advanced th,details.advanced td{border:1px solid var(--gray);padding:6px 8px;text-align:left}
+  details.advanced th{background:#F0EDE4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -87,21 +92,21 @@
       <div class="deck-head"><h2 id="leftName">Wood</h2><span class="tag">poor heat conductor</span></div>
       <div class="stage"><div class="frame">
         <svg id="svgL" viewBox="0 0 420 320" role="img" aria-label="A hand touching a wooden block with slow heat flow">
-          <rect width="420" height="320" fill="#141414"/>
-          <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#EDEDED" stroke-width="3"/>
+          <rect width="420" height="320" fill="#FBFAF7"/>
+          <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#15171A" stroke-width="3"/>
           <!-- thermometer -->
-          <rect x="66" y="150" width="16" height="90" fill="#0F0F0F" stroke="#EDEDED" stroke-width="2.5"/>
-          <circle cx="74" cy="248" r="13" fill="#F97316" stroke="#EDEDED" stroke-width="2.5"/>
-          <rect x="70" y="196" width="8" height="50" fill="#F97316"/>
-          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#EDEDED" id="thermL">20 °C</text>
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#15171A" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#15171A" stroke-width="2.5"/>
+          <rect x="70" y="196" width="8" height="50" fill="#E0453E"/>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#15171A" id="thermL">20 °C</text>
           <!-- hand -->
           <g id="handL">
-            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#EDEDED" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#8B8B8B">your hand</text>
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#15171A" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">your hand</text>
           </g>
           <!-- heat arrows -->
           <g id="arrowsL"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#8B8B8B" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6E6A60" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -115,18 +120,18 @@
       <div class="deck-head"><h2 id="rightName">Steel</h2><span class="tag">excellent heat conductor</span></div>
       <div class="stage"><div class="frame">
         <svg id="svgR" viewBox="0 0 420 320" role="img" aria-label="A hand touching a steel block with fast heat flow">
-          <rect width="420" height="320" fill="#141414"/>
-          <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#EDEDED" stroke-width="3"/>
-          <rect x="66" y="150" width="16" height="90" fill="#0F0F0F" stroke="#EDEDED" stroke-width="2.5"/>
-          <circle cx="74" cy="248" r="13" fill="#F97316" stroke="#EDEDED" stroke-width="2.5"/>
-          <rect x="70" y="196" width="8" height="50" fill="#F97316"/>
-          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#EDEDED" id="thermR">20 °C</text>
+          <rect width="420" height="320" fill="#FBFAF7"/>
+          <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#15171A" stroke-width="3"/>
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#15171A" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#15171A" stroke-width="2.5"/>
+          <rect x="70" y="196" width="8" height="50" fill="#E0453E"/>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#15171A" id="thermR">20 °C</text>
           <g id="handR">
-            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#EDEDED" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#8B8B8B">your hand</text>
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#15171A" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">your hand</text>
           </g>
           <g id="arrowsR"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#8B8B8B" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6E6A60" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -170,6 +175,20 @@
   "colder," a hot metal block would still feel mild. It does the opposite — it burns, for exactly the
   same reason. <b>Simplified:</b> uses typical values for how fast each material takes up heat, and
   ignores sweat, pressure and blood flow.</p>
+
+  <details class="advanced">
+    <summary>For the curious — the actual property</summary>
+    <div class="adv-body">
+      <p>The material property that decides this is called <b>thermal effusivity</b>, not thermal
+      conductivity alone — it also depends on density and heat capacity. Higher effusivity means a
+      material can absorb or release heat at a surface faster. The contact temperature is a weighted
+      average, weighted by each side's effusivity relative to the other's:
+      <code>T_contact = (e_skin&middot;T_skin + e_material&middot;T_material) / (e_skin + e_material)</code>.
+      Rough relative effusivity values used in this sim (skin = 1000): wood 400, stone 2200, steel 8000,
+      aluminium 24000, foam 40 — which is why aluminium (a drink can) feels even colder than steel at
+      the same temperature.</p>
+    </div>
+  </details>
 </div>
 
 <script>
@@ -184,7 +203,7 @@
     wood:  { name:'Wood',      e:400,   color:'#C6A06A', tag:'poor heat conductor' },
     steel: { name:'Steel',     e:8000,  color:'#B9BDC2', tag:'excellent heat conductor' },
     alu:   { name:'Aluminium', e:24000, color:'#D6DADE', tag:'the fastest of all' },
-    stone: { name:'Stone',     e:2200,  color:'#8B8B8B', tag:'moderate conductor' },
+    stone: { name:'Stone',     e:2200,  color:'#9E9C94', tag:'moderate conductor' },
     foam:  { name:'Foam',      e:40,    color:'#EFEAE0', tag:'almost an insulator' }
   };
 
@@ -198,13 +217,13 @@
 
   function feelWord(skinT){
     var d = skinT - BODY;
-    if(d <= -9)  return { w:'feels: freezing',   c:'#22C55E' };
-    if(d <= -4)  return { w:'feels: cold',       c:'#22C55E' };
-    if(d <= -1.2)return { w:'feels: cool',       c:'#22C55E' };
-    if(d <   1.2)return { w:'feels: neutral',    c:'#8B8B8B' };
-    if(d <   4)  return { w:'feels: warm',       c:'#F97316' };
-    if(d <   9)  return { w:'feels: hot',        c:'#F97316' };
-    return             { w:'feels: burning',     c:'#F97316' };
+    if(d <= -9)  return { w:'feels: freezing',   c:'#2B6CD4' };
+    if(d <= -4)  return { w:'feels: cold',       c:'#2B6CD4' };
+    if(d <= -1.2)return { w:'feels: cool',       c:'#2B6CD4' };
+    if(d <   1.2)return { w:'feels: neutral',    c:'#6E6A60' };
+    if(d <   4)  return { w:'feels: warm',       c:'#E0453E' };
+    if(d <   9)  return { w:'feels: hot',        c:'#E0453E' };
+    return             { w:'feels: burning',     c:'#E0453E' };
   }
 
   // ---------- heat-flow arrows ----------
@@ -222,7 +241,7 @@
       var p = document.createElementNS(ns,'path');
       p.setAttribute('d','M '+x+' '+y+' l '+(dir*16)+' 0 M '+(x+dir*16)+' '+y+
                         ' l '+(-dir*6)+' -5 M '+(x+dir*16)+' '+y+' l '+(-dir*6)+' 5');
-      p.setAttribute('stroke', into ? '#F97316' : '#22C55E');
+      p.setAttribute('stroke', into ? '#E0453E' : '#2B6CD4');
       p.setAttribute('stroke-width','3'); p.setAttribute('fill','none');
       p.setAttribute('stroke-linecap','round');
       g.appendChild(p);
@@ -242,15 +261,15 @@
     document.getElementById('bannerTemp').textContent = st.blockT;
 
     var sl = document.getElementById('skinL'), sr = document.getElementById('skinR');
-    sl.textContent = st.skinL.toFixed(1) + ' \u00B0C';
-    sr.textContent = st.skinR.toFixed(1) + ' \u00B0C';
+    sl.textContent = Math.round(st.skinL) + ' \u00B0C';
+    sr.textContent = Math.round(st.skinR) + ' \u00B0C';
 
     var fl = feelWord(st.skinL), fr = feelWord(st.skinR);
     var wl = document.getElementById('wordL'), wr = document.getElementById('wordR');
     wl.textContent = fl.w; wl.style.color = fl.c;
     wr.textContent = fr.w; wr.style.color = fr.c;
-    sl.style.color = fl.c === '#8B8B8B' ? '#EDEDED' : fl.c;
-    sr.style.color = fr.c === '#8B8B8B' ? '#EDEDED' : fr.c;
+    sl.style.color = fl.c === '#6E6A60' ? '#15171A' : fl.c;
+    sr.style.color = fr.c === '#6E6A60' ? '#15171A' : fr.c;
 
     var targetL = contactTemp(MATERIALS.wood.e, st.blockT);
     var targetR = contactTemp(right.e, st.blockT);
@@ -283,20 +302,20 @@
     var right = MATERIALS[st.right];
     var tL = contactTemp(MATERIALS.wood.e, st.blockT);
     var tR = contactTemp(right.e, st.blockT);
-    var gap = Math.abs(tL - tR).toFixed(1);
+    var gap = Math.round(Math.abs(tL - tR));
 
     if(st.blockT < BODY - 2){
-      say('<b>Same temperature. Completely different feeling.</b> Your skin sits at ' + tL.toFixed(1) +
-          ' \u00B0C on the wood and ' + tR.toFixed(1) + ' \u00B0C on the ' + right.name.toLowerCase() +
+      say('<b>Same temperature. Completely different feeling.</b> Your skin sits at ' + Math.round(tL) +
+          ' \u00B0C on the wood and ' + Math.round(tR) + ' \u00B0C on the ' + right.name.toLowerCase() +
           ' \u2014 a gap of ' + gap + ' degrees, caused entirely by how fast each one drains heat out of you. ' +
           'Both thermometers still read ' + st.blockT + ' \u00B0C.');
     } else if(st.blockT > BODY + 2){
       say('<b>Now flip it around.</b> Both blocks are hotter than you, at ' + st.blockT + ' \u00B0C. ' +
-          'The ' + right.name.toLowerCase() + ' shoves heat into you and your skin hits ' + tR.toFixed(1) +
-          ' \u00B0C, while the wood barely reaches ' + tL.toFixed(1) + ' \u00B0C. If metal were simply ' +
+          'The ' + right.name.toLowerCase() + ' shoves heat into you and your skin hits ' + Math.round(tR) +
+          ' \u00B0C, while the wood barely reaches ' + Math.round(tL) + ' \u00B0C. If metal were simply ' +
           '"a cold material," this could not happen. It is not about cold \u2014 it is about speed.');
     } else {
-      say('<b>At body temperature, everything feels the same.</b> Both read ' + tL.toFixed(1) +
+      say('<b>At body temperature, everything feels the same.</b> Both read ' + Math.round(tL) +
           ' \u00B0C against your skin. No heat is moving, so there is nothing to feel \u2014 which is ' +
           'the clearest proof that touch measures heat flow, not temperature.');
     }
