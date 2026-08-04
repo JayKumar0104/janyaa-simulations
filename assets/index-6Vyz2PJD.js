@@ -5,7 +5,7 @@
       <nav class="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-6">
         <div class="flex items-center gap-3">
           <img src="${n(`janyaa-logo.png`)}" alt="Janyaa" class="h-9 w-auto" />
-          <span class="text-sm font-semibold tracking-tight text-ink-100">Simulation Hub</span>
+          <span class="text-sm font-semibold tracking-tight text-ink-100">Interactive</span>
         </div>
         <a href="#simulations"
            class="rounded-lg border border-ink-700 px-3.5 py-2 text-sm text-ink-300 transition hover:border-green-500 hover:text-green-400">
@@ -15,7 +15,7 @@
 
       <div class="relative mx-auto max-w-6xl px-6 pb-20 pt-12 sm:pb-24 sm:pt-16">
         <h1 class="animate-fade-up text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-          Janyaa Simulation Hub
+          Janyaa Interactive
         </h1>
         <p class="mt-4 max-w-2xl animate-fade-up text-lg leading-relaxed text-ink-300">
           Interactive STEM simulations for hands-on workshops.
