@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why AI trains on a GPU — Janyaa Sim Lab</title>
+<style>
+  :root{
+    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
+    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:1060px;margin:0 auto;padding:36px 20px 80px}
+
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+          color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
+     margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:52ch;margin:0 0 34px;color:#33312C}
+  .stand b{color:var(--ink)}
+
+  /* ---- the question strip ---- */
+  .qbar{border:3px solid var(--ink);background:#fff;padding:16px 20px;margin-bottom:26px}
+  .qbar p{margin:0;font-size:16px;line-height:1.5}
+  .qbar strong{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  /* ---- chips ---- */
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:820px){ .chips{grid-template-columns:1fr} }
+
+  .chip{border:3px solid var(--ink);background:#fff}
+  .chip-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
+             justify-content:space-between;align-items:baseline;gap:10px}
+  .chip-head h2{font-family:var(--display);font-size:22px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .chip-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  .die{padding:14px;background:#EAE7DE}
+  .die-inner{border:2px solid var(--ink);background:#fff;padding:8px;aspect-ratio:1;display:flex;flex-direction:column}
+
+  /* CPU: 2x2 big cores */
+  .cores{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;flex:1}
+  .core{border:2px solid var(--ink);display:grid;grid-template-rows:1.15fr 1.15fr .9fr;gap:4px;padding:4px;background:#FBFAF7}
+  .blk{border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;
+       font-family:var(--label);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.15}
+  .blk.control{background:var(--blue);color:#fff}
+  .blk.cache{background:var(--gray)}
+  .alu-row{display:flex;gap:4px;align-items:stretch}
+  .alu-row .spacer{flex:1;border:1.5px dashed #D5D1C5}
+  .cpu-alu{flex:0 0 42%;background:var(--red);color:#fff;border:1.5px solid var(--ink);
+           display:flex;align-items:center;justify-content:center;
+           font-family:var(--label);font-size:9px;letter-spacing:.08em}
+
+  /* GPU: rows of lanes sharing one control */
+  .rows{display:flex;flex-direction:column;gap:5px;flex:1}
+  .grow{display:grid;grid-template-columns:34px 1fr;gap:5px;flex:1}
+  .rowctl{background:var(--blue);border:1.5px solid var(--ink);color:#fff;
+          display:flex;align-items:center;justify-content:center;
+          font-family:var(--label);font-size:7.5px;letter-spacing:.04em;text-align:center;line-height:1.1}
+  .lanes{display:grid;grid-template-columns:repeat(16,1fr);gap:3px}
+  .lane{background:var(--red);border:1px solid var(--ink)}
+  .lane.idle{background:#E5E1D6}
+  .gpu-cache{height:16px;background:var(--gray);border:1.5px solid var(--ink);margin-top:5px;
+             font-family:var(--label);font-size:8px;letter-spacing:.1em;
+             display:flex;align-items:center;justify-content:center}
+
+  /* firing states */
+  .core.fire .blk.control, .grow.fire .rowctl{background:var(--amber);color:var(--ink)}
+  .cpu-alu.fire, .lane.fire{background:var(--amber)}
+  .lane.stalled{background:#E5E1D6;position:relative}
+
+  /* ---- area budget bar ---- */
+  .budget{padding:14px 16px;border-top:3px solid var(--ink)}
+  .budget h3{font-family:var(--label);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+             color:var(--dim);margin:0 0 8px}
+  .bar{display:flex;height:26px;border:2px solid var(--ink)}
+  .bar span{display:flex;align-items:center;justify-content:center;font-family:var(--label);
+            font-size:9.5px;letter-spacing:.06em;overflow:hidden;white-space:nowrap}
+  .bar .b-ctl{background:var(--blue);color:#fff}
+  .bar .b-cache{background:var(--gray)}
+  .bar .b-math{background:var(--red);color:#fff}
+
+  /* ---- scoreboard ---- */
+  .score{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7}
+  .score .big{font-family:var(--display);font-size:clamp(26px,5vw,40px);line-height:1;letter-spacing:-.03em}
+  .score .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+              color:var(--dim);margin-top:6px}
+  .score .big.good{color:var(--red)}
+  .score .big.bad{color:var(--dim)}
+
+  /* ---- controls ---- */
+  .panel{border:3px solid var(--ink);background:#fff;margin:26px 0 0;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--dim);margin:0 0 12px}
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:700px){ .modes{grid-template-columns:1fr} }
+  .mode{border:2px solid var(--ink);background:#fff;padding:13px 15px;text-align:left;cursor:pointer;font-family:var(--body)}
+  .mode b{display:block;font-family:var(--display);font-size:14px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:5px}
+  .mode span{font-size:13px;line-height:1.45;color:#4A473F}
+  .mode[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .mode[aria-pressed="true"] span{color:#D6D2C6}
+  .runrow{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:center}
+  button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
+            background:var(--red);color:#fff;border:3px solid var(--ink);padding:12px 24px;cursor:pointer}
+  button.go:hover{background:var(--ink)}
+  button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+               background:transparent;border:2px solid var(--ink);padding:11px 16px;cursor:pointer}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.2em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
+        font-size:13.5px;line-height:1.6;color:#4A473F;max-width:74ch}
+  .foot b{color:var(--ink)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .lane,.cpu-alu,.rowctl,.blk{transition:background .12s linear}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Sim Lab · Computer workshop</p>
+  <h1>Same chip size.<br>One has <em>4</em> math units.<br>One has <em>128</em>.</h1>
+  <p class="stand">Both squares below are the same piece of silicon — same cost, same space. The
+  difference is <b>what the space was spent on</b>. Look at how much of each chip is actually doing
+  math, then find out what the GPU gave up to get there.</p>
+
+  <div class="qbar">
+    <p><strong>The trade:</strong> a math unit needs a control unit to tell it what to do. A CPU gives
+    every math unit its own. A GPU makes 16 share one — so all 16 must do the exact same thing at the
+    same instant.</p>
+  </div>
+
+  <div class="chips">
+    <!-- ================= CPU ================= -->
+    <section class="chip">
+      <div class="chip-head">
+        <h2>CPU</h2>
+        <span class="tag">4 cores · 4 math units</span>
+      </div>
+      <div class="die"><div class="die-inner">
+        <div class="cores" id="cpuCores"></div>
+      </div></div>
+      <div class="budget">
+        <h3>What the silicon is spent on</h3>
+        <div class="bar">
+          <span class="b-ctl" style="flex:35">control 35%</span>
+          <span class="b-cache" style="flex:50">cache 50%</span>
+          <span class="b-math" style="flex:15">math 15%</span>
+        </div>
+      </div>
+      <div class="score">
+        <div class="big good" id="cpuBig">4 of 4</div>
+        <div class="cap">math units doing useful work</div>
+      </div>
+    </section>
+
+    <!-- ================= GPU ================= -->
+    <section class="chip">
+      <div class="chip-head">
+        <h2>GPU</h2>
+        <span class="tag">8 rows × 16 lanes · 128 math units</span>
+      </div>
+      <div class="die"><div class="die-inner">
+        <div class="rows" id="gpuRows"></div>
+        <div class="gpu-cache">SHARED CACHE</div>
+      </div></div>
+      <div class="budget">
+        <h3>What the silicon is spent on</h3>
+        <div class="bar">
+          <span class="b-ctl" style="flex:8">8%</span>
+          <span class="b-cache" style="flex:12">12%</span>
+          <span class="b-math" style="flex:80">math 80%</span>
+        </div>
+      </div>
+      <div class="score">
+        <div class="big good" id="gpuBig">128 of 128</div>
+        <div class="cap" id="gpuCap">math units doing useful work</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= controls ================= -->
+  <div class="panel">
+    <h3>Give the chips a job</h3>
+    <div class="modes">
+      <button class="mode" id="mSame" aria-pressed="true">
+        <b>Everyone does the same thing</b>
+        <span>Nudge a million weights: <em>new = old − 0.01 × gradient</em>. Same formula every time,
+        different numbers. This is what training a model actually is.</span>
+      </button>
+      <button class="mode" id="mDiff" aria-pressed="false">
+        <b>Everyone does something different</b>
+        <span>Open a file, then decide what to do based on what's inside — every item needs its own
+        decision. This is what running an operating system is like.</span>
+      </button>
+    </div>
+    <div class="runrow">
+      <button class="go" id="run">Send one instruction</button>
+      <button class="ghost" id="reset">Reset</button>
+    </div>
+    <div class="readout" id="readout">Pick a job, then send an instruction and watch which math units light up.</div>
+  </div>
+
+  <p class="foot"><b>Why this is the whole story.</b> A GPU didn't get 32× more math units by being
+  better engineered — it got them by refusing to buy 128 separate control units and 128 separate
+  caches. That purchase decision is permanent and it's why a GPU is spectacular at one kind of work
+  and poor at the other. Training a neural network is millions of copies of the same tiny formula, so
+  every lane stays busy. <b>Simplified:</b> real GPUs group 32 lanes per control unit rather than 16,
+  and the area percentages here are rounded teaching figures.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var ROWS = 8, LANES = 16, TOTAL = ROWS*LANES;
+  var mode = 'same';
+  var busy = false;
+
+  // ---------- build CPU ----------
+  var cpuCores = document.getElementById('cpuCores');
+  for(var c=0;c<4;c++){
+    var core = document.createElement('div');
+    core.className = 'core';
+    core.innerHTML =
+      '<div class="blk control">control<br>unit</div>' +
+      '<div class="blk cache">cache</div>' +
+      '<div class="alu-row"><div class="cpu-alu">ALU</div><div class="spacer"></div></div>';
+    cpuCores.appendChild(core);
+  }
+  var cpuCoreEls = Array.prototype.slice.call(cpuCores.querySelectorAll('.core'));
+  var cpuAluEls  = Array.prototype.slice.call(cpuCores.querySelectorAll('.cpu-alu'));
+
+  // ---------- build GPU ----------
+  var gpuRows = document.getElementById('gpuRows');
+  for(var r=0;r<ROWS;r++){
+    var row = document.createElement('div');
+    row.className = 'grow';
+    var ctl = document.createElement('div');
+    ctl.className = 'rowctl';
+    ctl.innerHTML = 'one<br>control';
+    var lanes = document.createElement('div');
+    lanes.className = 'lanes';
+    for(var l=0;l<LANES;l++){
+      var lane = document.createElement('div');
+      lane.className = 'lane';
+      lanes.appendChild(lane);
+    }
+    row.appendChild(ctl); row.appendChild(lanes);
+    gpuRows.appendChild(row);
+  }
+  var gpuRowEls = Array.prototype.slice.call(gpuRows.querySelectorAll('.grow'));
+  var gpuLaneEls = gpuRowEls.map(function(row){
+    return Array.prototype.slice.call(row.querySelectorAll('.lane'));
+  });
+
+  // ---------- helpers ----------
+  function clearAll(){
+    cpuCoreEls.forEach(function(el){ el.classList.remove('fire'); });
+    cpuAluEls.forEach(function(el){ el.classList.remove('fire'); });
+    gpuRowEls.forEach(function(el){ el.classList.remove('fire'); });
+    gpuLaneEls.forEach(function(row){
+      row.forEach(function(el){ el.classList.remove('fire','idle'); });
+    });
+  }
+
+  function setScores(cpuWorking, gpuWorking){
+    document.getElementById('cpuBig').textContent = cpuWorking + ' of 4';
+    document.getElementById('gpuBig').textContent = gpuWorking + ' of ' + TOTAL;
+    var gb = document.getElementById('gpuBig');
+    gb.className = 'big ' + (gpuWorking > 4 ? 'good' : 'bad');
+    document.getElementById('gpuCap').textContent = gpuWorking > 4
+      ? 'math units doing useful work'
+      : 'math units doing useful work — the rest are stuck waiting their turn';
+  }
+
+  // ---------- the run ----------
+  function run(){
+    if(busy) return;
+    busy = true;
+    clearAll();
+    var readout = document.getElementById('readout');
+
+    // CPU always fires all four: every core owns its control unit.
+    cpuCoreEls.forEach(function(el,i){
+      setTimeout(function(){
+        el.classList.add('fire');
+        cpuAluEls[i].classList.add('fire');
+      }, 90 + i*40);
+    });
+
+    if(mode === 'same'){
+      gpuRowEls.forEach(function(row,i){
+        setTimeout(function(){
+          row.classList.add('fire');
+          gpuLaneEls[i].forEach(function(lane,j){
+            setTimeout(function(){ lane.classList.add('fire'); }, j*7);
+          });
+        }, 90 + i*45);
+      });
+      setTimeout(function(){
+        setScores(4, TOTAL);
+        readout.innerHTML = '<b>One instruction in, 128 numbers out.</b> Each control unit broadcast the ' +
+          'same formula down its whole row, and every lane applied it to a different weight. The CPU ' +
+          'managed 4. This is why a training run that takes a GPU an hour takes a CPU a week.';
+        busy = false;
+      }, 700);
+    } else {
+      // Divergence: each row's single control unit can only issue ONE instruction,
+      // so only one lane per row gets served this pass.
+      gpuRowEls.forEach(function(row,i){
+        setTimeout(function(){
+          row.classList.add('fire');
+          gpuLaneEls[i].forEach(function(lane,j){
+            if(j === 0) lane.classList.add('fire');
+            else lane.classList.add('idle');
+          });
+        }, 90 + i*45);
+      });
+      setTimeout(function(){
+        setScores(4, ROWS);
+        readout.innerHTML = '<b>127 lanes just went dark.</b> Each row has one control unit, so it can ' +
+          'only issue one instruction — the other 15 lanes in every row have to wait their turn. ' +
+          'All that math hardware is useless here. The CPU\u2019s 4 units each have their own control unit, ' +
+          'so all 4 keep working on 4 different jobs.';
+        busy = false;
+      }, 700);
+    }
+  }
+
+  // ---------- controls ----------
+  function setMode(m){
+    mode = m;
+    document.getElementById('mSame').setAttribute('aria-pressed', String(m==='same'));
+    document.getElementById('mDiff').setAttribute('aria-pressed', String(m==='diff'));
+    clearAll();
+    setScores(4, m==='same' ? TOTAL : ROWS);
+    document.getElementById('readout').textContent = m === 'same'
+      ? 'Same formula, different numbers. Send an instruction.'
+      : 'Every item needs its own decision. Send an instruction and watch the GPU stall.';
+  }
+  document.getElementById('mSame').addEventListener('click', function(){ setMode('same'); });
+  document.getElementById('mDiff').addEventListener('click', function(){ setMode('diff'); });
+  document.getElementById('run').addEventListener('click', run);
+  document.getElementById('reset').addEventListener('click', function(){
+    clearAll(); setScores(4, mode==='same'?TOTAL:ROWS);
+    document.getElementById('readout').textContent = 'Reset.';
+  });
+})();
+</script>
+</body>
+</html>

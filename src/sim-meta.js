@@ -1,24 +1,55 @@
 /**
- * Optional per-sim card copy, keyed by sim id.
+ * Per-sim card copy, keyed by sim id. This object lists exactly the sims
+ * present in public/sims/ — one entry per HTML file.
  *
- * The id is the filename without `.html` (`public/sims/pressure-head.html`
- * -> `pressure-head`) or the folder name (`public/sims/pressure-head/index.html`
- * -> `pressure-head`). Anything omitted here falls back to the sim's own
+ * The id is the filename without `.html` (`public/sims/CPU_vs_GPU.html`
+ * -> `CPU_vs_GPU`) or the folder name (`public/sims/CPU_vs_GPU/index.html`
+ * -> `CPU_vs_GPU`). Anything omitted here falls back to the sim's own
  * <title> and <meta name="description">.
  *
- *   'pressure-head': {
- *     title: 'Pressure & Head',
- *     description: 'Why a taller column pushes harder, independent of volume.',
- *     question: 'Why does height beat width?',   // the "why" line on the card
- *     tags: ['Fluids', 'Grade 6–8'],
- *   },
+ * Titles are set here because each sim's own <title> carries a
+ * "— Janyaa Sim Lab" suffix that is redundant on this page.
  */
 export const simMeta = {
-  'example-template': {
-    title: 'Example Template',
+  CPU_vs_GPU: {
+    title: 'CPU vs GPU',
     description:
-      'A placeholder sim showing the file conventions the hub reads. Delete it once your own sims are in public/sims/.',
-    question: 'How does a sim get onto this page?',
-    tags: ['Placeholder'],
+      'Sends one instruction to a 4-unit CPU and a 128-unit GPU of the same chip size, comparing them on repeated identical arithmetic and on work where each item needs its own decision.',
+    tags: ['Computers'],
+  },
+
+  Memory_Hierarchy: {
+    title: 'Memory Hierarchy',
+    description:
+      'Times a CPU fetch from L1 cache down to a hard drive, restated at one second per nanosecond, with a cache hit-rate slider that recalculates the average wait per lookup.',
+    tags: ['Computers'],
+  },
+
+  Metal_vs_Wood: {
+    title: 'Metal vs Wood',
+    description:
+      'Holds a wood block and a steel, aluminium, stone, or foam block at the same set temperature, then reports the thermometer reading and the rate each one draws heat from a hand.',
+    tags: ['Physics'],
+  },
+
+  PC_Bottleneck: {
+    title: 'PC Bottleneck',
+    description:
+      'Pairs a CPU that prepares 45 frames per second with a GPU that draws 120, and recalculates the final frame rate as either component is upgraded by 50%.',
+    tags: ['Computers'],
+  },
+
+  Square_Cube_Law: {
+    title: 'Square-Cube Law',
+    description:
+      "Scales a cube's edge length with a slider and tracks surface area rising with the square while volume rises with the cube, applied to leg stress and to melting ice.",
+    tags: ['Maths', 'Physics'],
+  },
+
+  SSD_vs_HDD: {
+    title: 'SSD vs HDD',
+    description:
+      'Applies a desk nudge, a knock off a chair, and a waist-height drop to a powered hard drive and an SSD, comparing a head flying 5 nm above the platter with a drive that has no moving parts.',
+    tags: ['Computers'],
   },
 }
