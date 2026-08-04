@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metal is not colder than wood — Janyaa Sim Lab</title>
+<style>
+  :root{
+    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
+    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:1060px;margin:0 auto;padding:36px 20px 80px}
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
+  .stand b{color:var(--ink)}
+
+  .banner{border:3px solid var(--ink);background:var(--amber);padding:15px 20px;margin-bottom:24px}
+  .banner p{margin:0;font-size:16px;line-height:1.5}
+  .banner strong{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  .decks{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media (max-width:820px){ .decks{grid-template-columns:1fr} }
+  .deck{border:3px solid var(--ink);background:#fff;display:flex;flex-direction:column}
+  .deck-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .deck-head h2{font-family:var(--display);font-size:21px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .deck-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  .stage{background:#EAE7DE;padding:14px;flex:1}
+  .stage .frame{border:2px solid var(--ink);background:#fff}
+  svg{display:block;width:100%;height:auto}
+  .feel{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7}
+  .feel .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+  .feel .val{font-family:var(--display);font-size:clamp(24px,4.6vw,34px);line-height:1;letter-spacing:-.03em}
+  .feel .word{font-family:var(--label);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:9px}
+
+  .panel{border:3px solid var(--ink);background:#fff;margin-top:24px;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
+  .ctrls{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media (max-width:700px){ .ctrls{grid-template-columns:1fr} }
+  .ctrl label{display:block;font-family:var(--label);font-size:10.5px;letter-spacing:.12em;
+              text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .ctrl label b{color:var(--ink);font-family:var(--display);font-size:16px}
+  input[type=range]{width:100%;accent-color:var(--red);height:26px}
+  select{width:100%;border:2px solid var(--ink);background:#fff;padding:10px;font-family:var(--body);font-size:14px}
+  .runrow{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+  button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
+            background:var(--red);color:#fff;border:3px solid var(--ink);padding:13px 24px;cursor:pointer}
+  button.go:hover{background:var(--ink)}
+  button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+               background:transparent;border:2px solid var(--ink);padding:13px 16px;cursor:pointer}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.6em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+  .foot b{color:var(--ink)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Sim Lab · Physics workshop</p>
+  <h1>Metal is not<br>colder than wood.<br><em>Check the thermometer.</em></h1>
+  <p class="stand">Touch a metal table leg and a wooden one in the same room. The metal feels freezing
+  and the wood feels fine. They have been sitting in the same air all night, so they are the same
+  temperature. <b>Your hand is not a thermometer — it can only feel how fast heat is leaving it.</b></p>
+
+  <div class="banner">
+    <p><strong>Both blocks are at <span id="bannerTemp">20</span>°C.</strong> Both thermometers agree.
+    Nothing below changes that — only how quickly each one drains heat out of your skin.</p>
+  </div>
+
+  <div class="decks">
+    <section class="deck">
+      <div class="deck-head"><h2 id="leftName">Wood</h2><span class="tag">poor heat conductor</span></div>
+      <div class="stage"><div class="frame">
+        <svg id="svgL" viewBox="0 0 420 320" role="img" aria-label="A hand touching a wooden block with slow heat flow">
+          <rect width="420" height="320" fill="#FBFAF7"/>
+          <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#15171A" stroke-width="3"/>
+          <!-- thermometer -->
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#15171A" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#15171A" stroke-width="2.5"/>
+          <rect x="70" y="196" width="8" height="50" fill="#E0453E"/>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#15171A" id="thermL">20 °C</text>
+          <!-- hand -->
+          <g id="handL">
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#15171A" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">your hand</text>
+          </g>
+          <!-- heat arrows -->
+          <g id="arrowsL"></g>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6E6A60" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+        </svg>
+      </div></div>
+      <div class="feel">
+        <div class="cap">Temperature of your skin where it touches</div>
+        <div class="val" id="skinL">33.0 °C</div>
+        <div class="word" id="wordL">feels: neutral</div>
+      </div>
+    </section>
+
+    <section class="deck">
+      <div class="deck-head"><h2 id="rightName">Steel</h2><span class="tag">excellent heat conductor</span></div>
+      <div class="stage"><div class="frame">
+        <svg id="svgR" viewBox="0 0 420 320" role="img" aria-label="A hand touching a steel block with fast heat flow">
+          <rect width="420" height="320" fill="#FBFAF7"/>
+          <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#15171A" stroke-width="3"/>
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#15171A" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#15171A" stroke-width="2.5"/>
+          <rect x="70" y="196" width="8" height="50" fill="#E0453E"/>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#15171A" id="thermR">20 °C</text>
+          <g id="handR">
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#15171A" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">your hand</text>
+          </g>
+          <g id="arrowsR"></g>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6E6A60" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+        </svg>
+      </div></div>
+      <div class="feel">
+        <div class="cap">Temperature of your skin where it touches</div>
+        <div class="val" id="skinR">33.0 °C</div>
+        <div class="word" id="wordR">feels: neutral</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="panel">
+    <h3>Change the setup</h3>
+    <div class="ctrls">
+      <div class="ctrl">
+        <label for="temp">Both blocks are at → <b id="tempVal">20 °C</b></label>
+        <input type="range" id="temp" min="0" max="60" step="1" value="20">
+      </div>
+      <div class="ctrl">
+        <label for="mat">Compare wood against</label>
+        <select id="mat">
+          <option value="steel" selected>Steel — a table leg</option>
+          <option value="alu">Aluminium — a drink can</option>
+          <option value="stone">Stone — a countertop</option>
+          <option value="foam">Foam — a coffee cup</option>
+        </select>
+      </div>
+    </div>
+    <div class="runrow">
+      <button class="go" id="touch">Touch both blocks</button>
+      <button class="ghost" id="lift">Take your hands off</button>
+    </div>
+    <div class="readout" id="readout">Both blocks are at room temperature. Press touch and watch what happens to your skin, not to the blocks.</div>
+  </div>
+
+  <p class="foot"><b>The rule underneath.</b> When two things touch, the temperature right at the
+  contact point settles somewhere between them — but not halfway. It lands closer to whichever material
+  can move heat in and out faster. Metal moves heat far faster than skin does, so the contact point
+  drops almost all the way to the metal's temperature and your nerves report "cold." Wood can barely
+  move heat at all, so the contact point stays close to your own 33&nbsp;°C and feels like nothing.
+  <b>The test that proves it:</b> slide the temperature above your body heat. If metal were simply
+  "colder," a hot metal block would still feel mild. It does the opposite — it burns, for exactly the
+  same reason. <b>Simplified:</b> uses typical values for how fast each material takes up heat, and
+  ignores sweat, pressure and blood flow.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var ns='http://www.w3.org/2000/svg';
+
+  // "effusivity": how fast a material can soak up or give out heat at a surface.
+  // Higher = pulls heat out of your skin faster. Units omitted; only ratios matter here.
+  var SKIN = 1000;
+  var MATERIALS = {
+    wood:  { name:'Wood',      e:400,   color:'#C6A06A', tag:'poor heat conductor' },
+    steel: { name:'Steel',     e:8000,  color:'#B9BDC2', tag:'excellent heat conductor' },
+    alu:   { name:'Aluminium', e:24000, color:'#D6DADE', tag:'the fastest of all' },
+    stone: { name:'Stone',     e:2200,  color:'#9E9C94', tag:'moderate conductor' },
+    foam:  { name:'Foam',      e:40,    color:'#EFEAE0', tag:'almost an insulator' }
+  };
+
+  var BODY = 33;                  // skin temperature before contact
+  var st = { blockT:20, right:'steel', touching:false, skinL:BODY, skinR:BODY, t:0 };
+
+  // contact temperature: weighted by how fast each side can supply/absorb heat
+  function contactTemp(matE, blockT){
+    return (SKIN*BODY + matE*blockT) / (SKIN + matE);
+  }
+
+  function feelWord(skinT){
+    var d = skinT - BODY;
+    if(d <= -9)  return { w:'feels: freezing',   c:'#2B6CD4' };
+    if(d <= -4)  return { w:'feels: cold',       c:'#2B6CD4' };
+    if(d <= -1.2)return { w:'feels: cool',       c:'#2B6CD4' };
+    if(d <   1.2)return { w:'feels: neutral',    c:'#6E6A60' };
+    if(d <   4)  return { w:'feels: warm',       c:'#E0453E' };
+    if(d <   9)  return { w:'feels: hot',        c:'#E0453E' };
+    return             { w:'feels: burning',     c:'#E0453E' };
+  }
+
+  // ---------- heat-flow arrows ----------
+  function drawArrows(groupId, rate, into){
+    var g = document.getElementById(groupId);
+    while(g.firstChild) g.removeChild(g.firstChild);
+    if(!st.touching || Math.abs(rate) < 0.02) return;
+    var count = Math.max(1, Math.min(7, Math.round(Math.abs(rate)*7)));
+    for(var i=0;i<count;i++){
+      var phase = (st.t*Math.min(3.2, 0.7 + Math.abs(rate)*2.6) + i/count) % 1;
+      // travel from the hand edge (x=244) leftward into the block (x=90), or the reverse
+      var x = into ? (244 - phase*150) : (94 + phase*150);
+      var y = 166 + (i % 4) * 15;
+      var dir = into ? -1 : 1;
+      var p = document.createElementNS(ns,'path');
+      p.setAttribute('d','M '+x+' '+y+' l '+(dir*16)+' 0 M '+(x+dir*16)+' '+y+
+                        ' l '+(-dir*6)+' -5 M '+(x+dir*16)+' '+y+' l '+(-dir*6)+' 5');
+      p.setAttribute('stroke', into ? '#E0453E' : '#2B6CD4');
+      p.setAttribute('stroke-width','3'); p.setAttribute('fill','none');
+      p.setAttribute('stroke-linecap','round');
+      g.appendChild(p);
+    }
+  }
+
+  // ---------- render ----------
+  function render(){
+    var right = MATERIALS[st.right];
+    document.getElementById('rightName').textContent = right.name;
+    var tags = document.querySelectorAll('.deck-head .tag');
+    if(tags[1]) tags[1].textContent = right.tag;
+    document.getElementById('blockR').setAttribute('fill', right.color);
+
+    document.getElementById('thermL').textContent = st.blockT + ' \u00B0C';
+    document.getElementById('thermR').textContent = st.blockT + ' \u00B0C';
+    document.getElementById('bannerTemp').textContent = st.blockT;
+
+    var sl = document.getElementById('skinL'), sr = document.getElementById('skinR');
+    sl.textContent = st.skinL.toFixed(1) + ' \u00B0C';
+    sr.textContent = st.skinR.toFixed(1) + ' \u00B0C';
+
+    var fl = feelWord(st.skinL), fr = feelWord(st.skinR);
+    var wl = document.getElementById('wordL'), wr = document.getElementById('wordR');
+    wl.textContent = fl.w; wl.style.color = fl.c;
+    wr.textContent = fr.w; wr.style.color = fr.c;
+    sl.style.color = fl.c === '#6E6A60' ? '#15171A' : fl.c;
+    sr.style.color = fr.c === '#6E6A60' ? '#15171A' : fr.c;
+
+    var targetL = contactTemp(MATERIALS.wood.e, st.blockT);
+    var targetR = contactTemp(right.e, st.blockT);
+    drawArrows('arrowsL', (BODY - targetL)/13, st.blockT < BODY);
+    drawArrows('arrowsR', (BODY - targetR)/13, st.blockT < BODY);
+  }
+
+  // ---------- loop ----------
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05,(now-last)/1000); last = now;
+    st.t += dt;
+
+    var right = MATERIALS[st.right];
+    var targetL = st.touching ? contactTemp(MATERIALS.wood.e, st.blockT) : BODY;
+    var targetR = st.touching ? contactTemp(right.e, st.blockT) : BODY;
+    // faster materials also reach their contact temperature sooner
+    var kL = st.touching ? 1.1 + MATERIALS.wood.e/3000 : 1.6;
+    var kR = st.touching ? 1.1 + right.e/3000 : 1.6;
+    st.skinL += (targetL - st.skinL) * Math.min(1, dt*kL);
+    st.skinR += (targetR - st.skinR) * Math.min(1, dt*kR);
+
+    render();
+    requestAnimationFrame(frame);
+  }
+
+  function say(html){ document.getElementById('readout').innerHTML = html; }
+
+  function verdict(){
+    var right = MATERIALS[st.right];
+    var tL = contactTemp(MATERIALS.wood.e, st.blockT);
+    var tR = contactTemp(right.e, st.blockT);
+    var gap = Math.abs(tL - tR).toFixed(1);
+
+    if(st.blockT < BODY - 2){
+      say('<b>Same temperature. Completely different feeling.</b> Your skin sits at ' + tL.toFixed(1) +
+          ' \u00B0C on the wood and ' + tR.toFixed(1) + ' \u00B0C on the ' + right.name.toLowerCase() +
+          ' \u2014 a gap of ' + gap + ' degrees, caused entirely by how fast each one drains heat out of you. ' +
+          'Both thermometers still read ' + st.blockT + ' \u00B0C.');
+    } else if(st.blockT > BODY + 2){
+      say('<b>Now flip it around.</b> Both blocks are hotter than you, at ' + st.blockT + ' \u00B0C. ' +
+          'The ' + right.name.toLowerCase() + ' shoves heat into you and your skin hits ' + tR.toFixed(1) +
+          ' \u00B0C, while the wood barely reaches ' + tL.toFixed(1) + ' \u00B0C. If metal were simply ' +
+          '"a cold material," this could not happen. It is not about cold \u2014 it is about speed.');
+    } else {
+      say('<b>At body temperature, everything feels the same.</b> Both read ' + tL.toFixed(1) +
+          ' \u00B0C against your skin. No heat is moving, so there is nothing to feel \u2014 which is ' +
+          'the clearest proof that touch measures heat flow, not temperature.');
+    }
+  }
+
+  // ---------- controls ----------
+  document.getElementById('temp').addEventListener('input', function(e){
+    st.blockT = +e.target.value;
+    document.getElementById('tempVal').textContent = st.blockT + ' \u00B0C';
+    if(st.touching) verdict();
+  });
+  document.getElementById('mat').addEventListener('change', function(e){
+    st.right = e.target.value;
+    if(st.touching) verdict();
+    else say('Now comparing wood against ' + MATERIALS[st.right].name.toLowerCase() + '. Press touch.');
+  });
+  document.getElementById('touch').addEventListener('click', function(){
+    st.touching = true; verdict();
+  });
+  document.getElementById('lift').addEventListener('click', function(){
+    st.touching = false;
+    say('Hands off. Your skin warms back up to 33 \u00B0C \u2014 and the blocks never changed at all.');
+  });
+
+  render();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
