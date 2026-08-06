@@ -7,8 +7,8 @@
 <title>Why there are no giant ants — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
-    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
+    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -68,7 +68,7 @@
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
   details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -200,7 +200,7 @@
     var p = document.createElementNS(ns,'polygon');
     p.setAttribute('points', pts.map(function(q){ return q.x.toFixed(1)+','+q.y.toFixed(1); }).join(' '));
     p.setAttribute('fill', fill);
-    p.setAttribute('stroke','#15171A');
+    p.setAttribute('stroke','#1A1A1A');
     p.setAttribute('stroke-width', sw || 3);
     p.setAttribute('stroke-linejoin','round');
     svg.appendChild(p);
@@ -225,12 +225,12 @@
     var g1 = [pt(origin,0,0,0), pt(origin,1,0,0), pt(origin,1,0,1), pt(origin,0,0,1)];
     var ghost = document.createElementNS(ns,'polygon');
     ghost.setAttribute('points', g1.map(function(q){return q.x+','+q.y;}).join(' '));
-    ghost.setAttribute('fill','none'); ghost.setAttribute('stroke','#C6C2B6');
+    ghost.setAttribute('fill','none'); ghost.setAttribute('stroke','#E4E1D6');
     ghost.setAttribute('stroke-width','2'); ghost.setAttribute('stroke-dasharray','5 4');
     svg.appendChild(ghost);
 
     // three visible faces
-    poly(svg, [pt(origin,0,0,k), pt(origin,k,0,k), pt(origin,k,k,k), pt(origin,0,k,k)], '#F5B335'); // top
+    poly(svg, [pt(origin,0,0,k), pt(origin,k,0,k), pt(origin,k,k,k), pt(origin,0,k,k)], '#D97706'); // top
     poly(svg, [pt(origin,0,0,0), pt(origin,k,0,0), pt(origin,k,0,k), pt(origin,0,0,k)], '#E0453E'); // right
     poly(svg, [pt(origin,0,0,0), pt(origin,0,k,0), pt(origin,0,k,k), pt(origin,0,0,k)], '#B8362F'); // left
 
@@ -250,7 +250,7 @@
     var cap = document.createElementNS(ns,'text');
     cap.setAttribute('x',20); cap.setAttribute('y',30);
     cap.setAttribute('font-family','Courier New, monospace'); cap.setAttribute('font-size','12');
-    cap.setAttribute('fill','#6E6A60');
+    cap.setAttribute('fill','#6B6B63');
     cap.textContent = 'EDGE = ' + k + ' UNIT' + (k===1?'':'S') + '  \u00B7  DASHED OUTLINE = THE ORIGINAL';
     svg.appendChild(cap);
   }
@@ -269,7 +269,7 @@
     [[-52,-22,20],[0,-30,26],[54,-26,22]].forEach(function(s){
       var e=document.createElementNS(ns,'ellipse');
       e.setAttribute('cx',s[0]);e.setAttribute('cy',s[1]);e.setAttribute('rx',s[2]);e.setAttribute('ry',s[2]*0.8);
-      e.setAttribute('fill','#15171A');svg.appendChild(e);
+      e.setAttribute('fill','#1A1A1A');svg.appendChild(e);
       g.appendChild(e);
     });
     // legs: thickness stays proportional, which is the point
@@ -278,7 +278,7 @@
         var l=document.createElementNS(ns,'line');
         l.setAttribute('x1',dx);l.setAttribute('y1',-10);
         l.setAttribute('x2',dx+dir*40);l.setAttribute('y2',34);
-        l.setAttribute('stroke','#15171A');l.setAttribute('stroke-width',5);
+        l.setAttribute('stroke','#1A1A1A');l.setAttribute('stroke-width',5);
         l.setAttribute('stroke-linecap','round');
         g.appendChild(l);
       });
@@ -288,23 +288,23 @@
     // ground
     var gr=document.createElementNS(ns,'line');
     gr.setAttribute('x1',0);gr.setAttribute('y1',126);gr.setAttribute('x2',260);gr.setAttribute('y2',126);
-    gr.setAttribute('stroke','#15171A');gr.setAttribute('stroke-width',3);svg.appendChild(gr);
+    gr.setAttribute('stroke','#1A1A1A');gr.setAttribute('stroke-width',3);svg.appendChild(gr);
 
     // stress meter
     var mx=196, mh=96;
     var frame=document.createElementNS(ns,'rect');
     frame.setAttribute('x',mx);frame.setAttribute('y',20);frame.setAttribute('width',36);frame.setAttribute('height',mh);
-    frame.setAttribute('fill','#fff');frame.setAttribute('stroke','#15171A');frame.setAttribute('stroke-width',3);
+    frame.setAttribute('fill','#fff');frame.setAttribute('stroke','#1A1A1A');frame.setAttribute('stroke-width',3);
     svg.appendChild(frame);
     var fillH = Math.min(mh, (k/6)*mh);
     var fill=document.createElementNS(ns,'rect');
     fill.setAttribute('x',mx);fill.setAttribute('y',20+mh-fillH);fill.setAttribute('width',36);fill.setAttribute('height',fillH);
-    fill.setAttribute('fill', k>=4 ? '#E0453E' : (k>=2 ? '#F5B335' : '#3E8E5A'));
+    fill.setAttribute('fill', k>=4 ? '#E0453E' : (k>=2 ? '#D97706' : '#1F4A2E'));
     svg.appendChild(fill);
     var lab=document.createElementNS(ns,'text');
     lab.setAttribute('x',214);lab.setAttribute('y',132);lab.setAttribute('text-anchor','middle');
     lab.setAttribute('font-family','Courier New, monospace');lab.setAttribute('font-size','11');
-    lab.setAttribute('fill','#6E6A60');lab.textContent='LEG STRESS';
+    lab.setAttribute('fill','#6B6B63');lab.textContent='LEG STRESS';
     svg.appendChild(lab);
   }
 
@@ -317,12 +317,12 @@
     // left: one solid block
     var b=document.createElementNS(ns,'rect');
     b.setAttribute('x',22);b.setAttribute('y',42);b.setAttribute('width',72);b.setAttribute('height',72);
-    b.setAttribute('fill','#CFE3F0');b.setAttribute('stroke','#15171A');b.setAttribute('stroke-width',3);
+    b.setAttribute('fill','#CFE3F0');b.setAttribute('stroke','#1A1A1A');b.setAttribute('stroke-width',3);
     svg.appendChild(b);
     var t1=document.createElementNS(ns,'text');
     t1.setAttribute('x',58);t1.setAttribute('y',132);t1.setAttribute('text-anchor','middle');
     t1.setAttribute('font-family','Courier New, monospace');t1.setAttribute('font-size','11');
-    t1.setAttribute('fill','#6E6A60');t1.textContent='ONE BLOCK';svg.appendChild(t1);
+    t1.setAttribute('fill','#6B6B63');t1.textContent='ONE BLOCK';svg.appendChild(t1);
 
     // right: same total ice cut into k x k pieces
     var n = k, cell = 72/n;
@@ -331,19 +331,19 @@
         var p=document.createElementNS(ns,'rect');
         p.setAttribute('x',158+c*cell+1);p.setAttribute('y',42+r*cell+1);
         p.setAttribute('width',Math.max(1,cell-2.5));p.setAttribute('height',Math.max(1,cell-2.5));
-        p.setAttribute('fill','#CFE3F0');p.setAttribute('stroke','#15171A');p.setAttribute('stroke-width',1.6);
+        p.setAttribute('fill','#CFE3F0');p.setAttribute('stroke','#1A1A1A');p.setAttribute('stroke-width',1.6);
         svg.appendChild(p);
       }
     }
     var t2=document.createElementNS(ns,'text');
     t2.setAttribute('x',194);t2.setAttribute('y',132);t2.setAttribute('text-anchor','middle');
     t2.setAttribute('font-family','Courier New, monospace');t2.setAttribute('font-size','11');
-    t2.setAttribute('fill','#6E6A60');t2.textContent='CUT INTO '+(n*n)+'';svg.appendChild(t2);
+    t2.setAttribute('fill','#6B6B63');t2.textContent='CUT INTO '+(n*n)+'';svg.appendChild(t2);
 
     var eq=document.createElementNS(ns,'text');
     eq.setAttribute('x',127);eq.setAttribute('y',84);eq.setAttribute('text-anchor','middle');
     eq.setAttribute('font-family','Arial Black, sans-serif');eq.setAttribute('font-size','17');
-    eq.setAttribute('fill','#15171A');eq.textContent='=';svg.appendChild(eq);
+    eq.setAttribute('fill','#1A1A1A');eq.textContent='=';svg.appendChild(eq);
   }
 
   function drawFins(){
@@ -355,17 +355,17 @@
     // left: solid slab
     var b=document.createElementNS(ns,'rect');
     b.setAttribute('x',22);b.setAttribute('y',62);b.setAttribute('width',76);b.setAttribute('height',52);
-    b.setAttribute('fill','#B9BDC2');b.setAttribute('stroke','#15171A');b.setAttribute('stroke-width',3);
+    b.setAttribute('fill','#B9BDC2');b.setAttribute('stroke','#1A1A1A');b.setAttribute('stroke-width',3);
     svg.appendChild(b);
     var t1=document.createElementNS(ns,'text');
     t1.setAttribute('x',60);t1.setAttribute('y',132);t1.setAttribute('text-anchor','middle');
     t1.setAttribute('font-family','Courier New, monospace');t1.setAttribute('font-size','11');
-    t1.setAttribute('fill','#6E6A60');t1.textContent='SOLID BLOCK';svg.appendChild(t1);
+    t1.setAttribute('fill','#6B6B63');t1.textContent='SOLID BLOCK';svg.appendChild(t1);
 
     // right: same metal spread into k fins on a base
     var base=document.createElementNS(ns,'rect');
     base.setAttribute('x',150);base.setAttribute('y',100);base.setAttribute('width',88);base.setAttribute('height',14);
-    base.setAttribute('fill','#B9BDC2');base.setAttribute('stroke','#15171A');base.setAttribute('stroke-width',3);
+    base.setAttribute('fill','#B9BDC2');base.setAttribute('stroke','#1A1A1A');base.setAttribute('stroke-width',3);
     svg.appendChild(base);
     var fins = k + 1;
     var gapW = 88/fins;
@@ -375,18 +375,18 @@
       f.setAttribute('y',40);
       f.setAttribute('width',Math.max(2, gapW*0.5));
       f.setAttribute('height',60);
-      f.setAttribute('fill','#B9BDC2');f.setAttribute('stroke','#15171A');f.setAttribute('stroke-width',2);
+      f.setAttribute('fill','#B9BDC2');f.setAttribute('stroke','#1A1A1A');f.setAttribute('stroke-width',2);
       svg.appendChild(f);
     }
     var t2=document.createElementNS(ns,'text');
     t2.setAttribute('x',194);t2.setAttribute('y',132);t2.setAttribute('text-anchor','middle');
     t2.setAttribute('font-family','Courier New, monospace');t2.setAttribute('font-size','11');
-    t2.setAttribute('fill','#6E6A60');t2.textContent=fins+' FINS, SAME METAL';svg.appendChild(t2);
+    t2.setAttribute('fill','#6B6B63');t2.textContent=fins+' FINS, SAME METAL';svg.appendChild(t2);
 
     var eq=document.createElementNS(ns,'text');
     eq.setAttribute('x',124);eq.setAttribute('y',90);eq.setAttribute('text-anchor','middle');
     eq.setAttribute('font-family','Arial Black, sans-serif');eq.setAttribute('font-size','17');
-    eq.setAttribute('fill','#15171A');eq.textContent='=';svg.appendChild(eq);
+    eq.setAttribute('fill','#1A1A1A');eq.textContent='=';svg.appendChild(eq);
   }
 
   // ---------- numbers ----------

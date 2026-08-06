@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Compares two ways of reading the same bits to show why number overflow depends on how those bits are interpreted.">
+<title>Same bits. Two different answers. — Janyaa Interactive</title>
+<style>
+  :root{
+    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 20px 80px}
+
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+          color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,54px);line-height:.98;letter-spacing:-.035em;
+     margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:60ch;margin:0 0 30px;color:#33312C}
+  .stand b{color:var(--ink)}
+
+  .board{border:3px solid var(--ink);background:var(--panel)}
+  .board-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
+              justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .board-head h2{font-family:var(--display);font-size:20px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .board-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  .scene{background:#EAE7DE;padding:26px 16px;display:flex;justify-content:center}
+  #bitCells{display:flex;gap:14px}
+  .bitcell{width:56px;height:56px;border:3px solid var(--ink);border-radius:10px;
+           display:flex;align-items:center;justify-content:center;
+           font-family:var(--display);font-size:22px;background:var(--panel);color:var(--ink);
+           transition:background .15s ease,color .15s ease}
+  .bitcell.on{background:var(--green);color:#fff}
+
+  .status{border-top:3px solid var(--ink);display:grid;grid-template-columns:1fr 1fr}
+  .stat{padding:18px 20px;background:#FBFAF7}
+  .stat + .stat{border-left:3px solid var(--ink)}
+  .stat .cap{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .stat .val{font-family:var(--display);font-size:clamp(38px,9vw,60px);line-height:1;letter-spacing:-.02em;
+             transition:color .1s linear}
+  .stat.signed .val.flash{color:var(--red)}
+
+  .panel{border:3px solid var(--ink);background:var(--panel);margin-top:26px;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--dim);margin:0 0 12px}
+  .runrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
+            background:var(--green);color:#fff;border:3px solid var(--ink);padding:13px 24px;cursor:pointer}
+  button.go:hover{background:var(--ink)}
+  button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+               background:transparent;border:2px solid var(--ink);padding:13px 16px;cursor:pointer}
+  button.ghost:hover{background:var(--ink);color:#fff}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;
+           line-height:1.55;min-height:3.4em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
+        font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+  .foot b{color:var(--ink)}
+
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
+  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.advanced summary::-webkit-details-marker{display:none}
+  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
+  details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:var(--paper);font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media (max-width:600px){ .status{grid-template-columns:1fr} .stat + .stat{border-left:none;border-top:3px solid var(--ink)} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Interactive · Computers · Maths</p>
+  <h1>Same bits.<br>Two different <em>answers</em>.</h1>
+  <p class="stand">A computer's memory only ever stores 1s and 0s. Whether those bits mean <b>8</b> or
+  <b>&minus;8</b> depends entirely on a rule you choose ahead of time &mdash; the bits themselves never
+  change. Click "Add 1" a few times and watch two readings of the exact same bits quietly disagree.</p>
+
+  <div class="board">
+    <div class="board-head">
+      <h2>A 4-bit register</h2>
+      <span class="tag">Same bits, read two ways</span>
+    </div>
+    <div class="scene">
+      <div id="bitCells" role="img" aria-label="4 bit lights, currently 0000"></div>
+    </div>
+    <div class="status">
+      <div class="stat">
+        <div class="cap">Unsigned</div>
+        <div class="val" id="unsignedVal">0</div>
+      </div>
+      <div class="stat signed">
+        <div class="cap">Signed (two's complement)</div>
+        <div class="val" id="signedVal">0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Try it</h3>
+    <div class="runrow">
+      <button class="go" id="addBtn">Add 1</button>
+      <button class="ghost" id="subBtn">Subtract 1</button>
+      <button class="ghost" id="resetBtn">Reset to 0000</button>
+    </div>
+    <div class="readout" id="readout">Both displays read the same bits &mdash; right now they agree.
+    Keep clicking Add 1.</div>
+  </div>
+
+  <p class="foot"><b>Simplified:</b> real processors commonly use 32 or 64 bits, not 4 &mdash; a 4-bit
+  register is small enough to click through by hand while keeping the exact same rule. The "jump"
+  described here happens at the same relative point (halfway through the range) no matter how many bits
+  are used.</p>
+
+  <details class="advanced">
+    <summary>For the curious — the real rule</summary>
+    <div class="adv-body">
+      <p>The encoding on the right is called <b>two's complement</b>, and it is how essentially every
+      modern computer stores negative whole numbers. For an <code>n</code>-bit register holding raw
+      value <code>r</code>:</p>
+      <table>
+        <tr><th>Condition</th><th>Signed value</th></tr>
+        <tr><td><code>r &lt; 2<sup>n&minus;1</sup></code></td><td><code>signed = r</code></td></tr>
+        <tr><td><code>r &ge; 2<sup>n&minus;1</sup></code></td><td><code>signed = r &minus; 2<sup>n</sup></code></td></tr>
+      </table>
+      <p>For 4 bits that threshold is 8, which is exactly the 0111&nbsp;&rarr;&nbsp;1000 step this sim
+      highlights. Formally, overflow in signed addition occurs when two operands of the same sign
+      produce a result of the opposite sign. For the simplest case &mdash; repeatedly adding 1 &mdash;
+      that can only happen once per cycle, at the maximum positive value rolling over.</p>
+      <p>This exact misconception is documented in the computing-education research already behind this
+      site's other lessons: Herman, Zilles &amp; Loui found that <b>over 40% of students who had passed
+      a full college hardware course</b> still could not reliably determine whether an addition overflowed,
+      or correctly interpret a two's-complement number.</p>
+      <p style="font-size:12.5px;color:var(--dim)">Cite: G.&nbsp;L. Herman, C.&nbsp;Zilles, M.&nbsp;C.
+      Loui, "How do students misunderstand number representations?", <i>Computer Science Education</i>,
+      2011.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var raw = 0;
+  var bitCellsEl = document.getElementById('bitCells');
+  var unsignedEl = document.getElementById('unsignedVal');
+  var signedEl   = document.getElementById('signedVal');
+  var readoutEl  = document.getElementById('readout');
+
+  var bits = [];
+  for(var i=0;i<4;i++){
+    var b = document.createElement('div');
+    b.className = 'bitcell';
+    bitCellsEl.appendChild(b);
+    bits.push(b);
+  }
+
+  function unsignedOf(r){ return r; }
+  function signedOf(r){ return r >= 8 ? r - 16 : r; }
+  function signDisplay(v){ return v < 0 ? ('−' + Math.abs(v)) : String(v); }
+  function signProse(v){ return v < 0 ? ('−' + Math.abs(v)) : ('+' + v); }
+  function binStr(r){
+    var s = '';
+    for(var i=3;i>=0;i--) s += (r >> i) & 1;
+    return s;
+  }
+
+  function render(){
+    for(var i=0;i<4;i++){
+      var on = ((raw >> (3-i)) & 1) === 1;
+      bits[i].textContent = on ? '1' : '0';
+      bits[i].className = 'bitcell' + (on ? ' on' : '');
+    }
+    bitCellsEl.setAttribute('aria-label', '4 bit lights, currently ' + binStr(raw));
+    unsignedEl.textContent = unsignedOf(raw);
+    signedEl.textContent = signDisplay(signedOf(raw));
+  }
+
+  var flashUntil = 0;
+  function flash(){ flashUntil = performance.now() + 650; }
+  function loop(now){
+    signedEl.className = 'val' + (now < flashUntil ? ' flash' : '');
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  function say(html){ readoutEl.innerHTML = html; }
+
+  function step(delta){
+    var oldRaw = raw;
+    raw = (raw + delta + 16) % 16;
+
+    var isFlip = (oldRaw === 7 && raw === 8) || (oldRaw === 8 && raw === 7);
+    var isWrap = (oldRaw === 15 && raw === 0) || (oldRaw === 0 && raw === 15);
+
+    if(isFlip){
+      var fromV = signedOf(oldRaw), toV = signedOf(raw);
+      say('<b>They just disagreed.</b> The bits only moved by one &mdash; but the signed reading just ' +
+          'jumped from ' + signProse(fromV) + ' to ' + signProse(toV) + '. This exact confusion is the ' +
+          'single most common mistake computer science students make about how numbers are stored.');
+      flash();
+    } else if(isWrap){
+      if(oldRaw === 15 && raw === 0){
+        say('<b>Unsigned wrapped back to 0.</b> Signed didn’t have a dramatic moment here &mdash; ' +
+            'it already had its jump earlier, at 7 to 8.');
+      } else {
+        say('<b>Unsigned wrapped back to 15.</b> Signed didn’t have a dramatic moment here &mdash; ' +
+            'it already had its jump earlier, at 8 to 7.');
+      }
+    } else {
+      say(unsignedOf(raw) + ' and ' + signDisplay(signedOf(raw)) + ' &mdash; same bits, still agree.');
+    }
+
+    render();
+  }
+
+  document.getElementById('addBtn').addEventListener('click', function(){ step(1); });
+  document.getElementById('subBtn').addEventListener('click', function(){ step(-1); });
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    raw = 0;
+    say('Both displays read the same bits &mdash; right now they agree. Keep clicking Add 1.');
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

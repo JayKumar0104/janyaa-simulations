@@ -7,8 +7,8 @@
 <title>Why a cheap charging cable gets warm — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
-    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
+    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -42,7 +42,7 @@
   .status .big{font-family:var(--display);font-size:clamp(26px,5vw,40px);line-height:1;letter-spacing:-.03em}
   .status .mid{font-family:var(--display);font-size:clamp(18px,3.4vw,26px);line-height:1;letter-spacing:-.02em}
   .status .mid.cool{color:var(--blue)}
-  .status .mid.warm{color:var(--amber)}
+  .status .mid.warm{color:var(--orange)}
   .status .mid.hot{color:var(--red)}
   .badge{font-family:var(--display);text-transform:uppercase;font-size:13px;letter-spacing:-.01em;
          border:3px solid var(--ink);padding:9px 15px;margin-left:auto;white-space:nowrap}
@@ -79,10 +79,10 @@
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
   details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
-  details.advanced th,details.advanced td{border:1px solid var(--gray);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F0EDE4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:#F4F1E8;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
 
   svg text{font-family:var(--label);font-size:12px;letter-spacing:.06em;fill:var(--ink)}
   svg text.num{font-family:var(--display);font-size:22px;letter-spacing:-.02em}
@@ -246,32 +246,32 @@
 
   // wall charger
   var chg = mk('g',{},svg);
-  mk('rect',{x:34,y:88,width:112,height:92,rx:8,fill:'#fff',stroke:'#15171A','stroke-width':3},chg);
-  mk('rect',{x:16,y:108,width:18,height:8,fill:'#15171A'},chg);
-  mk('rect',{x:16,y:152,width:18,height:8,fill:'#15171A'},chg);
+  mk('rect',{x:34,y:88,width:112,height:92,rx:8,fill:'#fff',stroke:'#1A1A1A','stroke-width':3},chg);
+  mk('rect',{x:16,y:108,width:18,height:8,fill:'#1A1A1A'},chg);
+  mk('rect',{x:16,y:152,width:18,height:8,fill:'#1A1A1A'},chg);
   label(90,128,'5.0 V',{'text-anchor':'middle','class':'num'},chg);
-  label(90,152,'CHARGER',{'text-anchor':'middle',fill:'#6E6A60'},chg);
+  label(90,152,'CHARGER',{'text-anchor':'middle',fill:'#6B6B63'},chg);
 
   // cable: a soft heat glow behind, the conductor itself on top
-  var glow = mk('line',{x1:CABLE_X1,y1:CABLE_Y,x2:CABLE_X2,y2:CABLE_Y,stroke:'#F5B335',
+  var glow = mk('line',{x1:CABLE_X1,y1:CABLE_Y,x2:CABLE_X2,y2:CABLE_Y,stroke:'#D97706',
                         'stroke-width':30,'stroke-linecap':'round',opacity:0},svg);
   var cable = mk('line',{id:'cableLine',x1:CABLE_X1,y1:CABLE_Y,x2:CABLE_X2,y2:CABLE_Y,
-                         stroke:'#C6C2B6','stroke-width':10,'stroke-linecap':'round'},svg);
+                         stroke:'#E4E1D6','stroke-width':10,'stroke-linecap':'round'},svg);
 
   // length marker under the cable
-  var lenTick1 = mk('line',{x1:CABLE_X1,y1:196,x2:CABLE_X1,y2:208,stroke:'#6E6A60','stroke-width':2},svg);
-  var lenTick2 = mk('line',{x1:CABLE_X2,y1:196,x2:CABLE_X2,y2:208,stroke:'#6E6A60','stroke-width':2},svg);
-  var lenDash = mk('line',{x1:CABLE_X1,y1:202,x2:CABLE_X2,y2:202,stroke:'#6E6A60','stroke-width':2,
+  var lenTick1 = mk('line',{x1:CABLE_X1,y1:196,x2:CABLE_X1,y2:208,stroke:'#6B6B63','stroke-width':2},svg);
+  var lenTick2 = mk('line',{x1:CABLE_X2,y1:196,x2:CABLE_X2,y2:208,stroke:'#6B6B63','stroke-width':2},svg);
+  var lenDash = mk('line',{x1:CABLE_X1,y1:202,x2:CABLE_X2,y2:202,stroke:'#6B6B63','stroke-width':2,
              'stroke-dasharray':'5 4'},svg);
-  var lenText = label((CABLE_X1+CABLE_X2)/2,224,'75 CM',{'text-anchor':'middle',fill:'#6E6A60'},svg);
+  var lenText = label((CABLE_X1+CABLE_X2)/2,224,'75 CM',{'text-anchor':'middle',fill:'#6B6B63'},svg);
 
   // phone
   var ph = mk('g',{},svg);
-  mk('rect',{x:520,y:44,width:150,height:176,rx:14,fill:'#fff',stroke:'#15171A','stroke-width':3},ph);
-  mk('rect',{x:532,y:60,width:126,height:132,fill:'#EFECE3',stroke:'#15171A','stroke-width':2},ph);
+  mk('rect',{x:520,y:44,width:150,height:176,rx:14,fill:'#fff',stroke:'#1A1A1A','stroke-width':3},ph);
+  mk('rect',{x:532,y:60,width:126,height:132,fill:'#EFECE3',stroke:'#1A1A1A','stroke-width':2},ph);
   var phoneVolts = label(595,120,'4.3 V',{'text-anchor':'middle','class':'num'},ph);
-  var phoneCap   = label(595,146,'ARRIVING',{'text-anchor':'middle',fill:'#6E6A60'},ph);
-  label(595,238,'PHONE',{'text-anchor':'middle',fill:'#6E6A60'},ph);
+  var phoneCap   = label(595,146,'ARRIVING',{'text-anchor':'middle',fill:'#6B6B63'},ph);
+  label(595,238,'PHONE',{'text-anchor':'middle',fill:'#6B6B63'},ph);
 
   /* ---------------- wiring ------------------------------------------------- */
   var dS = document.getElementById('dSlider');
