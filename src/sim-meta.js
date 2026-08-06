@@ -11,6 +11,13 @@
  * "— Janyaa Interactive" suffix that is redundant on this page.
  */
 export const simMeta = {
+  Binary_vs_Linear_Search: {
+    title: 'Binary vs Linear Search',
+    description:
+      'Races a searcher that checks 1, 2, 3 in order against one that halves the remaining range every guess, over the same hidden number in a list of up to 1000.',
+    tags: ['Computers', 'Maths'],
+  },
+
   Cable_Heat: {
     title: 'Cable Heat',
     description:
@@ -46,11 +53,25 @@ export const simMeta = {
     tags: ['Physics'],
   },
 
+  Password_Crack_Time: {
+    title: 'Password Crack Time',
+    description:
+      'Sets a password length and character set, then reports in plain words how long an attacker guessing a billion times a second needs to try every possibility, against milestones up to the age of the universe.',
+    tags: ['Computers', 'Maths'],
+  },
+
   PC_Bottleneck: {
     title: 'PC Bottleneck',
     description:
       'Pairs a CPU that prepares 45 frames per second with a GPU that draws 120, and recalculates the final frame rate as either component is upgraded by 50%.',
     tags: ['Computers'],
+  },
+
+  Resonance: {
+    title: 'Resonance',
+    description:
+      "Pushes a swing at rhythms from half to twice its own, with every push the same strength, so the sharp peak that appears only when the rhythms match is the swing's doing rather than the pusher's.",
+    tags: ['Physics'],
   },
 
   Square_Cube_Law: {
@@ -79,6 +100,13 @@ export const simMeta = {
     description:
       "Compares two ways of reading the same 4 bits to show why whether an addition 'overflowed' depends entirely on how those bits are interpreted.",
     tags: ['Computers', 'Maths'],
+  },
+
+  Variable_Swap: {
+    title: 'Variable Swap',
+    description:
+      "Steps one line at a time through a four-line program that tries to swap two numbers and destroys one of them, then fixes it with a third box that catches the value before it is overwritten.",
+    tags: ['Computers'],
   },
 
   USB_Charging: {

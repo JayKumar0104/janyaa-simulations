@@ -55,12 +55,12 @@ function card(sim, index) {
   const tags = (sim.tags ?? [])
     .map(
       (tag) =>
-        `<span class="rounded-md border border-border bg-paper px-2 py-0.5 text-[11px] font-medium text-dim">${escape(tag)}</span>`,
+        `<span class="rounded-md border border-border bg-strip px-2 py-0.5 text-[11px] font-medium text-dim">${escape(tag)}</span>`,
     )
     .join('')
 
   return `
-    <article class="card-sheen group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-panel p-6 transition duration-300 hover:-translate-y-1 hover:border-blue/60 hover:shadow-glow">
+    <article class="card-sheen group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-panel p-6 shadow-card transition duration-300 hover:-translate-y-1 hover:border-blue/60 hover:shadow-glow">
       <div class="flex items-start justify-between gap-4">
         <span class="font-mono text-xs text-dim transition group-hover:text-blue">${number}</span>
         <div class="flex flex-wrap justify-end gap-1.5">${tags}</div>
@@ -74,7 +74,7 @@ function card(sim, index) {
 
       <div class="mt-6 flex items-center gap-2">
         <button type="button" data-launch="${escape(sim.id)}"
-                class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:bg-blue group-hover:text-panel">
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-scene px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:bg-blue group-hover:text-panel">
           Launch ${ICON_LAUNCH}
         </button>
         <a href="${escape(simUrl(sim.file))}" target="_blank" rel="noopener"
@@ -87,7 +87,7 @@ function card(sim, index) {
 }
 
 function emptyState() {
-  const code = 'rounded bg-paper px-1.5 py-0.5 font-mono text-xs text-blue'
+  const code = 'rounded bg-scene px-1.5 py-0.5 font-mono text-xs text-blue'
   return `
     <div class="rounded-2xl border border-dashed border-border bg-panel p-10 text-center">
       <p class="text-base font-medium text-ink">No simulations found</p>
@@ -144,12 +144,12 @@ function modalMarkup() {
                 ${ICON_EXTERNAL} New tab
               </a>
               <button type="button" data-close
-                      class="inline-flex items-center gap-2 rounded-lg bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-blue hover:text-panel">
+                      class="inline-flex items-center gap-2 rounded-lg bg-scene px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-blue hover:text-panel">
                 ${ICON_CLOSE} Close
               </button>
             </div>
           </div>
-          <iframe id="sim-modal-frame" title="Simulation" class="min-h-0 w-full flex-1 bg-panel"></iframe>
+          <iframe id="sim-modal-frame" title="Simulation" class="min-h-0 w-full flex-1 bg-paper"></iframe>
         </div>
       </div>
     </div>`

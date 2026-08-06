@@ -1,11 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 
 /*
- * Strict light palette: paper/panel surfaces with dark ink text, and a single
- * blue accent (plus red, reserved for danger/alert states). `theme.colors` is
- * replaced rather than extended, so slate/amber/emerald/etc. simply do not
- * exist as utilities any more. These values mirror the exact tokens used
- * inline in every public/sims/*.html file.
+ * Strict light palette built from four distinct pale tints rather than shades
+ * of white, so no surface ever sits white-on-white: a warm sand page, ivory
+ * cards, a pale-sky mat behind artwork, and pale-sage result strips. Accents
+ * are blue, red (danger), and green (safe/success). `theme.colors` is replaced
+ * rather than extended, so slate/amber/emerald/etc. simply do not exist as
+ * utilities any more. These values mirror the exact tokens used inline in
+ * every public/sims/*.html file.
  */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -16,15 +18,20 @@ export default {
       black: '#000000',
       white: '#ffffff',
 
-      /* Backgrounds, borders and body copy. */
-      paper: '#F5F5F4',
-      panel: '#FFFFFF',
+      /* Surfaces, borders and body copy. */
+      paper: '#EDE7DC',
+      panel: '#FFFCF6',
+      scene: '#D8E3EC',
+      canvas: '#FBF9F4',
+      strip: '#E7EFE3',
+      inert: '#DCD5C7',
       ink: '#1A1A1A',
-      dim: '#6B6B6B',
-      border: '#E3E3E1',
+      dim: '#5E5A52',
+      border: '#D6CEBF',
 
-      red: '#E0453E',
+      red: '#D2443D',
       blue: '#2B6CD4',
+      green: '#2E7D5B',
     },
     extend: {
       fontFamily: {
@@ -42,6 +49,7 @@ export default {
       },
       boxShadow: {
         glow: '0 0 0 1px rgb(43 108 212 / 0.35), 0 18px 50px -12px rgb(43 108 212 / 0.28)',
+        card: '0 1px 2px rgb(94 90 82 / 0.06), 0 10px 24px -16px rgb(94 90 82 / 0.35)',
       },
       keyframes: {
         'fade-up': {
