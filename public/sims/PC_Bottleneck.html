@@ -7,8 +7,8 @@
 <title>Why the expensive upgrade did nothing — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
-    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
+    --paper:#F5F5F4; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --border:#E3E3E1; --dim:#6B6B6B;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -19,17 +19,17 @@
   .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#333333}
   .stand b{color:var(--ink)}
 
   .board{border:3px solid var(--ink);background:#fff}
   .board-head{border-bottom:3px solid var(--ink);padding:13px 18px;
               font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-  .scene{background:#EAE7DE;padding:16px}
+  .scene{background:#EAEAE8;padding:16px}
   .scene .frame{border:2px solid var(--ink);background:#fff}
   svg{display:block;width:100%;height:auto}
 
-  .fps{border-top:3px solid var(--ink);padding:18px;text-align:center;background:#FBFAF7}
+  .fps{border-top:3px solid var(--ink);padding:18px;text-align:center;background:#FAFAFA}
   .fps .cap{font-family:var(--label);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
   .fps .val{font-family:var(--display);font-size:clamp(44px,10vw,86px);line-height:.9;letter-spacing:-.045em}
   .fps .who{font-family:var(--label);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:10px;color:var(--red)}
@@ -43,7 +43,7 @@
   .slider label b{color:var(--ink);font-family:var(--display);font-size:16px}
   input[type=range]{width:100%;height:26px}
   #cpuRate{accent-color:var(--blue)}
-  #gpuRate{accent-color:var(--orange)}
+  #gpuRate{accent-color:var(--blue)}
 
   .shop{margin-top:24px;border:3px solid var(--ink);background:#fff;padding:18px 20px}
   .shop h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 6px}
@@ -54,14 +54,15 @@
              font-family:var(--body);text-align:left}
   button.buy b{display:block;font-family:var(--display);font-size:15px;text-transform:uppercase;
                letter-spacing:-.01em;margin-bottom:5px}
-  button.buy span{font-size:13px;line-height:1.45;color:#4A473F}
-  button.buy:hover{background:var(--orange)}
+  button.buy span{font-size:13px;line-height:1.45;color:#4A4A4A}
+  button.buy:hover{background:var(--ink)}
+  button.buy:hover b, button.buy:hover span{color:#fff}
   button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
                background:transparent;border:2px solid var(--ink);padding:14px 16px;cursor:pointer}
   :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
   .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.6em}
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
-  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A4A4A;max-width:76ch}
   .foot b{color:var(--ink)}
   details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
   details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
@@ -69,8 +70,8 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B3B3B}
+  details.advanced .adv-body code{font-family:var(--label);background:#F5F5F4;padding:1px 5px;border-radius:2px;font-size:12.5px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -87,10 +88,10 @@
     <div class="scene"><div class="frame">
       <svg id="scene" viewBox="0 0 940 300" role="img"
            aria-label="An assembly line where the CPU prepares frames and the GPU draws them, with a queue between">
-        <rect width="940" height="300" fill="#FBFAF7"/>
+        <rect width="940" height="300" fill="#FAFAFA"/>
 
         <!-- belt -->
-        <rect x="150" y="150" width="640" height="10" fill="#E4E1D6" stroke="#1A1A1A" stroke-width="2"/>
+        <rect x="150" y="150" width="640" height="10" fill="#E3E3E1" stroke="#1A1A1A" stroke-width="2"/>
         <g id="beltTicks"></g>
 
         <!-- CPU station -->
@@ -102,16 +103,16 @@
               fill="#fff" text-anchor="middle">BUSY</text>
 
         <!-- GPU station -->
-        <rect x="790" y="86" width="126" height="140" fill="#D97706" stroke="#1A1A1A" stroke-width="3"/>
-        <text x="853" y="126" font-family="Arial Black, sans-serif" font-size="19" fill="#1A1A1A" text-anchor="middle">GPU</text>
-        <text x="853" y="146" font-family="Courier New, monospace" font-size="10" fill="#1A1A1A" text-anchor="middle">DRAWS</text>
-        <text x="853" y="160" font-family="Courier New, monospace" font-size="10" fill="#1A1A1A" text-anchor="middle">THE PIXELS</text>
+        <rect x="790" y="86" width="126" height="140" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="3"/>
+        <text x="853" y="126" font-family="Arial Black, sans-serif" font-size="19" fill="#fff" text-anchor="middle">GPU</text>
+        <text x="853" y="146" font-family="Courier New, monospace" font-size="10" fill="#fff" text-anchor="middle">DRAWS</text>
+        <text x="853" y="160" font-family="Courier New, monospace" font-size="10" fill="#fff" text-anchor="middle">THE PIXELS</text>
         <text id="gpuState" x="853" y="196" font-family="Arial Black, sans-serif" font-size="13"
-              fill="#1A1A1A" text-anchor="middle">BUSY</text>
+              fill="#fff" text-anchor="middle">BUSY</text>
 
         <!-- queue zone marker -->
         <line x1="640" y1="120" x2="640" y2="190" stroke="#1A1A1A" stroke-width="2" stroke-dasharray="5 5"/>
-        <text x="716" y="112" font-family="Courier New, monospace" font-size="11" fill="#6B6B63" text-anchor="middle">WAITING AREA</text>
+        <text x="716" y="112" font-family="Courier New, monospace" font-size="11" fill="#6B6B6B" text-anchor="middle">WAITING AREA</text>
 
         <!-- frames in transit -->
         <g id="frames"></g>

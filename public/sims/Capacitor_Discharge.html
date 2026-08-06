@@ -7,8 +7,8 @@
 <title>Why an unplugged PSU can still shock you — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
-    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
+    --paper:#F5F5F4; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --border:#E3E3E1; --dim:#6B6B6B;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -22,7 +22,7 @@
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
      margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#333333}
   .stand b{color:var(--ink)}
 
   .board{border:3px solid var(--ink);background:#fff}
@@ -31,20 +31,20 @@
   .board-head h2{font-family:var(--display);font-size:20px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
   .board-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 
-  .scene{background:#EAE7DE;padding:16px}
+  .scene{background:#EAEAE8;padding:16px}
   .frame{border:2px solid var(--ink);background:#fff}
   .frame svg{display:block;width:100%;height:auto}
 
-  .status{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7;
+  .status{border-top:3px solid var(--ink);padding:14px 16px;background:#FAFAFA;
           display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
   .status .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
                color:var(--dim);margin:0 0 4px}
   .status .big{font-family:var(--display);font-size:clamp(26px,5vw,40px);line-height:1;letter-spacing:-.03em}
-  .status .sub{font-size:13.5px;line-height:1.4;color:#4A473F;margin-top:6px;max-width:34ch}
+  .status .sub{font-size:13.5px;line-height:1.4;color:#4A4A4A;margin-top:6px;max-width:34ch}
   .badge{font-family:var(--display);text-transform:uppercase;font-size:13px;letter-spacing:-.01em;
          border:3px solid var(--ink);padding:8px 14px;margin-left:auto;white-space:nowrap}
   .badge.danger{background:var(--red);color:#fff}
-  .badge.safe{background:var(--green);color:#fff}
+  .badge.safe{background:var(--blue);color:#fff}
 
   .panel{border:3px solid var(--ink);background:#fff;margin:26px 0 0;padding:18px 20px}
   .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
@@ -63,7 +63,7 @@
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
   .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
-        font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+        font-size:13.5px;line-height:1.6;color:#4A4A4A;max-width:76ch}
   .foot b{color:var(--ink)}
 
   details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
@@ -72,11 +72,11 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B3B3B}
+  details.advanced .adv-body code{font-family:var(--label);background:#F5F5F4;padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F4F1E8;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th{background:#F5F5F4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
 
   svg text{font-family:var(--label);font-size:10px;letter-spacing:.07em;fill:var(--ink)}
   svg text.big{font-family:var(--display);font-size:15px;letter-spacing:-.01em}
@@ -240,7 +240,7 @@
   mk('circle',{cx:132,cy:RAIL,r:4,fill:'#1A1A1A'},svg);
   var lever = mk('line',{x1:92,y1:RAIL,x2:128,y2:70,stroke:'#1A1A1A','stroke-width':4,
                          'stroke-linecap':'round'},svg);
-  var plugState = label(112,130,'UNPLUGGED',{'text-anchor':'middle',fill:'#6B6B63'},svg);
+  var plugState = label(112,130,'UNPLUGGED',{'text-anchor':'middle',fill:'#6B6B6B'},svg);
 
   line(132,RAIL,152,RAIL);
 
@@ -256,9 +256,9 @@
   mk('rect',{x:CAP_L,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#1A1A1A'},capG);
   mk('rect',{x:CAP_R,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#1A1A1A'},capG);
   // empty channel behind the fill
-  mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'#EFECE3'},capG);
+  mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'#EFEFED'},capG);
   var voltageFill = mk('rect',{id:'voltageFill',x:FILL_X,y:FILL_BOT,width:FILL_W,height:0,
-                               fill:'#1F4A2E'},capG);
+                               fill:'#2B6CD4'},capG);
   mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'none',
              stroke:'#1A1A1A','stroke-width':1.5},capG);
   label(332,170,'CAPACITOR',{'text-anchor':'start'},capG);
@@ -271,7 +271,7 @@
   // --- right rail to test point ---
   line(CAP_R+PLATE_W,RAIL,LOOP_R,RAIL);
   mk('circle',{cx:TEST_X,cy:RAIL,r:5,fill:'#1A1A1A'},svg);
-  label(412,124,'TEST POINT',{'text-anchor':'end',fill:'#6B6B63'},svg);
+  label(412,124,'TEST POINT',{'text-anchor':'end',fill:'#6B6B6B'},svg);
 
   // --- bleed branch ---
   var bleedG = mk('g',{},svg);
@@ -286,11 +286,11 @@
                  fill:'none',stroke:'#1A1A1A','stroke-width':3,'stroke-linejoin':'round'},bleedG);
   line(404,LOOP_Y,LOOP_R,LOOP_Y,bleedG);
   line(LOOP_R,LOOP_Y,LOOP_R,RAIL,bleedG);
-  var bleedState = label(348,292,'BLEED RESISTOR: OFF',{'text-anchor':'middle',fill:'#6B6B63'},bleedG);
+  var bleedState = label(348,292,'BLEED RESISTOR: OFF',{'text-anchor':'middle',fill:'#6B6B6B'},bleedG);
 
   // --- zap flash ---
   var zap = mk('polygon',{points:'392,60 380,92 392,92 384,124 408,86 394,86 404,60',
-                          fill:'#D97706',stroke:'#1A1A1A','stroke-width':2,opacity:0},svg);
+                          fill:'#E0453E',stroke:'#1A1A1A','stroke-width':2,opacity:0},svg);
 
   // --- touch probe (clickable) ---
   var probe = mk('g',{id:'touchProbe',role:'button',tabindex:'0','aria-label':'Touch the test point'},svg);
@@ -338,11 +338,11 @@
     voltageFill.setAttribute('height', h);
     voltageFill.setAttribute('y', FILL_BOT - h);
 
-    // green well below the safety line, red at or above it
+    // blue well below the safety line, red at or above it
     var t = Math.max(0, Math.min(1, (V - 30) / (SAFE_V - 30)));
-    var r = Math.round(62  + (224-62)  * t);
-    var g = Math.round(142 + (69-142)  * t);
-    var b = Math.round(90  + (62-90)   * t);
+    var r = Math.round(43  + (224-43)  * t);
+    var g = Math.round(108 + (69-108)  * t);
+    var b = Math.round(212 + (62-212)  * t);
     voltageFill.setAttribute('fill', 'rgb(' + r + ',' + g + ',' + b + ')');
 
     elVolt.textContent = Math.round(V) + ' V';

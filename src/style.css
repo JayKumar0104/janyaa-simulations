@@ -18,19 +18,19 @@
   }
 
   ::selection {
-    @apply bg-orange/30 text-ink;
+    @apply bg-blue/30 text-ink;
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-green ring-offset-2 ring-offset-paper;
+    @apply outline-none ring-2 ring-blue ring-offset-2 ring-offset-paper;
   }
 }
 
 @layer components {
-  /* Faint grid + green bloom behind the hero. */
+  /* Faint grid + blue bloom behind the hero. */
   .hero-backdrop {
     background-image:
-      radial-gradient(60rem 32rem at 50% -8rem, rgb(31 74 46 / 0.1), transparent 70%),
+      radial-gradient(60rem 32rem at 50% -8rem, rgb(43 108 212 / 0.1), transparent 70%),
       linear-gradient(to right, rgb(26 26 26 / 0.05) 1px, transparent 1px),
       linear-gradient(to bottom, rgb(26 26 26 / 0.05) 1px, transparent 1px);
     background-size:

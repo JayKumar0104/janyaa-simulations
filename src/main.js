@@ -34,7 +34,7 @@ function heroSection() {
           <span class="text-sm font-semibold tracking-tight text-ink">Janyaa Interactive</span>
         </div>
         <a href="#simulations"
-           class="rounded-lg border border-border px-3.5 py-2 text-sm text-dim transition hover:border-green hover:text-green">
+           class="rounded-lg border border-border px-3.5 py-2 text-sm text-dim transition hover:border-blue hover:text-blue">
           Browse simulations
         </a>
       </nav>
@@ -60,9 +60,9 @@ function card(sim, index) {
     .join('')
 
   return `
-    <article class="card-sheen group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-panel p-6 transition duration-300 hover:-translate-y-1 hover:border-green/60 hover:shadow-glow">
+    <article class="card-sheen group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-panel p-6 transition duration-300 hover:-translate-y-1 hover:border-blue/60 hover:shadow-glow">
       <div class="flex items-start justify-between gap-4">
-        <span class="font-mono text-xs text-dim transition group-hover:text-orange">${number}</span>
+        <span class="font-mono text-xs text-dim transition group-hover:text-blue">${number}</span>
         <div class="flex flex-wrap justify-end gap-1.5">${tags}</div>
       </div>
 
@@ -74,12 +74,12 @@ function card(sim, index) {
 
       <div class="mt-6 flex items-center gap-2">
         <button type="button" data-launch="${escape(sim.id)}"
-                class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:bg-green group-hover:text-panel">
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:bg-blue group-hover:text-panel">
           Launch ${ICON_LAUNCH}
         </button>
         <a href="${escape(simUrl(sim.file))}" target="_blank" rel="noopener"
            title="Open in a new tab"
-           class="inline-flex items-center justify-center rounded-lg border border-border p-2.5 text-dim transition hover:border-orange hover:text-orange">
+           class="inline-flex items-center justify-center rounded-lg border border-border p-2.5 text-dim transition hover:border-blue hover:text-blue">
           ${ICON_EXTERNAL}<span class="sr-only">Open ${escape(sim.title)} in a new tab</span>
         </a>
       </div>
@@ -87,7 +87,7 @@ function card(sim, index) {
 }
 
 function emptyState() {
-  const code = 'rounded bg-paper px-1.5 py-0.5 font-mono text-xs text-green'
+  const code = 'rounded bg-paper px-1.5 py-0.5 font-mono text-xs text-blue'
   return `
     <div class="rounded-2xl border border-dashed border-border bg-panel p-10 text-center">
       <p class="text-base font-medium text-ink">No simulations found</p>
@@ -123,7 +123,7 @@ function footerSection() {
     <footer class="border-t border-border">
       <div class="mx-auto max-w-6xl px-6 py-8 text-sm text-dim">
         <a href="https://janyaa.org/" target="_blank" rel="noopener"
-           class="transition hover:text-orange">
+           class="transition hover:text-blue">
           Developed by the Palo Alto Youth Chapter
         </a>
       </div>
@@ -140,11 +140,11 @@ function modalMarkup() {
             <h2 id="sim-modal-title" class="truncate text-sm font-semibold text-ink"></h2>
             <div class="flex shrink-0 items-center gap-2">
               <a id="sim-modal-open" href="#" target="_blank" rel="noopener"
-                 class="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-dim transition hover:border-orange hover:text-orange">
+                 class="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-dim transition hover:border-blue hover:text-blue">
                 ${ICON_EXTERNAL} New tab
               </a>
               <button type="button" data-close
-                      class="inline-flex items-center gap-2 rounded-lg bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-green hover:text-panel">
+                      class="inline-flex items-center gap-2 rounded-lg bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-blue hover:text-panel">
                 ${ICON_CLOSE} Close
               </button>
             </div>

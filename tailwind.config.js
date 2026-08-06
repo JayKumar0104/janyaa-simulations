@@ -1,10 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 
 /*
- * Strict light palette: paper/panel surfaces with dark ink text, and green and
- * orange as the only accents. `theme.colors` is replaced rather than extended,
- * so slate/amber/etc. simply do not exist as utilities any more. These values
- * mirror the exact tokens used inline in every public/sims/*.html file.
+ * Strict light palette: paper/panel surfaces with dark ink text, and a single
+ * blue accent (plus red, reserved for danger/alert states). `theme.colors` is
+ * replaced rather than extended, so slate/amber/emerald/etc. simply do not
+ * exist as utilities any more. These values mirror the exact tokens used
+ * inline in every public/sims/*.html file.
  */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -16,14 +17,12 @@ export default {
       white: '#ffffff',
 
       /* Backgrounds, borders and body copy. */
-      paper: '#F4F1E8',
+      paper: '#F5F5F4',
       panel: '#FFFFFF',
       ink: '#1A1A1A',
-      dim: '#6B6B63',
-      border: '#E4E1D6',
+      dim: '#6B6B6B',
+      border: '#E3E3E1',
 
-      green: '#1F4A2E',
-      orange: '#D97706',
       red: '#E0453E',
       blue: '#2B6CD4',
     },
@@ -42,7 +41,7 @@ export default {
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
       boxShadow: {
-        glow: '0 0 0 1px rgb(31 74 46 / 0.35), 0 18px 50px -12px rgb(31 74 46 / 0.28)',
+        glow: '0 0 0 1px rgb(43 108 212 / 0.35), 0 18px 50px -12px rgb(43 108 212 / 0.28)',
       },
       keyframes: {
         'fade-up': {

@@ -7,8 +7,8 @@
 <title>Metal is not colder than wood — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
-    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
+    --paper:#F5F5F4; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --border:#E3E3E1; --dim:#6B6B6B;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -19,10 +19,10 @@
   .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#333333}
   .stand b{color:var(--ink)}
 
-  .banner{border:3px solid var(--ink);background:var(--orange);padding:15px 20px;margin-bottom:24px}
+  .banner{border:3px solid var(--ink);background:var(--blue);color:#fff;padding:15px 20px;margin-bottom:24px}
   .banner p{margin:0;font-size:16px;line-height:1.5}
   .banner strong{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
@@ -32,10 +32,10 @@
   .deck-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
   .deck-head h2{font-family:var(--display);font-size:21px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
   .deck-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-  .stage{background:#EAE7DE;padding:14px;flex:1}
+  .stage{background:#EAEAE8;padding:14px;flex:1}
   .stage .frame{border:2px solid var(--ink);background:#fff}
   svg{display:block;width:100%;height:auto}
-  .feel{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7}
+  .feel{border-top:3px solid var(--ink);padding:14px 16px;background:#FAFAFA}
   .feel .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
   .feel .val{font-family:var(--display);font-size:clamp(24px,4.6vw,34px);line-height:1;letter-spacing:-.03em}
   .feel .word{font-family:var(--label);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:9px}
@@ -58,7 +58,7 @@
   :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
   .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.6em}
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
-  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A4A4A;max-width:76ch}
   .foot b{color:var(--ink)}
   details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
   details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
@@ -66,11 +66,11 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B3B3B}
+  details.advanced .adv-body code{font-family:var(--label);background:#F5F5F4;padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F4F1E8;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th{background:#F5F5F4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -92,7 +92,7 @@
       <div class="deck-head"><h2 id="leftName">Wood</h2><span class="tag">poor heat conductor</span></div>
       <div class="stage"><div class="frame">
         <svg id="svgL" viewBox="0 0 420 320" role="img" aria-label="A hand touching a wooden block with slow heat flow">
-          <rect width="420" height="320" fill="#FBFAF7"/>
+          <rect width="420" height="320" fill="#FAFAFA"/>
           <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#1A1A1A" stroke-width="3"/>
           <!-- thermometer -->
           <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#1A1A1A" stroke-width="2.5"/>
@@ -102,11 +102,11 @@
           <!-- hand -->
           <g id="handL">
             <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#1A1A1A" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6B6B63">your hand</text>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6B6B6B">your hand</text>
           </g>
           <!-- heat arrows -->
           <g id="arrowsL"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6B6B63" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6B6B6B" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -120,7 +120,7 @@
       <div class="deck-head"><h2 id="rightName">Steel</h2><span class="tag">excellent heat conductor</span></div>
       <div class="stage"><div class="frame">
         <svg id="svgR" viewBox="0 0 420 320" role="img" aria-label="A hand touching a steel block with fast heat flow">
-          <rect width="420" height="320" fill="#FBFAF7"/>
+          <rect width="420" height="320" fill="#FAFAFA"/>
           <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#1A1A1A" stroke-width="3"/>
           <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#1A1A1A" stroke-width="2.5"/>
           <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#1A1A1A" stroke-width="2.5"/>
@@ -128,10 +128,10 @@
           <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#1A1A1A" id="thermR">20 °C</text>
           <g id="handR">
             <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#1A1A1A" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6B6B63">your hand</text>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6B6B6B">your hand</text>
           </g>
           <g id="arrowsR"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6B6B63" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6B6B6B" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -220,7 +220,7 @@
     if(d <= -9)  return { w:'feels: freezing',   c:'#2B6CD4' };
     if(d <= -4)  return { w:'feels: cold',       c:'#2B6CD4' };
     if(d <= -1.2)return { w:'feels: cool',       c:'#2B6CD4' };
-    if(d <   1.2)return { w:'feels: neutral',    c:'#6B6B63' };
+    if(d <   1.2)return { w:'feels: neutral',    c:'#6B6B6B' };
     if(d <   4)  return { w:'feels: warm',       c:'#E0453E' };
     if(d <   9)  return { w:'feels: hot',        c:'#E0453E' };
     return             { w:'feels: burning',     c:'#E0453E' };
@@ -268,8 +268,8 @@
     var wl = document.getElementById('wordL'), wr = document.getElementById('wordR');
     wl.textContent = fl.w; wl.style.color = fl.c;
     wr.textContent = fr.w; wr.style.color = fr.c;
-    sl.style.color = fl.c === '#6B6B63' ? '#1A1A1A' : fl.c;
-    sr.style.color = fr.c === '#6B6B63' ? '#1A1A1A' : fr.c;
+    sl.style.color = fl.c === '#6B6B6B' ? '#1A1A1A' : fl.c;
+    sr.style.color = fr.c === '#6B6B6B' ? '#1A1A1A' : fr.c;
 
     var targetL = contactTemp(MATERIALS.wood.e, st.blockT);
     var targetR = contactTemp(right.e, st.blockT);
