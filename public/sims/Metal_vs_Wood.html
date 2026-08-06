@@ -7,8 +7,8 @@
 <title>Metal is not colder than wood — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
-    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
+    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -22,7 +22,7 @@
   .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
   .stand b{color:var(--ink)}
 
-  .banner{border:3px solid var(--ink);background:var(--amber);padding:15px 20px;margin-bottom:24px}
+  .banner{border:3px solid var(--ink);background:var(--orange);padding:15px 20px;margin-bottom:24px}
   .banner p{margin:0;font-size:16px;line-height:1.5}
   .banner strong{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
@@ -67,10 +67,10 @@
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
   details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
-  details.advanced th,details.advanced td{border:1px solid var(--gray);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F0EDE4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:#F4F1E8;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -93,20 +93,20 @@
       <div class="stage"><div class="frame">
         <svg id="svgL" viewBox="0 0 420 320" role="img" aria-label="A hand touching a wooden block with slow heat flow">
           <rect width="420" height="320" fill="#FBFAF7"/>
-          <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#15171A" stroke-width="3"/>
+          <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#1A1A1A" stroke-width="3"/>
           <!-- thermometer -->
-          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#15171A" stroke-width="2.5"/>
-          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#15171A" stroke-width="2.5"/>
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#1A1A1A" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#1A1A1A" stroke-width="2.5"/>
           <rect x="70" y="196" width="8" height="50" fill="#E0453E"/>
-          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#15171A" id="thermL">20 °C</text>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#1A1A1A" id="thermL">20 °C</text>
           <!-- hand -->
           <g id="handL">
-            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#15171A" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">your hand</text>
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#1A1A1A" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6B6B63">your hand</text>
           </g>
           <!-- heat arrows -->
           <g id="arrowsL"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6E6A60" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6B6B63" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -121,17 +121,17 @@
       <div class="stage"><div class="frame">
         <svg id="svgR" viewBox="0 0 420 320" role="img" aria-label="A hand touching a steel block with fast heat flow">
           <rect width="420" height="320" fill="#FBFAF7"/>
-          <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#15171A" stroke-width="3"/>
-          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#15171A" stroke-width="2.5"/>
-          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#15171A" stroke-width="2.5"/>
+          <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#1A1A1A" stroke-width="3"/>
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#1A1A1A" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#E0453E" stroke="#1A1A1A" stroke-width="2.5"/>
           <rect x="70" y="196" width="8" height="50" fill="#E0453E"/>
-          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#15171A" id="thermR">20 °C</text>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#1A1A1A" id="thermR">20 °C</text>
           <g id="handR">
-            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#15171A" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">your hand</text>
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#1A1A1A" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#6B6B63">your hand</text>
           </g>
           <g id="arrowsR"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6E6A60" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#6B6B63" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -220,7 +220,7 @@
     if(d <= -9)  return { w:'feels: freezing',   c:'#2B6CD4' };
     if(d <= -4)  return { w:'feels: cold',       c:'#2B6CD4' };
     if(d <= -1.2)return { w:'feels: cool',       c:'#2B6CD4' };
-    if(d <   1.2)return { w:'feels: neutral',    c:'#6E6A60' };
+    if(d <   1.2)return { w:'feels: neutral',    c:'#6B6B63' };
     if(d <   4)  return { w:'feels: warm',       c:'#E0453E' };
     if(d <   9)  return { w:'feels: hot',        c:'#E0453E' };
     return             { w:'feels: burning',     c:'#E0453E' };
@@ -268,8 +268,8 @@
     var wl = document.getElementById('wordL'), wr = document.getElementById('wordR');
     wl.textContent = fl.w; wl.style.color = fl.c;
     wr.textContent = fr.w; wr.style.color = fr.c;
-    sl.style.color = fl.c === '#6E6A60' ? '#15171A' : fl.c;
-    sr.style.color = fr.c === '#6E6A60' ? '#15171A' : fr.c;
+    sl.style.color = fl.c === '#6B6B63' ? '#1A1A1A' : fl.c;
+    sr.style.color = fr.c === '#6B6B63' ? '#1A1A1A' : fr.c;
 
     var targetL = contactTemp(MATERIALS.wood.e, st.blockT);
     var targetR = contactTemp(right.e, st.blockT);

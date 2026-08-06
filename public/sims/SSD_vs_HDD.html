@@ -7,8 +7,8 @@
 <title>Why a bump kills a hard drive — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
-    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60;
+    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -52,7 +52,7 @@
   .drop{border:2px solid var(--ink);background:#fff;padding:14px 15px;text-align:left;cursor:pointer;font-family:var(--body)}
   .drop b{display:block;font-family:var(--display);font-size:14px;text-transform:uppercase;margin-bottom:5px;letter-spacing:-.01em}
   .drop span{font-size:13px;line-height:1.45;color:#4A473F}
-  .drop:hover{background:var(--amber)}
+  .drop:hover{background:var(--orange)}
   .runrow{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
   button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
                background:transparent;border:2px solid var(--ink);padding:11px 16px;cursor:pointer}
@@ -69,7 +69,7 @@
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
   details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -88,9 +88,9 @@
       jumbo jet to that same proportion and here is what it looks like:</p>
       <svg viewBox="0 0 900 150" role="img" aria-label="A jumbo jet flying one millimetre above the runway at 900 kilometres per hour">
         <!-- ground -->
-        <rect x="0" y="120" width="900" height="30" fill="#C6C2B6" stroke="#15171A" stroke-width="3"/>
+        <rect x="0" y="120" width="900" height="30" fill="#E4E1D6" stroke="#1A1A1A" stroke-width="3"/>
         <!-- jet body -->
-        <g stroke="#15171A" stroke-width="3" fill="#fff">
+        <g stroke="#1A1A1A" stroke-width="3" fill="#fff">
           <path d="M180 78 L560 78 Q625 78 655 92 L680 106 Q690 110 680 113 L200 113 Q180 113 176 100 Z"/>
           <path d="M300 80 L360 34 L400 34 L372 80 Z"/>
           <path d="M560 80 L600 52 L628 52 L606 80 Z"/>
@@ -108,11 +108,11 @@
         <line x1="700" y1="113" x2="900" y2="113" stroke="#E0453E" stroke-width="2" stroke-dasharray="6 5"/>
         <text x="734" y="112" font-family="Courier New, monospace" font-size="15" fill="#E0453E">1 mm of clearance</text>
         <!-- speed -->
-        <g stroke="#15171A" stroke-width="2.5" fill="none">
+        <g stroke="#1A1A1A" stroke-width="2.5" fill="none">
           <line x1="60" y1="90" x2="150" y2="90"/><line x1="40" y1="100" x2="150" y2="100"/>
           <line x1="70" y1="110" x2="150" y2="110"/>
         </g>
-        <text x="34" y="72" font-family="Courier New, monospace" font-size="15" fill="#15171A">900 km/h</text>
+        <text x="34" y="72" font-family="Courier New, monospace" font-size="15" fill="#1A1A1A">900 km/h</text>
       </svg>
       <p style="margin-top:12px">That is a jet doing 900&nbsp;km/h with <b>one millimetre</b> of air
       under it — for years, without ever touching down. Now bump the table.</p>
@@ -128,26 +128,26 @@
           <g id="hddShake">
             <rect x="0" y="0" width="420" height="340" fill="#FBFAF7"/>
             <!-- disc -->
-            <circle cx="200" cy="170" r="132" fill="#EAE7DE" stroke="#15171A" stroke-width="3"/>
-            <circle cx="200" cy="170" r="112" fill="#fff" stroke="#15171A" stroke-width="2"/>
+            <circle cx="200" cy="170" r="132" fill="#EAE7DE" stroke="#1A1A1A" stroke-width="3"/>
+            <circle cx="200" cy="170" r="112" fill="#fff" stroke="#1A1A1A" stroke-width="2"/>
             <!-- data rings -->
             <g id="rings"></g>
             <!-- scratch marks -->
             <g id="scratches"></g>
             <!-- spindle -->
-            <circle cx="200" cy="170" r="22" fill="#C6C2B6" stroke="#15171A" stroke-width="3"/>
+            <circle cx="200" cy="170" r="22" fill="#E4E1D6" stroke="#1A1A1A" stroke-width="3"/>
             <g id="spinMark">
-              <line x1="200" y1="170" x2="200" y2="152" stroke="#15171A" stroke-width="3"/>
+              <line x1="200" y1="170" x2="200" y2="152" stroke="#1A1A1A" stroke-width="3"/>
             </g>
             <!-- arm -->
             <g id="arm">
-              <line x1="386" y1="292" x2="252" y2="118" stroke="#15171A" stroke-width="9" stroke-linecap="round"/>
-              <line x1="386" y1="292" x2="252" y2="118" stroke="#C6C2B6" stroke-width="4" stroke-linecap="round"/>
-              <circle cx="386" cy="292" r="15" fill="#C6C2B6" stroke="#15171A" stroke-width="3"/>
-              <circle id="head" cx="252" cy="118" r="9" fill="#E0453E" stroke="#15171A" stroke-width="3"/>
+              <line x1="386" y1="292" x2="252" y2="118" stroke="#1A1A1A" stroke-width="9" stroke-linecap="round"/>
+              <line x1="386" y1="292" x2="252" y2="118" stroke="#E4E1D6" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="386" cy="292" r="15" fill="#E4E1D6" stroke="#1A1A1A" stroke-width="3"/>
+              <circle id="head" cx="252" cy="118" r="9" fill="#E0453E" stroke="#1A1A1A" stroke-width="3"/>
             </g>
           </g>
-          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">7,200 RPM</text>
+          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#6B6B63">7,200 RPM</text>
           <text id="hddCry" x="210" y="180" font-family="Arial Black, sans-serif" font-size="34"
                 fill="#E0453E" text-anchor="middle" opacity="0">SCRATCH</text>
         </svg>
@@ -164,20 +164,20 @@
         <svg id="ssdSvg" viewBox="0 0 420 340" role="img" aria-label="A grid of memory cells holding charge, with nothing that moves">
           <g id="ssdShake">
             <rect x="0" y="0" width="420" height="340" fill="#FBFAF7"/>
-            <rect x="34" y="34" width="352" height="200" fill="none" stroke="#15171A" stroke-width="3"/>
+            <rect x="34" y="34" width="352" height="200" fill="none" stroke="#1A1A1A" stroke-width="3"/>
             <g id="cells"></g>
             <!-- one cell blown up -->
-            <rect x="34" y="256" width="352" height="62" fill="#fff" stroke="#15171A" stroke-width="3"/>
-            <rect x="52" y="270" width="150" height="12" fill="#C6C2B6" stroke="#15171A" stroke-width="2"/>
-            <rect x="52" y="286" width="150" height="18" fill="#EAE7DE" stroke="#15171A" stroke-width="2"/>
-            <g fill="#F5B335" stroke="#15171A" stroke-width="1.5">
+            <rect x="34" y="256" width="352" height="62" fill="#fff" stroke="#1A1A1A" stroke-width="3"/>
+            <rect x="52" y="270" width="150" height="12" fill="#E4E1D6" stroke="#1A1A1A" stroke-width="2"/>
+            <rect x="52" y="286" width="150" height="18" fill="#EAE7DE" stroke="#1A1A1A" stroke-width="2"/>
+            <g fill="#D97706" stroke="#1A1A1A" stroke-width="1.5">
               <circle cx="72" cy="295" r="5"/><circle cx="97" cy="295" r="5"/>
               <circle cx="122" cy="295" r="5"/><circle cx="147" cy="295" r="5"/><circle cx="172" cy="295" r="5"/>
             </g>
-            <text x="214" y="280" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">ONE CELL, ENLARGED</text>
+            <text x="214" y="280" font-family="Courier New, monospace" font-size="12" fill="#6B6B63">ONE CELL, ENLARGED</text>
             <text x="214" y="300" font-family="Courier New, monospace" font-size="12" fill="#E0453E">TRAPPED ELECTRICITY = YOUR FILE</text>
           </g>
-          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#6E6A60">0 MOVING PARTS</text>
+          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#6B6B63">0 MOVING PARTS</text>
         </svg>
       </div></div>
       <div class="status">
@@ -235,7 +235,7 @@
   RING_RADII.forEach(function(r){
     var c = document.createElementNS(ns,'circle');
     c.setAttribute('cx',200); c.setAttribute('cy',170); c.setAttribute('r',r);
-    c.setAttribute('fill','none'); c.setAttribute('stroke','#C6C2B6'); c.setAttribute('stroke-width','1.5');
+    c.setAttribute('fill','none'); c.setAttribute('stroke','#E4E1D6'); c.setAttribute('stroke-width','1.5');
     rings.appendChild(c);
   });
 
@@ -248,8 +248,8 @@
       rect.setAttribute('x', 44 + c2*15.6);
       rect.setAttribute('y', 44 + r2*15.6);
       rect.setAttribute('width', 11); rect.setAttribute('height', 11);
-      rect.setAttribute('fill', Math.random() < 0.55 ? '#F5B335' : '#EAE7DE');
-      rect.setAttribute('stroke','#15171A'); rect.setAttribute('stroke-width','1');
+      rect.setAttribute('fill', Math.random() < 0.55 ? '#D97706' : '#EAE7DE');
+      rect.setAttribute('stroke','#1A1A1A'); rect.setAttribute('stroke-width','1');
       cells.appendChild(rect);
     }
   }

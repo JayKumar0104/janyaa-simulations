@@ -7,8 +7,8 @@
 <title>Why an unplugged PSU can still shock you — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
-    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60; --green:#3E8E5A;
+    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -73,10 +73,10 @@
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
   details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
-  details.advanced th,details.advanced td{border:1px solid var(--gray);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F0EDE4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:#F4F1E8;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
 
   svg text{font-family:var(--label);font-size:10px;letter-spacing:.07em;fill:var(--ink)}
   svg text.big{font-family:var(--display);font-size:15px;letter-spacing:-.01em}
@@ -221,81 +221,81 @@
 
   // static wiring
   function line(x1,y1,x2,y2,parent){
-    return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#15171A','stroke-width':3,
+    return mk('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#1A1A1A','stroke-width':3,
                       'stroke-linecap':'round'}, parent||svg);
   }
 
   // --- wall plug ---
   var plugG = mk('g',{},svg);
-  mk('rect',{x:16,y:78,width:36,height:36,rx:4,fill:'#fff',stroke:'#15171A','stroke-width':3},plugG);
-  mk('rect',{x:24,y:88,width:7,height:6,fill:'#15171A'},plugG);
-  mk('rect',{x:24,y:100,width:7,height:6,fill:'#15171A'},plugG);
+  mk('rect',{x:16,y:78,width:36,height:36,rx:4,fill:'#fff',stroke:'#1A1A1A','stroke-width':3},plugG);
+  mk('rect',{x:24,y:88,width:7,height:6,fill:'#1A1A1A'},plugG);
+  mk('rect',{x:24,y:100,width:7,height:6,fill:'#1A1A1A'},plugG);
   line(52,86,64,86,plugG); line(52,106,64,106,plugG);
   line(64,86,64,RAIL,plugG); line(64,106,64,RAIL,plugG);
   line(64,RAIL,90,RAIL,plugG);
   label(34,130,'WALL',{'text-anchor':'middle'},plugG);
 
   // --- main switch (plug state) ---
-  mk('circle',{cx:92,cy:RAIL,r:4,fill:'#15171A'},svg);
-  mk('circle',{cx:132,cy:RAIL,r:4,fill:'#15171A'},svg);
-  var lever = mk('line',{x1:92,y1:RAIL,x2:128,y2:70,stroke:'#15171A','stroke-width':4,
+  mk('circle',{cx:92,cy:RAIL,r:4,fill:'#1A1A1A'},svg);
+  mk('circle',{cx:132,cy:RAIL,r:4,fill:'#1A1A1A'},svg);
+  var lever = mk('line',{x1:92,y1:RAIL,x2:128,y2:70,stroke:'#1A1A1A','stroke-width':4,
                          'stroke-linecap':'round'},svg);
-  var plugState = label(112,130,'UNPLUGGED',{'text-anchor':'middle',fill:'#6E6A60'},svg);
+  var plugState = label(112,130,'UNPLUGGED',{'text-anchor':'middle',fill:'#6B6B63'},svg);
 
   line(132,RAIL,152,RAIL);
 
   // --- rectifier box ---
   var boxG = mk('g',{},svg);
-  mk('rect',{x:152,y:76,width:60,height:40,fill:'#fff',stroke:'#15171A','stroke-width':3},boxG);
+  mk('rect',{x:152,y:76,width:60,height:40,fill:'#fff',stroke:'#1A1A1A','stroke-width':3},boxG);
   label(182,101,'AC → DC',{'text-anchor':'middle'},boxG);
 
   line(212,RAIL,CAP_L,RAIL);
 
   // --- capacitor ---
   var capG = mk('g',{},svg);
-  mk('rect',{x:CAP_L,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#15171A'},capG);
-  mk('rect',{x:CAP_R,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#15171A'},capG);
+  mk('rect',{x:CAP_L,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#1A1A1A'},capG);
+  mk('rect',{x:CAP_R,y:CAP_TOP,width:PLATE_W,height:CAP_BOT-CAP_TOP,fill:'#1A1A1A'},capG);
   // empty channel behind the fill
   mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'#EFECE3'},capG);
   var voltageFill = mk('rect',{id:'voltageFill',x:FILL_X,y:FILL_BOT,width:FILL_W,height:0,
-                               fill:'#3E8E5A'},capG);
+                               fill:'#1F4A2E'},capG);
   mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'none',
-             stroke:'#15171A','stroke-width':1.5},capG);
+             stroke:'#1A1A1A','stroke-width':1.5},capG);
   label(332,170,'CAPACITOR',{'text-anchor':'start'},capG);
   // danger line at 50 V
   var dangerY = FILL_BOT - (SAFE_V/VS)*FILL_MAX;
-  mk('line',{x1:FILL_X-8,y1:dangerY,x2:FILL_X+FILL_W+8,y2:dangerY,stroke:'#15171A',
+  mk('line',{x1:FILL_X-8,y1:dangerY,x2:FILL_X+FILL_W+8,y2:dangerY,stroke:'#1A1A1A',
              'stroke-width':2,'stroke-dasharray':'5 4'},capG);
   label(FILL_X-14,dangerY+3.5,'SAFE LINE',{fill:'#E0453E','font-size':8.5,'text-anchor':'end'},capG);
 
   // --- right rail to test point ---
   line(CAP_R+PLATE_W,RAIL,LOOP_R,RAIL);
-  mk('circle',{cx:TEST_X,cy:RAIL,r:5,fill:'#15171A'},svg);
-  label(412,124,'TEST POINT',{'text-anchor':'end',fill:'#6E6A60'},svg);
+  mk('circle',{cx:TEST_X,cy:RAIL,r:5,fill:'#1A1A1A'},svg);
+  label(412,124,'TEST POINT',{'text-anchor':'end',fill:'#6B6B63'},svg);
 
   // --- bleed branch ---
   var bleedG = mk('g',{},svg);
   line(LOOP_L,CAP_BOT,LOOP_L,LOOP_Y,bleedG);
   line(LOOP_L,LOOP_Y,292,LOOP_Y,bleedG);
-  mk('circle',{cx:292,cy:LOOP_Y,r:4,fill:'#15171A'},bleedG);
-  mk('circle',{cx:332,cy:LOOP_Y,r:4,fill:'#15171A'},bleedG);
-  var bleedLever = mk('line',{x1:292,y1:LOOP_Y,x2:328,y2:LOOP_Y-26,stroke:'#15171A',
+  mk('circle',{cx:292,cy:LOOP_Y,r:4,fill:'#1A1A1A'},bleedG);
+  mk('circle',{cx:332,cy:LOOP_Y,r:4,fill:'#1A1A1A'},bleedG);
+  var bleedLever = mk('line',{x1:292,y1:LOOP_Y,x2:328,y2:LOOP_Y-26,stroke:'#1A1A1A',
                               'stroke-width':4,'stroke-linecap':'round'},bleedG);
   line(332,LOOP_Y,344,LOOP_Y,bleedG);
   mk('polyline',{points:'344,266 350,254 362,278 374,254 386,278 398,254 404,266',
-                 fill:'none',stroke:'#15171A','stroke-width':3,'stroke-linejoin':'round'},bleedG);
+                 fill:'none',stroke:'#1A1A1A','stroke-width':3,'stroke-linejoin':'round'},bleedG);
   line(404,LOOP_Y,LOOP_R,LOOP_Y,bleedG);
   line(LOOP_R,LOOP_Y,LOOP_R,RAIL,bleedG);
-  var bleedState = label(348,292,'BLEED RESISTOR: OFF',{'text-anchor':'middle',fill:'#6E6A60'},bleedG);
+  var bleedState = label(348,292,'BLEED RESISTOR: OFF',{'text-anchor':'middle',fill:'#6B6B63'},bleedG);
 
   // --- zap flash ---
   var zap = mk('polygon',{points:'392,60 380,92 392,92 384,124 408,86 394,86 404,60',
-                          fill:'#F5B335',stroke:'#15171A','stroke-width':2,opacity:0},svg);
+                          fill:'#D97706',stroke:'#1A1A1A','stroke-width':2,opacity:0},svg);
 
   // --- touch probe (clickable) ---
   var probe = mk('g',{id:'touchProbe',role:'button',tabindex:'0','aria-label':'Touch the test point'},svg);
-  mk('rect',{x:376,y:18,width:32,height:40,rx:8,fill:'#fff',stroke:'#15171A','stroke-width':3},probe);
-  mk('polygon',{points:'384,58 400,58 392,82',fill:'#15171A'},probe);
+  mk('rect',{x:376,y:18,width:32,height:40,rx:8,fill:'#fff',stroke:'#1A1A1A','stroke-width':3},probe);
+  mk('polygon',{points:'384,58 400,58 392,82',fill:'#1A1A1A'},probe);
   label(392,12,'TOUCH',{'text-anchor':'middle'},probe);
   mk('rect',{x:366,y:4,width:52,height:86,fill:'transparent','class':'hit'},probe);
 

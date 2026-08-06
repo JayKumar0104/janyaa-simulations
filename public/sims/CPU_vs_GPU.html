@@ -7,8 +7,8 @@
 <title>Why AI trains on a GPU — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F0EDE4; --ink:#15171A; --red:#E0453E; --blue:#2B6CD4;
-    --amber:#F5B335; --gray:#C6C2B6; --dim:#6E6A60;
+    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -49,7 +49,7 @@
   .blk{border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;
        font-family:var(--label);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.15}
   .blk.control{background:var(--blue);color:#fff}
-  .blk.cache{background:var(--gray)}
+  .blk.cache{background:var(--border)}
   .alu-row{display:flex;gap:4px;align-items:stretch}
   .alu-row .spacer{flex:1;border:1.5px dashed #D5D1C5}
   .cpu-alu{flex:0 0 42%;background:var(--red);color:#fff;border:1.5px solid var(--ink);
@@ -65,13 +65,13 @@
   .lanes{display:grid;grid-template-columns:repeat(16,1fr);gap:3px}
   .lane{background:var(--red);border:1px solid var(--ink)}
   .lane.idle{background:#E5E1D6}
-  .gpu-cache{height:16px;background:var(--gray);border:1.5px solid var(--ink);margin-top:5px;
+  .gpu-cache{height:16px;background:var(--border);border:1.5px solid var(--ink);margin-top:5px;
              font-family:var(--label);font-size:8px;letter-spacing:.1em;
              display:flex;align-items:center;justify-content:center}
 
   /* firing states */
-  .core.fire .blk.control, .grow.fire .rowctl{background:var(--amber);color:var(--ink)}
-  .cpu-alu.fire, .lane.fire{background:var(--amber)}
+  .core.fire .blk.control, .grow.fire .rowctl{background:var(--orange);color:var(--ink)}
+  .cpu-alu.fire, .lane.fire{background:var(--orange)}
   .lane.stalled{background:#E5E1D6;position:relative}
 
   /* ---- area budget bar ---- */
@@ -82,7 +82,7 @@
   .bar span{display:flex;align-items:center;justify-content:center;font-family:var(--label);
             font-size:9.5px;letter-spacing:.06em;overflow:hidden;white-space:nowrap}
   .bar .b-ctl{background:var(--blue);color:#fff}
-  .bar .b-cache{background:var(--gray)}
+  .bar .b-cache{background:var(--border)}
   .bar .b-math{background:var(--red);color:#fff}
 
   /* ---- scoreboard ---- */
@@ -127,10 +127,10 @@
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
   details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F0EDE4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
-  details.advanced th,details.advanced td{border:1px solid var(--gray);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F0EDE4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:#F4F1E8;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
 </style>
 </head>
 <body>

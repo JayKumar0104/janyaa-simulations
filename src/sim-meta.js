@@ -74,6 +74,13 @@ export const simMeta = {
     tags: ['Computers'],
   },
 
+  Twos_Complement: {
+    title: "Two's Complement",
+    description:
+      "Compares two ways of reading the same 4 bits to show why whether an addition 'overflowed' depends entirely on how those bits are interpreted.",
+    tags: ['Computers', 'Maths'],
+  },
+
   USB_Charging: {
     title: 'USB Charging',
     description:
