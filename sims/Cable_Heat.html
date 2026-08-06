@@ -7,8 +7,15 @@
 <title>Why a cheap charging cable gets warm — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F5F5F4; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
-    --border:#E3E3E1; --dim:#6B6B6B;
+    /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
+    --paper:#EDE7DC;   /* page background — warm sand   */
+    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
+    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
+    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
+    --strip:#E7EFE3;   /* status and result strips — pale sage */
+    --inert:#DCD5C7;   /* empty meters, idle cells */
+    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
+    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -22,20 +29,20 @@
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
      margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#333333}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#3D3A33}
   .stand b{color:var(--ink)}
 
-  .board{border:3px solid var(--ink);background:#fff}
+  .board{border:3px solid var(--ink);background:var(--panel)}
   .board-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
               justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
   .board-head h2{font-family:var(--display);font-size:20px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
   .board-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 
-  .scene{background:#EAEAE8;padding:16px}
-  .frame{border:2px solid var(--ink);background:#fff}
+  .scene{background:var(--scene);padding:16px}
+  .frame{border:2px solid var(--ink);background:var(--canvas)}
   .frame svg{display:block;width:100%;height:auto}
 
-  .status{border-top:3px solid var(--ink);padding:14px 16px;background:#FAFAFA;
+  .status{border-top:3px solid var(--ink);padding:14px 16px;background:var(--strip);
           display:flex;align-items:flex-end;gap:32px;flex-wrap:wrap}
   .status .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
                color:var(--dim);margin:0 0 5px}
@@ -49,7 +56,7 @@
   .badge.pass{background:var(--blue);color:#fff}
   .badge.fail{background:var(--red);color:#fff}
 
-  .panel{border:3px solid var(--ink);background:#fff;margin:26px 0 0;padding:18px 20px}
+  .panel{border:3px solid var(--ink);background:var(--panel);margin:26px 0 0;padding:18px 20px}
   .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
             color:var(--dim);margin:0 0 14px}
   .sliders{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -69,20 +76,20 @@
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
   .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
-        font-size:13.5px;line-height:1.6;color:#4A4A4A;max-width:76ch}
+        font-size:13.5px;line-height:1.6;color:#4A463E;max-width:76ch}
   .foot b{color:var(--ink)}
 
-  details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
   details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
     font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B3B3B}
-  details.advanced .adv-body code{font-family:var(--label);background:#F5F5F4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F5F5F4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th{background:var(--paper);font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
 
   svg text{font-family:var(--label);font-size:12px;letter-spacing:.06em;fill:var(--ink)}
   svg text.num{font-family:var(--display);font-size:22px;letter-spacing:-.02em}
@@ -144,7 +151,7 @@
     <div class="runrow">
       <button class="ghost" id="resetBtn">Back to the cheap cable</button>
     </div>
-    <div class="readout" id="readout"></div>
+    <div class="readout" id="readout" role="status" aria-live="polite"></div>
   </div>
 
   <p class="foot"><b>Simplified:</b> models the cable as a plain resistor carrying a fixed current and
@@ -250,28 +257,28 @@
   mk('rect',{x:16,y:108,width:18,height:8,fill:'#1A1A1A'},chg);
   mk('rect',{x:16,y:152,width:18,height:8,fill:'#1A1A1A'},chg);
   label(90,128,'5.0 V',{'text-anchor':'middle','class':'num'},chg);
-  label(90,152,'CHARGER',{'text-anchor':'middle',fill:'#6B6B6B'},chg);
+  label(90,152,'CHARGER',{'text-anchor':'middle',fill:'#5E5A52'},chg);
 
   // cable: a soft heat glow behind, the conductor itself on top
-  var glow = mk('line',{x1:CABLE_X1,y1:CABLE_Y,x2:CABLE_X2,y2:CABLE_Y,stroke:'#E0453E',
+  var glow = mk('line',{x1:CABLE_X1,y1:CABLE_Y,x2:CABLE_X2,y2:CABLE_Y,stroke:'#D2443D',
                         'stroke-width':30,'stroke-linecap':'round',opacity:0},svg);
   var cable = mk('line',{id:'cableLine',x1:CABLE_X1,y1:CABLE_Y,x2:CABLE_X2,y2:CABLE_Y,
-                         stroke:'#E3E3E1','stroke-width':10,'stroke-linecap':'round'},svg);
+                         stroke:'#DCD5C7','stroke-width':10,'stroke-linecap':'round'},svg);
 
   // length marker under the cable
-  var lenTick1 = mk('line',{x1:CABLE_X1,y1:196,x2:CABLE_X1,y2:208,stroke:'#6B6B6B','stroke-width':2},svg);
-  var lenTick2 = mk('line',{x1:CABLE_X2,y1:196,x2:CABLE_X2,y2:208,stroke:'#6B6B6B','stroke-width':2},svg);
-  var lenDash = mk('line',{x1:CABLE_X1,y1:202,x2:CABLE_X2,y2:202,stroke:'#6B6B6B','stroke-width':2,
+  var lenTick1 = mk('line',{x1:CABLE_X1,y1:196,x2:CABLE_X1,y2:208,stroke:'#5E5A52','stroke-width':2},svg);
+  var lenTick2 = mk('line',{x1:CABLE_X2,y1:196,x2:CABLE_X2,y2:208,stroke:'#5E5A52','stroke-width':2},svg);
+  var lenDash = mk('line',{x1:CABLE_X1,y1:202,x2:CABLE_X2,y2:202,stroke:'#5E5A52','stroke-width':2,
              'stroke-dasharray':'5 4'},svg);
-  var lenText = label((CABLE_X1+CABLE_X2)/2,224,'75 CM',{'text-anchor':'middle',fill:'#6B6B6B'},svg);
+  var lenText = label((CABLE_X1+CABLE_X2)/2,224,'75 CM',{'text-anchor':'middle',fill:'#5E5A52'},svg);
 
   // phone
   var ph = mk('g',{},svg);
   mk('rect',{x:520,y:44,width:150,height:176,rx:14,fill:'#fff',stroke:'#1A1A1A','stroke-width':3},ph);
-  mk('rect',{x:532,y:60,width:126,height:132,fill:'#EFEFED',stroke:'#1A1A1A','stroke-width':2},ph);
+  mk('rect',{x:532,y:60,width:126,height:132,fill:'#E4DDD0',stroke:'#1A1A1A','stroke-width':2},ph);
   var phoneVolts = label(595,120,'4.3 V',{'text-anchor':'middle','class':'num'},ph);
-  var phoneCap   = label(595,146,'ARRIVING',{'text-anchor':'middle',fill:'#6B6B6B'},ph);
-  label(595,238,'PHONE',{'text-anchor':'middle',fill:'#6B6B6B'},ph);
+  var phoneCap   = label(595,146,'ARRIVING',{'text-anchor':'middle',fill:'#5E5A52'},ph);
+  label(595,238,'PHONE',{'text-anchor':'middle',fill:'#5E5A52'},ph);
 
   /* ---------------- wiring ------------------------------------------------- */
   var dS = document.getElementById('dSlider');

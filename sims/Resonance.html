@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Simulates pushing a swing at different rhythms to show why matching a system's natural frequency produces a dramatically larger response than pushing harder off-rhythm.">
+<title>The right rhythm, not the hardest push — Janyaa Interactive</title>
+<style>
+  :root{
+    /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
+    --paper:#EDE7DC;   /* page background — warm sand   */
+    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
+    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
+    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
+    --strip:#E7EFE3;   /* status and result strips — pale sage */
+    --inert:#DCD5C7;   /* empty meters, idle cells */
+    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
+    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 20px 80px}
+
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+          color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,56px);line-height:.96;letter-spacing:-.035em;
+     margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:58ch;margin:0 0 30px;color:#3D3A33}
+  .stand b{color:var(--ink)}
+
+  .board{border:3px solid var(--ink);background:var(--panel)}
+  .board-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
+              justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .board-head h2{font-family:var(--display);font-size:20px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .board-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  .scene{background:var(--scene);padding:16px;display:grid;grid-template-columns:1fr 136px;gap:16px}
+  @media (max-width:640px){ .scene{grid-template-columns:1fr} }
+  .frame{border:2px solid var(--ink);background:var(--canvas)}
+  .frame svg{display:block;width:100%;height:auto}
+
+  .panel{border:3px solid var(--ink);background:var(--panel);margin-top:26px;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--dim);margin:0 0 14px}
+  .slider label{display:block;font-family:var(--label);font-size:10.5px;letter-spacing:.12em;
+                text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  input[type=range]{width:100%;accent-color:var(--red);height:26px}
+  .ends{display:flex;justify-content:space-between;font-family:var(--label);font-size:11px;
+        letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:2px}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+  .readout{margin-top:18px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;
+           line-height:1.55;min-height:4.4em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
+        font-size:13.5px;line-height:1.6;color:#4A463E;max-width:76ch}
+  .foot b{color:var(--ink)}
+
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
+  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.advanced summary::-webkit-details-marker{display:none}
+  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:var(--paper);font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced .curvebox{border:2px solid var(--ink);background:var(--canvas);margin:12px 0}
+
+  svg text{font-family:var(--label);font-size:11px;letter-spacing:.07em;fill:var(--ink)}
+  svg text.cap{fill:var(--dim);font-size:10.5px;letter-spacing:.13em}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Interactive · Physics workshop</p>
+  <h1>The right rhythm,<br>not the hardest <em>push</em>.</h1>
+  <p class="stand">Everyone has pushed someone on a swing. Shove at random and almost nothing happens.
+  Find the beat and the same small pushes send them soaring. <b>The strength of every push below is
+  identical — the only thing you can change is how often they come.</b> Slide it around and find the
+  rhythm the swing already wanted.</p>
+
+  <div class="board">
+    <div class="board-head">
+      <h2>One swing, one pusher</h2>
+      <span class="tag">Every push is exactly the same strength</span>
+    </div>
+    <div class="scene">
+      <div class="frame">
+        <svg id="swingScene" viewBox="0 0 620 340" role="img"
+             aria-label="A rider on a swing hanging from a frame, with a person beside it pushing at a chosen rhythm."></svg>
+      </div>
+      <div class="frame">
+        <svg id="heightGauge" viewBox="0 0 136 340" role="img"
+             aria-label="A vertical gauge showing how high the swing is getting compared with the highest it can ever reach."></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Change your rhythm</h3>
+    <div class="slider">
+      <label for="pushRateSlider">How fast you push</label>
+      <input type="range" id="pushRateSlider" min="0.30" max="2.00" step="0.01" value="0.60"
+             aria-label="How fast you push, from much slower than the swing's own rhythm to much faster">
+      <div class="ends"><span>&larr; Slower</span><span>Faster &rarr;</span></div>
+    </div>
+    <div class="readout" id="readout" role="status" aria-live="polite"></div>
+  </div>
+
+  <p class="foot"><b>Simplified:</b> real swings and structures have more complex motion than a single
+  clean frequency, and damping in this sim is a fixed illustrative value rather than measured from a
+  real swing.</p>
+
+  <details class="advanced">
+    <summary>For the curious — resonance, and what it does in the real world</summary>
+    <div class="adv-body">
+      <p>Every object that can wobble has a <b>natural frequency</b>: the rate it swings, rings or
+      vibrates at when you disturb it once and let go. Drive it with a repeating push at that same
+      rate and each push arrives while the object is already moving the right way, so energy keeps
+      piling on instead of cancelling out. That build-up is called <b>resonance</b>.</p>
+
+      <p>For a driven, lightly damped oscillator, the steady-state amplitude at a driving rate
+      <code>r</code> (driving rate divided by natural rate) is</p>
+      <p style="text-align:center"><code>amplitude(r) &prop; 1 / sqrt( (1 &minus; r&sup2;)&sup2; +
+      (2&zeta;r)&sup2; )</code></p>
+      <p>with the damping ratio <code>&zeta; = 0.1</code> used here — light damping, like a real swing
+      that keeps going for a while after you stop pushing. The peak is sharp, not gradual:</p>
+      <table>
+        <tr><th>Push rate compared with the swing's own</th><th>Relative height</th><th>Compared with the peak</th></tr>
+        <tr><td>half as fast</td><td>1.32</td><td>3.8&times; smaller</td></tr>
+        <tr><td>slightly slow (0.9)</td><td>3.82</td><td>1.3&times; smaller</td></tr>
+        <tr><td><b>exactly matched (1.0)</b></td><td><b>5.00</b></td><td><b>the peak</b></td></tr>
+        <tr><td>slightly fast (1.1)</td><td>3.29</td><td>1.5&times; smaller</td></tr>
+        <tr><td>half again as fast (1.5)</td><td>0.78</td><td>6.4&times; smaller</td></tr>
+        <tr><td>twice as fast</td><td>0.33</td><td>15.1&times; smaller</td></tr>
+      </table>
+
+      <p>Drawn out, with the dot showing where your slider currently sits:</p>
+      <div class="curvebox">
+        <svg id="curveArt" viewBox="0 0 620 240" role="img"
+             aria-label="A response curve with a tall narrow peak where the push rate matches the swing's natural rate."></svg>
+      </div>
+
+      <p><b>Why the timing matters, not the force.</b> The swing always ends up moving at whatever rate
+      you push it, but the <i>phase</i> — where it is in its arc when your push lands — depends on
+      <code>r</code>. Push far too slowly and your hand arrives when the swing is at the top of its arc,
+      momentarily stopped, so you do almost no useful work. Push far too fast and the swing is coming
+      back at you, so you cancel out what it already had. Exactly on rhythm, the push lands while the
+      swing is at the bottom moving away from you at full speed, which is where a push adds the most
+      energy. That is the quarter-turn phase shift you can watch in the animation.</p>
+
+      <p><b>Where this shows up.</b> An opera singer can shatter a wine glass by holding a note at the
+      glass's own natural frequency, loudly enough and long enough for the vibration to build past what
+      the glass can survive. The <b>Tacoma Narrows Bridge</b> collapse of 1940 is the famous
+      engineering example — steady wind set the deck oscillating and the motion grew until the bridge
+      tore itself apart. Engineers today describe that case more precisely as <i>aeroelastic
+      flutter</i>: the bridge's own motion kept re-timing the force the wind applied to it, which is a
+      self-feeding version of the same build-up rather than a fixed outside rhythm happening to match.
+      Soldiers also break step when crossing a footbridge for exactly this reason, and a washing
+      machine walks across the floor when the drum's spin rate passes through the frame's natural
+      frequency on its way up to speed.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- model -------------------------------------------------- */
+  var ZETA   = 0.10;   // damping ratio — light, like a real swing
+  var F0      = 0.45;  // the swing's own rhythm, in cycles per second, for the animation
+  var MAX_DEG = 52;    // how far the swing leans at the peak of the response
+  var BUILD_S = 1.5;   // how long the swing takes to settle to its new height
+
+  /* Steady-state height for a driving rate r times the swing's own rate. */
+  function response(r){
+    var a = 1 - r*r, b = 2*ZETA*r;
+    return 1 / Math.sqrt(a*a + b*b);
+  }
+  var PEAK = response(1);                     // 5.0 with this damping
+
+  /* How far behind the push the swing lags, from 0 (in step) to half a cycle. */
+  function lag(r){ return Math.atan2(2*ZETA*r, 1 - r*r); }
+
+  var r = 0.60;             // driving rate as a multiple of the swing's own
+  var phase = 0;            // where we are in the push cycle
+  var ampDeg = 0;           // the height the swing has actually built up to
+
+  /* ---------------- svg helpers -------------------------------------------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  function mk(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag), k;
+    for(k in attrs){ if(Object.prototype.hasOwnProperty.call(attrs,k)) e.setAttribute(k, attrs[k]); }
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+  function label(x, y, str, attrs, parent){
+    var a = attrs || {}, o = {}, k;
+    for(k in a){ if(Object.prototype.hasOwnProperty.call(a,k)) o[k] = a[k]; }
+    o.x = x; o.y = y;
+    var t = mk('text', o, parent);
+    t.textContent = str;
+    return t;
+  }
+
+  /* ---------------- the swing ---------------------------------------------- */
+  var scene = document.getElementById('swingScene');
+  var PIVOT_X = 330, PIVOT_Y = 58, ROPE = 190, GROUND = 306;
+  var SEAT_Y = PIVOT_Y + ROPE;                       // 248 when hanging straight down
+  var el = {};
+
+  function buildSwing(){
+    mk('rect',{width:620,height:340,fill:'#FBF9F4'},scene);
+
+    // ---- frame ----
+    var f = mk('g',{stroke:'#1A1A1A','stroke-width':7,'stroke-linecap':'round',fill:'none'},scene);
+    mk('line',{x1:200,y1:GROUND,x2:250,y2:PIVOT_Y},f);
+    mk('line',{x1:300,y1:GROUND,x2:250,y2:PIVOT_Y},f);
+    mk('line',{x1:420,y1:GROUND,x2:470,y2:PIVOT_Y},f);
+    mk('line',{x1:520,y1:GROUND,x2:470,y2:PIVOT_Y},f);
+    mk('line',{x1:238,y1:PIVOT_Y,x2:482,y2:PIVOT_Y},f);
+    mk('line',{x1:20,y1:GROUND,x2:600,y2:GROUND,stroke:'#1A1A1A','stroke-width':4},scene);
+
+    // ---- the arc the seat sweeps, so the size of the swing is readable ----
+    el.arc = mk('path',{fill:'none',stroke:'#D6CEBF','stroke-width':3,'stroke-dasharray':'6 6'},scene);
+
+    // ---- rider + ropes, rotated about the pivot as one piece ----
+    var s = mk('g',{},scene);
+    mk('line',{x1:PIVOT_X-19,y1:PIVOT_Y,x2:PIVOT_X-19,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':4},s);
+    mk('line',{x1:PIVOT_X+19,y1:PIVOT_Y,x2:PIVOT_X+19,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':4},s);
+    mk('rect',{x:PIVOT_X-30,y:SEAT_Y-6,width:60,height:11,fill:'#B0731C',
+               stroke:'#1A1A1A','stroke-width':3},s);
+    // the rider
+    mk('line',{x1:PIVOT_X,y1:SEAT_Y-8,x2:PIVOT_X,y2:SEAT_Y-52,stroke:'#1A1A1A','stroke-width':7,
+               'stroke-linecap':'round'},s);
+    mk('circle',{cx:PIVOT_X,cy:SEAT_Y-66,r:15,fill:'#2B6CD4',stroke:'#1A1A1A','stroke-width':3},s);
+    mk('line',{x1:PIVOT_X,y1:SEAT_Y-40,x2:PIVOT_X-21,y2:SEAT_Y-16,stroke:'#1A1A1A','stroke-width':5,
+               'stroke-linecap':'round'},s);
+    mk('line',{x1:PIVOT_X,y1:SEAT_Y-2,x2:PIVOT_X+34,y2:SEAT_Y+18,stroke:'#1A1A1A','stroke-width':6,
+               'stroke-linecap':'round'},s);
+    mk('line',{x1:PIVOT_X+34,y1:SEAT_Y+18,x2:PIVOT_X+48,y2:SEAT_Y+12,stroke:'#1A1A1A','stroke-width':6,
+               'stroke-linecap':'round'},s);
+    el.swing = s;
+
+    // ---- the pusher ----
+    var p = mk('g',{},scene);
+    mk('line',{x1:120,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':6,'stroke-linecap':'round'},p);
+    mk('line',{x1:150,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':6,'stroke-linecap':'round'},p);
+    mk('line',{x1:132,y1:SEAT_Y-6,x2:132,y2:SEAT_Y-58,stroke:'#1A1A1A','stroke-width':7,'stroke-linecap':'round'},p);
+    mk('circle',{cx:132,cy:SEAT_Y-73,r:15,fill:'#2E7D5B',stroke:'#1A1A1A','stroke-width':3},p);
+    el.arm  = mk('line',{x1:132,y1:SEAT_Y-46,x2:180,y2:SEAT_Y-22,stroke:'#1A1A1A','stroke-width':6,
+                         'stroke-linecap':'round'},p);
+    el.hand = mk('circle',{cx:180,cy:SEAT_Y-22,r:9,fill:'#2E7D5B',stroke:'#1A1A1A','stroke-width':3},p);
+    el.puff = mk('g',{opacity:0},p);
+    mk('line',{x1:0,y1:-12,x2:16,y2:-12,stroke:'#D2443D','stroke-width':3,'stroke-linecap':'round'},el.puff);
+    mk('line',{x1:0,y1:0,  x2:22,y2:0,  stroke:'#D2443D','stroke-width':3,'stroke-linecap':'round'},el.puff);
+    mk('line',{x1:0,y1:12, x2:16,y2:12, stroke:'#D2443D','stroke-width':3,'stroke-linecap':'round'},el.puff);
+    label(132, SEAT_Y+58, 'YOU', {'text-anchor':'middle','class':'cap'}, p);
+
+    el.beat = label(600, 28, '', {'text-anchor':'end','class':'cap'}, scene);
+    label(20, 28, 'THE PUSH LANDS WHERE THE RED MARKS FLASH', {'class':'cap'}, scene);
+  }
+
+  /* ---------------- the gauge ---------------------------------------------- */
+  var gauge = document.getElementById('heightGauge');
+  var G_X = 38, G_W = 60, G_TOP = 58, G_BOT = 288, G_H = G_BOT - G_TOP;
+
+  function buildGauge(){
+    mk('rect',{width:136,height:340,fill:'#FBF9F4'},gauge);
+    label(68, 26, 'HOW HIGH', {'text-anchor':'middle','class':'cap'}, gauge);
+    label(68, 40, 'IT GETS',  {'text-anchor':'middle','class':'cap'}, gauge);
+    mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'#DCD5C7'},gauge);
+    el.gaugeFill = mk('rect',{x:G_X,y:G_BOT,width:G_W,height:0,fill:'#2B6CD4'},gauge);
+    mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'none',stroke:'#1A1A1A','stroke-width':3},gauge);
+    mk('line',{x1:G_X-10,y1:G_TOP,x2:G_X+G_W+10,y2:G_TOP,stroke:'#D2443D','stroke-width':3,
+               'stroke-dasharray':'5 4'},gauge);
+    label(68, G_TOP-8, 'HIGHEST POSSIBLE', {'text-anchor':'middle','class':'cap','font-size':9}, gauge);
+    el.gaugeWord = label(68, G_BOT+24, '', {'text-anchor':'middle','class':'cap'}, gauge);
+  }
+
+  /* ---------------- the response curve, for the curious --------------------- */
+  var curve = document.getElementById('curveArt');
+  var C_X0 = 60, C_X1 = 580, C_Y0 = 200, C_Y1 = 30;
+
+  function cx(rr){ return C_X0 + (rr - 0.3) / (2.0 - 0.3) * (C_X1 - C_X0); }
+  function cy(a){  return C_Y0 - (a / PEAK) * (C_Y0 - C_Y1); }
+
+  function buildCurve(){
+    mk('rect',{width:620,height:240,fill:'#FBF9F4'},curve);
+    mk('line',{x1:C_X0,y1:C_Y0,x2:C_X1,y2:C_Y0,stroke:'#1A1A1A','stroke-width':3},curve);
+    mk('line',{x1:C_X0,y1:C_Y0,x2:C_X0,y2:C_Y1-6,stroke:'#1A1A1A','stroke-width':3},curve);
+
+    var d = '', rr;
+    for(rr = 0.3; rr <= 2.0001; rr += 0.005){
+      d += (d ? ' L' : 'M') + cx(rr).toFixed(1) + ' ' + cy(response(rr)).toFixed(1);
+    }
+    mk('path',{d:d,fill:'none',stroke:'#2B6CD4','stroke-width':4,'stroke-linejoin':'round'},curve);
+
+    mk('line',{x1:cx(1),y1:C_Y0,x2:cx(1),y2:C_Y1-6,stroke:'#D2443D','stroke-width':2,
+               'stroke-dasharray':'5 4'},curve);
+    label(cx(1), 22, 'THE SWING’S OWN RHYTHM', {'text-anchor':'middle','class':'cap',fill:'#D2443D'}, curve);
+    label(C_X0, C_Y0 + 22, 'SLOWER', {'class':'cap'}, curve);
+    label(C_X1, C_Y0 + 22, 'FASTER', {'text-anchor':'end','class':'cap'}, curve);
+    label(14, C_Y1 + 6, 'HIGH', {'class':'cap'}, curve);
+    label(14, C_Y0 - 4, 'LOW',  {'class':'cap'}, curve);
+
+    el.curveDot = mk('circle',{cx:cx(r),cy:cy(response(r)),r:8,fill:'#D2443D',
+                               stroke:'#1A1A1A','stroke-width':3},curve);
+  }
+
+  /* ---------------- narration ---------------------------------------------- */
+  var readEl = document.getElementById('readout');
+
+  function narrate(){
+    var off = r - 1;
+    if(Math.abs(off) <= 0.025){
+      readEl.innerHTML = '<b>Right on rhythm.</b> This is the highest the swing gets, and it’s not ' +
+        'because you’re pushing harder — it’s because you’re pushing at exactly the swing’s own ' +
+        'natural rhythm. Push at any other rate with the same effort and it barely climbs.';
+    } else if(Math.abs(off) <= 0.14){
+      readEl.innerHTML = 'Getting close — the swing is climbing fast now.';
+    } else {
+      readEl.innerHTML = 'Pushing ' + (off < 0 ? 'slower' : 'faster') + ' than the swing’s own ' +
+        'rhythm — notice it barely gets higher no matter how long you keep at it.';
+    }
+  }
+
+  function heightWord(frac){
+    if(frac > 0.92) return 'AS HIGH AS IT GOES';
+    if(frac > 0.6)  return 'CLIMBING WELL';
+    if(frac > 0.3)  return 'A LITTLE';
+    return 'HARDLY MOVING';
+  }
+
+  /* ---------------- animation ---------------------------------------------- */
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    phase = (phase + 2 * Math.PI * F0 * r * dt) % (2 * Math.PI);
+
+    // the swing eases up to its steady height rather than snapping to it
+    var target = MAX_DEG * response(r) / PEAK;
+    ampDeg += (target - ampDeg) * Math.min(1, dt / BUILD_S);
+
+    // the swing follows the push, a phase lag behind it
+    var theta = ampDeg * Math.sin(phase - lag(r));
+    el.swing.setAttribute('transform', 'rotate(' + theta.toFixed(2) + ' ' + PIVOT_X + ' ' + PIVOT_Y + ')');
+
+    // the sweep the seat is covering
+    var a = ampDeg * Math.PI / 180;
+    var lx = PIVOT_X - ROPE * Math.sin(a), ly = PIVOT_Y + ROPE * Math.cos(a);
+    var rx = PIVOT_X + ROPE * Math.sin(a), ry = ly;
+    el.arc.setAttribute('d', 'M ' + lx.toFixed(1) + ' ' + ly.toFixed(1) +
+                             ' A ' + ROPE + ' ' + ROPE + ' 0 0 1 ' + rx.toFixed(1) + ' ' + ry.toFixed(1));
+
+    // the pusher lunges once per push cycle, peaking exactly on the beat
+    var drive = Math.sin(phase);
+    var lunge = drive > 0 ? Math.pow(drive, 3) : 0;
+    var hx = 180 + 96 * lunge;
+    el.arm.setAttribute('x2', hx.toFixed(1));
+    el.hand.setAttribute('cx', hx.toFixed(1));
+    el.puff.setAttribute('transform', 'translate(' + (hx + 16).toFixed(1) + ',' + (SEAT_Y - 22) + ')');
+    el.puff.setAttribute('opacity', lunge > 0.55 ? '1' : '0');
+    el.beat.textContent = lunge > 0.55 ? 'PUSH' : '';
+
+    var frac = Math.max(0, Math.min(1, ampDeg / MAX_DEG));
+    var h = frac * G_H;
+    el.gaugeFill.setAttribute('height', h.toFixed(1));
+    el.gaugeFill.setAttribute('y', (G_BOT - h).toFixed(1));
+    el.gaugeFill.setAttribute('fill', frac > 0.92 ? '#2E7D5B' : '#2B6CD4');
+    el.gaugeWord.textContent = heightWord(frac);
+
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------------- controls ------------------------------------------------ */
+  document.getElementById('pushRateSlider').addEventListener('input', function(e){
+    r = parseFloat(e.target.value);
+    el.curveDot.setAttribute('cx', cx(r));
+    el.curveDot.setAttribute('cy', cy(response(r)));
+    narrate();
+  });
+
+  buildSwing();
+  buildGauge();
+  buildCurve();
+  narrate();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

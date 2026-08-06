@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Steps through a broken variable swap and its fix to show that assignment copies a value rather than linking two variables.">
+<title>The swap that doesn't work — Janyaa Interactive</title>
+<style>
+  :root{
+    /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
+    --paper:#EDE7DC;   /* page background — warm sand   */
+    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
+    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
+    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
+    --strip:#E7EFE3;   /* status and result strips — pale sage */
+    --inert:#DCD5C7;   /* empty meters, idle cells */
+    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
+    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 20px 80px}
+
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+          color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,56px);line-height:.96;letter-spacing:-.035em;
+     margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:58ch;margin:0 0 30px;color:#3D3A33}
+  .stand b{color:var(--ink)}
+
+  .board{border:3px solid var(--ink);background:var(--panel)}
+  .board-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
+              justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .board-head h2{font-family:var(--display);font-size:20px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .board-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  .split{display:grid;grid-template-columns:minmax(0,300px) 1fr}
+  @media (max-width:760px){ .split{grid-template-columns:1fr} }
+
+  /* ---- the program ---- */
+  .codewrap{border-right:3px solid var(--ink);background:var(--canvas);padding:16px 14px}
+  @media (max-width:760px){ .codewrap{border-right:0;border-bottom:3px solid var(--ink)} }
+  #codeListing{margin:0;padding:0;list-style:none}
+  #codeListing li{font-family:var(--label);font-size:16.5px;line-height:1.35;padding:9px 12px;
+                  border-left:5px solid transparent;color:var(--dim);white-space:pre;
+                  transition:background .15s ease,color .15s ease}
+  #codeListing li.done{color:var(--ink)}
+  #codeListing li.current{background:var(--blue);border-left-color:var(--ink);color:#fff}
+  #codeListing li .num{color:inherit;opacity:.55;margin-right:12px}
+
+  /* ---- the boxes ---- */
+  .boxes{position:relative;background:var(--scene);padding:26px 16px;
+         display:flex;gap:20px;justify-content:center;align-items:center;min-height:214px}
+  .box{width:126px;border:3px solid var(--ink);background:var(--panel);
+       transition:box-shadow .18s ease}
+  .box .bname{display:block;font-family:var(--label);font-size:11.5px;letter-spacing:.18em;
+              text-transform:uppercase;background:var(--ink);color:#fff;padding:7px 0;text-align:center}
+  .box .bval{display:flex;align-items:center;justify-content:center;height:94px;
+             font-family:var(--display);font-size:40px;letter-spacing:-.03em}
+  .box .bval.empty{color:var(--dim);font-size:15px;font-family:var(--label);letter-spacing:.08em;text-align:center;padding:0 8px}
+  .box.hit{box-shadow:0 0 0 6px rgba(43,108,212,.3)}
+  #boxTemp{display:none}
+  #boxTemp.live{display:block;animation:popin .4s cubic-bezier(.2,1.4,.4,1) both}
+  #boxTemp .bname{background:var(--green)}
+  .bval.land{animation:land .5s ease-out both}
+  @keyframes land{0%{transform:scale(.5);opacity:.15;color:var(--blue)}
+                  60%{transform:scale(1.16);color:var(--blue)}
+                  100%{transform:scale(1);opacity:1}}
+  @keyframes popin{0%{transform:translateY(16px) scale(.82);opacity:0}100%{transform:none;opacity:1}}
+
+  .chip{position:absolute;width:56px;height:44px;margin:-22px 0 0 -28px;
+        border:3px solid var(--ink);background:var(--blue);color:#fff;
+        font-family:var(--display);font-size:21px;display:flex;align-items:center;justify-content:center;
+        transition:transform .5s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:3}
+
+  /* ---- controls ---- */
+  .panel{border:3px solid var(--ink);background:var(--panel);margin-top:26px;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--dim);margin:0 0 12px}
+  .starts{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px}
+  .starts label{display:block;font-family:var(--label);font-size:10.5px;letter-spacing:.12em;
+                text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+  .starts input{width:96px;border:2px solid var(--ink);background:var(--canvas);padding:10px;
+                font-family:var(--display);font-size:19px;color:var(--ink)}
+  .starts .note{font-size:13px;line-height:1.45;color:#4A463E;max-width:32ch}
+  .runrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
+            background:var(--blue);color:#fff;border:3px solid var(--ink);padding:13px 24px;cursor:pointer}
+  button.go:hover{background:var(--ink)}
+  button.go[disabled]{background:var(--inert);color:#6C665B;cursor:default}
+  button.fix{background:var(--green);display:none}
+  button.fix.live{display:inline-block;animation:popin .4s cubic-bezier(.2,1.4,.4,1) both}
+  button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+               background:transparent;border:2px solid var(--ink);padding:13px 16px;cursor:pointer}
+  button.ghost:hover{background:var(--ink);color:#fff}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;
+           line-height:1.55;min-height:4.6em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+  .readout code{font-family:var(--label);background:var(--scene);padding:1px 6px;font-size:14px}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
+        font-size:13.5px;line-height:1.6;color:#4A463E;max-width:76ch}
+  .foot b{color:var(--ink)}
+
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
+  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.advanced summary::-webkit-details-marker{display:none}
+  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:var(--paper);font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Interactive · Computers · Programming</p>
+  <h1>The swap<br>that doesn't <em>work</em>.</h1>
+  <p class="stand">Almost everyone learning to program reads <b>x = y</b> as "now x and y are joined."
+  They are not. A box can only hold one number, and an assignment does one thing: it <b>copies whatever
+  is in the box on the right, at that exact instant, into the box on the left</b>. Run these four lines
+  one at a time and watch a perfectly sensible-looking swap destroy the very number it was trying to
+  save.</p>
+
+  <div class="board">
+    <div class="board-head">
+      <h2 id="partTitle">Part 1 — the broken attempt</h2>
+      <span class="tag" id="partTag">Goal: end with the two numbers swapped</span>
+    </div>
+    <div class="split">
+      <div class="codewrap">
+        <ol id="codeListing" aria-label="The program, one line at a time"></ol>
+      </div>
+      <div class="boxes" id="boxes">
+        <div class="box" id="boxX">
+          <span class="bname">x</span>
+          <span class="bval empty">no value yet</span>
+        </div>
+        <div class="box" id="boxY">
+          <span class="bname">y</span>
+          <span class="bval empty">no value yet</span>
+        </div>
+        <div class="box" id="boxTemp">
+          <span class="bname">temp</span>
+          <span class="bval empty">no value yet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Run it</h3>
+    <div class="starts">
+      <div>
+        <label for="xInput">x starts at</label>
+        <input type="number" id="xInput" value="5" min="-99" max="99" step="1">
+      </div>
+      <div>
+        <label for="yInput">y starts at</label>
+        <input type="number" id="yInput" value="10" min="-99" max="99" step="1">
+      </div>
+      <p class="note">Pick any two numbers you like — the failure and the fix behave the same way for
+      every pair.</p>
+    </div>
+    <div class="runrow">
+      <button class="go" id="runLineBtn">Run next line</button>
+      <button class="go fix" id="fixItBtn">Now let's fix it</button>
+      <button class="ghost" id="restartBtn">Restart</button>
+    </div>
+    <div class="readout" id="readout" role="status" aria-live="polite">Predict: after these four lines
+    run, what will x and y equal?</div>
+  </div>
+
+  <p class="foot"><b>Simplified:</b> real programs can swap two variables without a third box using
+  other tricks, but the temp-variable method is the one that makes the underlying rule — assignment
+  copies a value, it doesn't link two variables — the most visible.</p>
+
+  <details class="advanced">
+    <summary>For the curious — the notional machine</summary>
+    <div class="adv-body">
+      <p>The mental picture of "what the computer is actually doing while my program runs" has a name
+      in computing-education research: the <b>notional machine</b>. Most early programming bugs are not
+      typing mistakes, they are a wrong notional machine — and the belief that <code>x = y</code>
+      creates a lasting link between two variables is the classic example. The rule the real machine
+      follows is short:</p>
+      <p style="text-align:center"><code>evaluate the right-hand side to a single value, then store
+      that value in the name on the left</code></p>
+      <p>Both traces in full:</p>
+      <table>
+        <tr><th>Step</th><th>Line</th><th>x</th><th>y</th></tr>
+        <tr><td>0</td><td>(start)</td><td>—</td><td>—</td></tr>
+        <tr><td>1</td><td><code>x = 5</code></td><td>5</td><td>—</td></tr>
+        <tr><td>2</td><td><code>y = 10</code></td><td>5</td><td>10</td></tr>
+        <tr><td>3</td><td><code>x = y</code></td><td>10</td><td>10</td></tr>
+        <tr><td>4</td><td><code>y = x</code></td><td><b>10</b></td><td><b>10</b></td></tr>
+      </table>
+      <table>
+        <tr><th>Step</th><th>Line</th><th>x</th><th>y</th><th>temp</th></tr>
+        <tr><td>1</td><td><code>x = 5</code></td><td>5</td><td>—</td><td>—</td></tr>
+        <tr><td>2</td><td><code>y = 10</code></td><td>5</td><td>10</td><td>—</td></tr>
+        <tr><td>3</td><td><code>temp = x</code></td><td>5</td><td>10</td><td>5</td></tr>
+        <tr><td>4</td><td><code>x = y</code></td><td>10</td><td>10</td><td>5</td></tr>
+        <tr><td>5</td><td><code>y = temp</code></td><td><b>10</b></td><td><b>5</b></td><td>5</td></tr>
+      </table>
+      <p>Notice that step 3 of the broken version is not "wrong" on its own — it does exactly what it
+      says. The bug is that it is <i>irreversible</i>: the moment <code>x</code> is overwritten, the
+      original 5 no longer exists anywhere in the program, so line 4 has nothing left to copy back.</p>
+      <p><b>The other tricks mentioned in the note above.</b> Python and a few other languages let you
+      write <code>x, y = y, x</code>, which builds both new values before storing either, so no third
+      name is needed. There is also an old arithmetic trick using addition and subtraction, or the
+      exclusive-or operation, that swaps two numbers with no extra storage. Both work, and both hide
+      the rule this page is about, which is why neither is a good place to start.</p>
+      <p style="font-size:12.5px;color:var(--dim)">Cite: Juha Sorva, "Notional Machines and Introductory
+      Programming Education", <i>ACM Transactions on Computing Education</i>, 2013.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var REDUCED = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var FLY_MS  = REDUCED ? 0 : 500;
+
+  var listEl    = document.getElementById('codeListing');
+  var boxesEl   = document.getElementById('boxes');
+  var readEl    = document.getElementById('readout');
+  var runBtn    = document.getElementById('runLineBtn');
+  var fixBtn    = document.getElementById('fixItBtn');
+  var restart   = document.getElementById('restartBtn');
+  var xIn       = document.getElementById('xInput');
+  var yIn       = document.getElementById('yInput');
+  var titleEl   = document.getElementById('partTitle');
+  var tagEl     = document.getElementById('partTag');
+
+  var BOX = {
+    x:    document.getElementById('boxX'),
+    y:    document.getElementById('boxY'),
+    temp: document.getElementById('boxTemp')
+  };
+
+  /* ---------------- state -------------------------------------------------- */
+  var a = 5, b = 10;          // the two starting numbers
+  var part = 'A';             // 'A' = broken attempt, 'B' = the fix
+  var step = 0;               // how many lines have run in this part
+  var vals = { x:null, y:null, temp:null };
+  var busy = false;
+
+  /* Each line names the box it writes to, and where the value comes from:
+     a literal number, or a copy taken out of another box at that instant. */
+  function program(){
+    return part === 'A'
+      ? [ { to:'x', literal:a },
+          { to:'y', literal:b },
+          { to:'x', from:'y' },
+          { to:'y', from:'x' } ]
+      : [ { to:'x',    literal:a },
+          { to:'y',    literal:b },
+          { to:'temp', from:'x' },
+          { to:'x',    from:'y' },
+          { to:'y',    from:'temp' } ];
+  }
+  function lineText(s){
+    return s.to + ' = ' + (s.from !== undefined ? s.from : s.literal);
+  }
+
+  /* ---------------- drawing ------------------------------------------------ */
+  function drawListing(){
+    var lines = program();
+    listEl.innerHTML = '';
+    lines.forEach(function(s, i){
+      var li = document.createElement('li');
+      li.innerHTML = '<span class="num">' + (i+1) + '</span>';
+      li.appendChild(document.createTextNode(lineText(s)));
+      if(i < step) li.className = 'done';
+      if(i === step - 1) li.className = 'current';
+      listEl.appendChild(li);
+    });
+  }
+
+  function valEl(name){ return BOX[name].querySelector('.bval'); }
+
+  function drawBox(name, animate){
+    var el = valEl(name), v = vals[name];
+    if(v === null){
+      el.textContent = 'no value yet';
+      el.className = 'bval empty';
+      return;
+    }
+    el.textContent = String(v);
+    el.className = 'bval';
+    if(animate && !REDUCED){
+      // restart the landing animation even if it is already running
+      el.classList.remove('land');
+      void el.offsetWidth;
+      el.classList.add('land');
+    }
+  }
+
+  function drawAll(){
+    drawBox('x'); drawBox('y'); drawBox('temp');
+    BOX.temp.className = 'box' + (part === 'B' ? ' live' : '');
+    titleEl.textContent = part === 'A' ? 'Part 1 — the broken attempt'
+                                       : 'Part 2 — the same idea, one more box';
+    tagEl.textContent   = part === 'A' ? 'Goal: end with the two numbers swapped'
+                                       : 'temp holds the value that used to get lost';
+    drawListing();
+  }
+
+  /* A value visibly travelling from one box to another: the whole point is that
+     something is *copied*, not connected. */
+  function fly(fromName, toName, value, done){
+    var src = BOX[fromName], dst = BOX[toName];
+    var sx = src.offsetLeft + src.offsetWidth/2;
+    var sy = src.offsetTop  + src.offsetHeight/2;
+    var tx = dst.offsetLeft + dst.offsetWidth/2;
+    var ty = dst.offsetTop  + dst.offsetHeight/2;
+
+    var chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = String(value);
+    chip.style.left = sx + 'px';
+    chip.style.top  = sy + 'px';
+    boxesEl.appendChild(chip);
+
+    src.classList.add('hit');
+    void chip.offsetWidth;                       // commit the start position
+    chip.style.transform = 'translate(' + (tx-sx) + 'px,' + (ty-sy) + 'px)';
+
+    setTimeout(function(){
+      chip.remove();
+      src.classList.remove('hit');
+      done();
+    }, FLY_MS + 30);
+  }
+
+  /* ---------------- narration ---------------------------------------------- */
+  function say(html){ readEl.innerHTML = html; }
+
+  var START_TEXT = 'Predict: after these four lines run, what will x and y equal?';
+
+  function narrate(){
+    var n = step;   // lines run so far
+    if(part === 'A'){
+      if(n === 1) say('x is holding ' + a + '. Nothing has been put in y yet.');
+      else if(n === 2) say('Both boxes are set: x holds ' + a + ', y holds ' + b + '. The goal is to ' +
+        'finish with those two numbers the other way round.');
+      else if(n === 3) say('<b>Watch what just happened.</b> <code>x = y</code> copied y’s current ' +
+        'value into x. The ' + a + ' that x used to hold is now gone — no box anywhere is still ' +
+        'holding it. The next line is about to look for it.');
+      else if(n === 4) say('<b>x = ' + vals.x + ', y = ' + vals.y + '.</b> If you expected them ' +
+        'swapped, you’re not alone — that’s the single most common mistake in early ' +
+        'programming. y = x didn’t link the two boxes together. It copied x’s value at that ' +
+        'moment — and by the time the last line ran, x had already changed.');
+    } else {
+      if(n === 0) say('Same two numbers, same idea — with one extra box called temp. Run it and ' +
+        'watch what temp does <i>before</i> anything gets overwritten.');
+      else if(n === 1) say('x is holding ' + a + ' again.');
+      else if(n === 2) say('Back to the same starting point: x holds ' + a + ', y holds ' + b + '.');
+      else if(n === 3) say('temp now holds a safe copy of x’s original value — before x gets ' +
+        'overwritten.');
+      else if(n === 4) say('<code>x = y</code> overwrites x, exactly like it did last time. The ' +
+        'difference: the value x just lost is still sitting in temp.');
+      else if(n === 5) say('<b>x = ' + vals.x + ', y = ' + vals.y + '.</b> Swapped correctly — ' +
+        'temp held onto the value that would otherwise have been lost.');
+    }
+  }
+
+  /* ---------------- running ------------------------------------------------- */
+  function partLength(){ return program().length; }
+
+  function setButtons(){
+    var finished = step >= partLength();
+    runBtn.disabled = busy || finished;
+    runBtn.textContent = finished
+      ? (part === 'A' ? 'Part 1 finished' : 'Part 2 finished')
+      : 'Run next line';
+    fixBtn.className = 'go fix' + (part === 'A' && finished ? ' live' : '');
+  }
+
+  function runNext(){
+    if(busy || step >= partLength()) return;
+    var s = program()[step];
+    step++;
+    busy = true;
+    setButtons();
+    drawListing();
+
+    function land(){
+      drawBox(s.to, true);
+      busy = false;
+      setButtons();
+      narrate();
+    }
+
+    if(s.from !== undefined){
+      var copied = vals[s.from];
+      fly(s.from, s.to, copied, function(){ vals[s.to] = copied; land(); });
+    } else {
+      vals[s.to] = s.literal;
+      land();
+    }
+  }
+
+  /* ---------------- controls ------------------------------------------------ */
+  function readStarts(){
+    var na = parseInt(xIn.value, 10);
+    var nb = parseInt(yIn.value, 10);
+    a = isNaN(na) ? 5  : Math.max(-99, Math.min(99, na));
+    b = isNaN(nb) ? 10 : Math.max(-99, Math.min(99, nb));
+  }
+
+  function reset(toPart){
+    part = toPart;
+    step = 0;
+    busy = false;
+    vals = { x:null, y:null, temp:null };
+    drawAll();
+    setButtons();
+    if(part === 'A') say(START_TEXT); else narrate();
+  }
+
+  runBtn.addEventListener('click', runNext);
+  fixBtn.addEventListener('click', function(){ reset('B'); });
+  restart.addEventListener('click', function(){ readStarts(); reset('A'); });
+
+  [xIn, yIn].forEach(function(input){
+    input.addEventListener('change', function(){
+      readStarts();
+      xIn.value = a; yIn.value = b;
+      reset('A');
+      if(a === b){
+        say('Both boxes start at ' + a + ', so a swap would not change anything visible. Pick two ' +
+            'different numbers to see the bug.');
+      }
+    });
+  });
+
+  reset('A');
+})();
+</script>
+</body>
+</html>

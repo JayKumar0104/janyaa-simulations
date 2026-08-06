@@ -7,8 +7,15 @@
 <title>Why a bump kills a hard drive — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F5F5F4; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
-    --border:#E3E3E1; --dim:#6B6B6B;
+    /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
+    --paper:#EDE7DC;   /* page background — warm sand   */
+    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
+    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
+    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
+    --strip:#E7EFE3;   /* status and result strips — pale sage */
+    --inert:#DCD5C7;   /* empty meters, idle cells */
+    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
+    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -19,11 +26,11 @@
   .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:54ch;margin:0 0 30px;color:#333333}
+  .stand{font-size:17px;line-height:1.5;max-width:54ch;margin:0 0 30px;color:#3D3A33}
   .stand b{color:var(--ink)}
 
   /* scale analogy strip */
-  .analogy{border:3px solid var(--ink);background:#fff;margin-bottom:26px}
+  .analogy{border:3px solid var(--ink);background:var(--panel);margin-bottom:26px}
   .analogy-head{padding:13px 18px;border-bottom:3px solid var(--ink);
                 font-family:var(--display);text-transform:uppercase;font-size:16px;letter-spacing:-.01em}
   .analogy-body{padding:16px 18px 18px}
@@ -33,25 +40,25 @@
 
   .decks{display:grid;grid-template-columns:1fr 1fr;gap:22px}
   @media (max-width:820px){ .decks{grid-template-columns:1fr} }
-  .deck{border:3px solid var(--ink);background:#fff;display:flex;flex-direction:column}
+  .deck{border:3px solid var(--ink);background:var(--panel);display:flex;flex-direction:column}
   .deck-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
   .deck-head h2{font-family:var(--display);font-size:21px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
   .deck-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-  .stage{background:#EAEAE8;padding:14px;flex:1}
-  .stage .frame{border:2px solid var(--ink);background:#fff}
-  .status{border-top:3px solid var(--ink);padding:13px 16px;background:#FAFAFA}
+  .stage{background:var(--scene);padding:14px;flex:1}
+  .stage .frame{border:2px solid var(--ink);background:var(--canvas)}
+  .status{border-top:3px solid var(--ink);padding:13px 16px;background:var(--strip)}
   .status .big{font-family:var(--display);font-size:clamp(22px,4.4vw,32px);line-height:1;letter-spacing:-.03em}
   .status .big.ok{color:var(--ink)}
   .status .big.dead{color:var(--red)}
   .status .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:6px}
 
-  .panel{border:3px solid var(--ink);background:#fff;margin-top:26px;padding:18px 20px}
+  .panel{border:3px solid var(--ink);background:var(--panel);margin-top:26px;padding:18px 20px}
   .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
   .drops{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
   @media (max-width:640px){ .drops{grid-template-columns:1fr} }
-  .drop{border:2px solid var(--ink);background:#fff;padding:14px 15px;text-align:left;cursor:pointer;font-family:var(--body)}
+  .drop{border:2px solid var(--ink);background:var(--panel);padding:14px 15px;text-align:left;cursor:pointer;font-family:var(--body)}
   .drop b{display:block;font-family:var(--display);font-size:14px;text-transform:uppercase;margin-bottom:5px;letter-spacing:-.01em}
-  .drop span{font-size:13px;line-height:1.45;color:#4A4A4A}
+  .drop span{font-size:13px;line-height:1.45;color:#4A463E}
   .drop:hover{background:var(--ink)}
   .drop:hover b, .drop:hover span{color:#fff}
   .runrow{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
@@ -60,17 +67,17 @@
   :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
   .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.2em}
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
-  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A4A4A;max-width:74ch}
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A463E;max-width:74ch}
   .foot b{color:var(--ink)}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-  details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
   details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
     font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B3B3B}
-  details.advanced .adv-body code{font-family:var(--label);background:#F5F5F4;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -89,7 +96,7 @@
       jumbo jet to that same proportion and here is what it looks like:</p>
       <svg viewBox="0 0 900 150" role="img" aria-label="A jumbo jet flying one millimetre above the runway at 900 kilometres per hour">
         <!-- ground -->
-        <rect x="0" y="120" width="900" height="30" fill="#E3E3E1" stroke="#1A1A1A" stroke-width="3"/>
+        <rect x="0" y="120" width="900" height="30" fill="#DCD5C7" stroke="#1A1A1A" stroke-width="3"/>
         <!-- jet body -->
         <g stroke="#1A1A1A" stroke-width="3" fill="#fff">
           <path d="M180 78 L560 78 Q625 78 655 92 L680 106 Q690 110 680 113 L200 113 Q180 113 176 100 Z"/>
@@ -105,9 +112,9 @@
           <rect x="328" y="88" width="10" height="8"/><rect x="350" y="88" width="10" height="8"/>
         </g>
         <!-- gap dimension -->
-        <line x1="720" y1="113" x2="720" y2="120" stroke="#E0453E" stroke-width="3"/>
-        <line x1="700" y1="113" x2="900" y2="113" stroke="#E0453E" stroke-width="2" stroke-dasharray="6 5"/>
-        <text x="734" y="112" font-family="Courier New, monospace" font-size="15" fill="#E0453E">1 mm of clearance</text>
+        <line x1="720" y1="113" x2="720" y2="120" stroke="#D2443D" stroke-width="3"/>
+        <line x1="700" y1="113" x2="900" y2="113" stroke="#D2443D" stroke-width="2" stroke-dasharray="6 5"/>
+        <text x="734" y="112" font-family="Courier New, monospace" font-size="15" fill="#D2443D">1 mm of clearance</text>
         <!-- speed -->
         <g stroke="#1A1A1A" stroke-width="2.5" fill="none">
           <line x1="60" y1="90" x2="150" y2="90"/><line x1="40" y1="100" x2="150" y2="100"/>
@@ -127,30 +134,30 @@
       <div class="stage"><div class="frame">
         <svg id="hddSvg" viewBox="0 0 420 340" role="img" aria-label="Top view of a spinning disc with an arm and needle resting over it">
           <g id="hddShake">
-            <rect x="0" y="0" width="420" height="340" fill="#FAFAFA"/>
+            <rect x="-40" y="-40" width="500" height="420" fill="#FBF9F4"/>
             <!-- disc -->
-            <circle cx="200" cy="170" r="132" fill="#EAEAE8" stroke="#1A1A1A" stroke-width="3"/>
+            <circle cx="200" cy="170" r="132" fill="#E2DACB" stroke="#1A1A1A" stroke-width="3"/>
             <circle cx="200" cy="170" r="112" fill="#fff" stroke="#1A1A1A" stroke-width="2"/>
             <!-- data rings -->
             <g id="rings"></g>
             <!-- scratch marks -->
             <g id="scratches"></g>
             <!-- spindle -->
-            <circle cx="200" cy="170" r="22" fill="#E3E3E1" stroke="#1A1A1A" stroke-width="3"/>
+            <circle cx="200" cy="170" r="22" fill="#DCD5C7" stroke="#1A1A1A" stroke-width="3"/>
             <g id="spinMark">
               <line x1="200" y1="170" x2="200" y2="152" stroke="#1A1A1A" stroke-width="3"/>
             </g>
             <!-- arm -->
             <g id="arm">
               <line x1="386" y1="292" x2="252" y2="118" stroke="#1A1A1A" stroke-width="9" stroke-linecap="round"/>
-              <line x1="386" y1="292" x2="252" y2="118" stroke="#E3E3E1" stroke-width="4" stroke-linecap="round"/>
-              <circle cx="386" cy="292" r="15" fill="#E3E3E1" stroke="#1A1A1A" stroke-width="3"/>
-              <circle id="head" cx="252" cy="118" r="9" fill="#E0453E" stroke="#1A1A1A" stroke-width="3"/>
+              <line x1="386" y1="292" x2="252" y2="118" stroke="#DCD5C7" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="386" cy="292" r="15" fill="#DCD5C7" stroke="#1A1A1A" stroke-width="3"/>
+              <circle id="head" cx="252" cy="118" r="9" fill="#D2443D" stroke="#1A1A1A" stroke-width="3"/>
             </g>
           </g>
-          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#6B6B6B">7,200 RPM</text>
+          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#5E5A52">7,200 RPM</text>
           <text id="hddCry" x="210" y="180" font-family="Arial Black, sans-serif" font-size="34"
-                fill="#E0453E" text-anchor="middle" opacity="0">SCRATCH</text>
+                fill="#D2443D" text-anchor="middle" opacity="0">SCRATCH</text>
         </svg>
       </div></div>
       <div class="status">
@@ -164,21 +171,21 @@
       <div class="stage"><div class="frame">
         <svg id="ssdSvg" viewBox="0 0 420 340" role="img" aria-label="A grid of memory cells holding charge, with nothing that moves">
           <g id="ssdShake">
-            <rect x="0" y="0" width="420" height="340" fill="#FAFAFA"/>
+            <rect x="-40" y="-40" width="500" height="420" fill="#FBF9F4"/>
             <rect x="34" y="34" width="352" height="200" fill="none" stroke="#1A1A1A" stroke-width="3"/>
             <g id="cells"></g>
             <!-- one cell blown up -->
             <rect x="34" y="256" width="352" height="62" fill="#fff" stroke="#1A1A1A" stroke-width="3"/>
-            <rect x="52" y="270" width="150" height="12" fill="#E3E3E1" stroke="#1A1A1A" stroke-width="2"/>
-            <rect x="52" y="286" width="150" height="18" fill="#EAEAE8" stroke="#1A1A1A" stroke-width="2"/>
+            <rect x="52" y="270" width="150" height="12" fill="#DCD5C7" stroke="#1A1A1A" stroke-width="2"/>
+            <rect x="52" y="286" width="150" height="18" fill="#E2DACB" stroke="#1A1A1A" stroke-width="2"/>
             <g fill="#2B6CD4" stroke="#1A1A1A" stroke-width="1.5">
               <circle cx="72" cy="295" r="5"/><circle cx="97" cy="295" r="5"/>
               <circle cx="122" cy="295" r="5"/><circle cx="147" cy="295" r="5"/><circle cx="172" cy="295" r="5"/>
             </g>
-            <text x="214" y="280" font-family="Courier New, monospace" font-size="12" fill="#6B6B6B">ONE CELL, ENLARGED</text>
-            <text x="214" y="300" font-family="Courier New, monospace" font-size="12" fill="#E0453E">TRAPPED ELECTRICITY = YOUR FILE</text>
+            <text x="214" y="280" font-family="Courier New, monospace" font-size="12" fill="#5E5A52">ONE CELL, ENLARGED</text>
+            <text x="214" y="300" font-family="Courier New, monospace" font-size="12" fill="#D2443D">TRAPPED ELECTRICITY = YOUR FILE</text>
           </g>
-          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#6B6B6B">0 MOVING PARTS</text>
+          <text x="16" y="26" font-family="Courier New, monospace" font-size="12" fill="#5E5A52">0 MOVING PARTS</text>
         </svg>
       </div></div>
       <div class="status">
@@ -199,7 +206,7 @@
     <div class="runrow">
       <button class="ghost" id="reset">Put fresh drives in</button>
     </div>
-    <div class="readout" id="readout">Pick a bump. Watch which drive cares.</div>
+    <div class="readout" id="readout" role="status" aria-live="polite">Pick a bump. Watch which drive cares.</div>
   </div>
 
   <p class="foot"><b>What actually happens.</b> The needle rides on a cushion of air made by the
@@ -236,7 +243,7 @@
   RING_RADII.forEach(function(r){
     var c = document.createElementNS(ns,'circle');
     c.setAttribute('cx',200); c.setAttribute('cy',170); c.setAttribute('r',r);
-    c.setAttribute('fill','none'); c.setAttribute('stroke','#E3E3E1'); c.setAttribute('stroke-width','1.5');
+    c.setAttribute('fill','none'); c.setAttribute('stroke','#DCD5C7'); c.setAttribute('stroke-width','1.5');
     rings.appendChild(c);
   });
 
@@ -249,7 +256,7 @@
       rect.setAttribute('x', 44 + c2*15.6);
       rect.setAttribute('y', 44 + r2*15.6);
       rect.setAttribute('width', 11); rect.setAttribute('height', 11);
-      rect.setAttribute('fill', Math.random() < 0.55 ? '#2B6CD4' : '#EAEAE8');
+      rect.setAttribute('fill', Math.random() < 0.55 ? '#2B6CD4' : '#E2DACB');
       rect.setAttribute('stroke','#1A1A1A'); rect.setAttribute('stroke-width','1');
       cells.appendChild(rect);
     }
@@ -257,12 +264,11 @@
 
   // ---------- disc rotation ----------
   var spinMark = document.getElementById('spinMark');
-  var angle = 0, spinning = true;
+  var angle = 0;
   function tick(){
-    if(spinning){
-      angle = (angle + 4.5) % 360;
-      spinMark.setAttribute('transform','rotate('+angle+' 200 170)');
-    }
+    // The platter never stops — a crash happens *because* it is still spinning.
+    angle = (angle + 4.5) % 360;
+    spinMark.setAttribute('transform','rotate('+angle+' 200 170)');
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
@@ -297,7 +303,7 @@
     var path = document.createElementNS(ns,'path');
     path.setAttribute('d','M '+x0+' '+y0+' A '+radius+' '+radius+' 0 0 1 '+x1+' '+y1);
     path.setAttribute('fill','none');
-    path.setAttribute('stroke','#E0453E');
+    path.setAttribute('stroke','#D2443D');
     path.setAttribute('stroke-width','5');
     path.setAttribute('stroke-linecap','round');
     scratches.appendChild(path);
@@ -324,8 +330,7 @@
 
     if(crashed){
       // needle slams down onto the disc
-      spinning = true;
-      head.setAttribute('fill','#E0453E');
+      head.setAttribute('fill','#D2443D');
       arm.setAttribute('transform','rotate(-7 386 292)');
       setTimeout(function(){ arm.setAttribute('transform',''); }, 500);
       var gouges = g >= 250 ? 5 : (g >= 150 ? 3 : 2);

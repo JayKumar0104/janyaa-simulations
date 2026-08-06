@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Races two search strategies over the same hidden number to show why repeatedly halving a range finds an answer far faster than checking one at a time.">
+<title>Halving your way to the answer — Janyaa Interactive</title>
+<style>
+  :root{
+    /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
+    --paper:#EDE7DC;   /* page background — warm sand   */
+    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
+    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
+    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
+    --strip:#E7EFE3;   /* status and result strips — pale sage */
+    --inert:#DCD5C7;   /* empty meters, idle cells */
+    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
+    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
+    --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --label:"Courier New",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+  .wrap{max-width:1060px;margin:0 auto;padding:36px 20px 80px}
+
+  .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+          color:var(--dim);margin:0 0 14px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
+     margin:0 0 18px;text-transform:uppercase}
+  h1 em{font-style:normal;color:var(--red)}
+  .stand{font-size:17px;line-height:1.5;max-width:58ch;margin:0 0 30px;color:#3D3A33}
+  .stand b{color:var(--ink)}
+
+  .board{border:3px solid var(--ink);background:var(--panel)}
+  .board-head{border-bottom:3px solid var(--ink);padding:12px 16px;display:flex;
+              justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .board-head h2{font-family:var(--display);font-size:20px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
+  .board-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  .scene{background:var(--scene);padding:16px}
+  .frame{border:2px solid var(--ink);background:var(--canvas)}
+  .frame svg{display:block;width:100%;height:auto}
+
+  .status{border-top:3px solid var(--ink);display:grid;grid-template-columns:1fr 1fr}
+  @media (max-width:620px){ .status{grid-template-columns:1fr} }
+  .stat{padding:16px 20px;background:var(--strip)}
+  .stat + .stat{border-left:3px solid var(--ink)}
+  @media (max-width:620px){ .stat + .stat{border-left:0;border-top:3px solid var(--ink)} }
+  .stat .cap{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+             color:var(--dim);margin-bottom:8px}
+  .stat .val{font-family:var(--display);font-size:clamp(34px,8vw,52px);line-height:1;letter-spacing:-.03em}
+  .stat.linear .val{color:var(--red)}
+  .stat.binary .val{color:var(--blue)}
+  .stat .sub{font-family:var(--label);font-size:11.5px;color:var(--dim);margin-top:9px;line-height:1.5}
+
+  .panel{border:3px solid var(--ink);background:var(--panel);margin-top:26px;padding:18px 20px}
+  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--dim);margin:0 0 12px}
+  .sliderbox{max-width:520px}
+  .slab{font-family:var(--label);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--dim);display:flex;justify-content:space-between;gap:16px;margin-bottom:6px}
+  .slab b{font-family:var(--display);font-size:16px;color:var(--ink);letter-spacing:-.01em}
+  input[type=range]{width:100%;accent-color:var(--red);height:26px}
+  .runrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
+            background:var(--blue);color:#fff;border:3px solid var(--ink);padding:13px 24px;cursor:pointer}
+  button.go:hover{background:var(--ink)}
+  button.go[disabled]{background:var(--inert);color:#6C665B;cursor:default}
+  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+  .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;
+           line-height:1.55;min-height:4.4em}
+  .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
+        font-size:13.5px;line-height:1.6;color:#4A463E;max-width:76ch}
+  .foot b{color:var(--ink)}
+
+  details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
+  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.advanced summary::-webkit-details-marker{display:none}
+  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+  details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
+  details.advanced th{background:var(--paper);font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+
+  svg text{font-family:var(--label);font-size:11px;letter-spacing:.07em;fill:var(--ink)}
+  svg text.cap{fill:var(--dim);font-size:10.5px;letter-spacing:.13em}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Janyaa Interactive · Computers · Maths</p>
+  <h1>Halving your way<br>to the <em>answer</em>.</h1>
+  <p class="stand">A number is hidden somewhere between 1 and 1000. One searcher checks every number
+  in order: 1, 2, 3, 4… The other only ever guesses the middle of what's left, asks "higher or lower?",
+  and <b>throws away half the possibilities with every single guess</b>. Watch how badly that second
+  idea beats the first.</p>
+
+  <div class="board">
+    <div class="board-head">
+      <h2>The same hidden number, two ways to hunt for it</h2>
+      <span class="tag" id="rangeTag">Somewhere in 1 … 1000</span>
+    </div>
+    <div class="scene"><div class="frame">
+      <svg id="numberLine" viewBox="0 0 960 262" role="img"
+           aria-label="A number line from 1 to N. Above it, a linear searcher creeps rightward one number at a time. Below it, a binary searcher's remaining range halves with every guess."></svg>
+    </div></div>
+    <div class="status">
+      <div class="stat linear">
+        <div class="cap">Linear — guesses used</div>
+        <div class="val" id="linearCount">0</div>
+        <div class="sub" id="linearSub">checks 1, 2, 3, … in order</div>
+      </div>
+      <div class="stat binary">
+        <div class="cap">Binary — guesses used</div>
+        <div class="val" id="binaryCount">0</div>
+        <div class="sub" id="binarySub">halves what's left, every time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Set it up</h3>
+    <div class="sliderbox">
+      <div class="slab"><span>How many numbers</span><b id="nLabel">1000</b></div>
+      <input type="range" id="nSlider" min="100" max="1000" step="10" value="1000"
+             aria-label="How many numbers the secret could be hiding in">
+    </div>
+    <div class="runrow">
+      <button class="go" id="raceBtn">Pick a secret number and race</button>
+    </div>
+    <div class="readout" id="readout" role="status" aria-live="polite">Somewhere between 1 and 1000 is
+    a secret number. Watch how many guesses each method needs to find it.</div>
+  </div>
+
+  <p class="foot"><b>Simplified:</b> assumes the list is already sorted, which is what makes binary
+  search possible at all — searching an unsorted list can't skip ahead like this.</p>
+
+  <details class="advanced">
+    <summary>For the curious — why the gap gets worse as the list grows</summary>
+    <div class="adv-body">
+      <p>Linear search has to be prepared to look at every item, so its worst case is <code>N</code>
+      guesses. Binary search halves the range each time, so its worst case is the number of halvings
+      it takes to get from <code>N</code> down to 1 — that is
+      <code>floor(log&#8322; N) + 1</code>:</p>
+      <table>
+        <tr><th>How many numbers</th><th>Linear, worst case</th><th>Binary, worst case</th></tr>
+        <tr><td>16</td><td>16</td><td>5</td></tr>
+        <tr><td>64</td><td>64</td><td>7</td></tr>
+        <tr><td>128</td><td>128</td><td>8</td></tr>
+        <tr><td>256</td><td>256</td><td>9</td></tr>
+        <tr><td>1,000</td><td>1,000</td><td>10</td></tr>
+        <tr><td>1,024</td><td>1,024</td><td>11</td></tr>
+        <tr><td>1,000,000</td><td>1,000,000</td><td>20</td></tr>
+      </table>
+      <p>Read the last row again: a million numbers costs binary search twice what a thousand costs it.
+      Doubling the length of the list only ever adds <b>one</b> guess. That is the same exponent
+      relationship as folding a sheet of paper — every fold doubles the thickness, so it takes
+      surprisingly few folds to get somewhere absurd — read in the opposite direction: every guess
+      halves the search, so it takes surprisingly few guesses to get down to one answer.</p>
+      <p>The procedure itself, in full:</p>
+      <p><code>lo = 1; hi = N; guess the middle; if too low, lo = middle + 1; if too high,
+      hi = middle &minus; 1; repeat.</code></p>
+      <p><b>What it costs.</b> Binary search only works because the list is sorted — the "higher or
+      lower" answer is what lets it discard a whole half. Sorting a list in the first place is real
+      work, so binary search pays off when you search the same sorted list many times, which is exactly
+      what a dictionary, a phone book, a database index, and a git bisect all are. The same logarithm
+      turns up everywhere a problem is repeatedly cut in half.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var NS = 'http://www.w3.org/2000/svg';
+  function mk(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag), k;
+    for(k in attrs){ if(Object.prototype.hasOwnProperty.call(attrs,k)) e.setAttribute(k, attrs[k]); }
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+  function label(x, y, str, attrs, parent){
+    var a = attrs || {}, o = {}, k;
+    for(k in a){ if(Object.prototype.hasOwnProperty.call(a,k)) o[k] = a[k]; }
+    o.x = x; o.y = y;
+    var t = mk('text', o, parent);
+    t.textContent = str;
+    return t;
+  }
+
+  /* ---------------- geometry ---------------------------------------------- */
+  var X0 = 52, X1 = 908, W = X1 - X0;
+  var LIN_Y = 48, LIN_H = 18;            // linear progress track
+  var AXIS_Y = 124;                      // the number line itself
+  var BIN_Y = 200, BIN_H = 18;           // binary remaining-range track
+
+  var svg = document.getElementById('numberLine');
+
+  /* ---------------- state -------------------------------------------------- */
+  var N = 1000;
+  var secret = 0;
+  var running = false;
+
+  var lin = { guess:0, done:false };
+  var bin = { lo:1, hi:1, mid:0, guess:0, done:false };
+
+  var STEP_SEC = 0.16;     // seconds per guess while both are still racing
+  var FF_SEC   = 4.0;      // seconds allowed for linear to finish once binary is done
+  var acc = 0, stepSec = STEP_SEC, fastForward = false, winner = null;
+
+  /* ---------------- drawing ------------------------------------------------ */
+  var el = {};   // handles for the parts that move
+
+  function xOf(v){ return X0 + (v - 1) / (N - 1) * W; }
+
+  function buildScene(){
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    mk('rect',{width:960,height:262,fill:'#FBF9F4'},svg);
+
+    // ---- linear lane ----
+    label(X0, 22, 'LINEAR — CHECKS EVERY NUMBER IN ORDER', {'class':'cap'}, svg);
+    mk('rect',{x:X0,y:LIN_Y,width:W,height:LIN_H,fill:'#DCD5C7',stroke:'#1A1A1A','stroke-width':2},svg);
+    el.linBar = mk('rect',{x:X0,y:LIN_Y,width:0,height:LIN_H,fill:'#D2443D'},svg);
+    mk('rect',{x:X0,y:LIN_Y,width:W,height:LIN_H,fill:'none',stroke:'#1A1A1A','stroke-width':2},svg);
+    el.linMark = mk('polygon',{id:'linearMarker',points:'0,0 0,0 0,0',fill:'#D2443D',
+                               stroke:'#1A1A1A','stroke-width':2},svg);
+
+    // ---- the number line ----
+    mk('line',{x1:X0,y1:AXIS_Y,x2:X1,y2:AXIS_Y,stroke:'#1A1A1A','stroke-width':3},svg);
+    el.ticks = mk('g',{},svg);
+
+    // ---- secret-number flag, revealed at the end ----
+    el.flag = mk('g',{opacity:0},svg);
+    mk('line',{x1:0,y1:AXIS_Y-30,x2:0,y2:AXIS_Y,stroke:'#2E7D5B','stroke-width':3},el.flag);
+    mk('circle',{cx:0,cy:AXIS_Y,r:7,fill:'#2E7D5B',stroke:'#1A1A1A','stroke-width':2.5},el.flag);
+    el.flagBox = mk('rect',{x:-34,y:AXIS_Y-48,width:68,height:20,fill:'#2E7D5B',
+                            stroke:'#1A1A1A','stroke-width':2},el.flag);
+    el.flagText = label(0, AXIS_Y-34, '', {'text-anchor':'middle',fill:'#fff'}, el.flag);
+
+    // ---- binary lane ----
+    label(X0, 176, 'BINARY — ALWAYS GUESSES THE MIDDLE OF WHAT IS LEFT', {'class':'cap'}, svg);
+    mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#DCD5C7',stroke:'#1A1A1A','stroke-width':2},svg);
+
+    var bracket = mk('g',{id:'binaryBracket'},svg);
+    el.binRange = mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#2B6CD4'},bracket);
+    el.binL = mk('line',{x1:X0,y1:BIN_Y-9,x2:X0,y2:BIN_Y+BIN_H+9,stroke:'#1A1A1A','stroke-width':4},bracket);
+    el.binR = mk('line',{x1:X1,y1:BIN_Y-9,x2:X1,y2:BIN_Y+BIN_H+9,stroke:'#1A1A1A','stroke-width':4},bracket);
+    el.binMark = mk('polygon',{points:'0,0 0,0 0,0',fill:'#2B6CD4',stroke:'#1A1A1A','stroke-width':2,
+                               opacity:0},bracket);
+    mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'none',stroke:'#1A1A1A','stroke-width':2},svg);
+    el.binNote = label(X1, 248, '', {'text-anchor':'end','class':'cap'}, svg);
+    el.linNote = label(X1, 22, '', {'text-anchor':'end','class':'cap'}, svg);
+
+    drawTicks();
+  }
+
+  function drawTicks(){
+    while(el.ticks.firstChild) el.ticks.removeChild(el.ticks.firstChild);
+    var marks = [1, Math.round(N*0.25), Math.round(N*0.5), Math.round(N*0.75), N];
+    marks.forEach(function(v, i){
+      var x = xOf(v);
+      mk('line',{x1:x,y1:AXIS_Y-7,x2:x,y2:AXIS_Y+7,stroke:'#1A1A1A','stroke-width':2},el.ticks);
+      label(x, AXIS_Y+26, String(v),
+            {'text-anchor': i===0 ? 'start' : (i===4 ? 'end' : 'middle')}, el.ticks);
+    });
+  }
+
+  function triangle(x, baseY, h){
+    // a downward-pointing marker sitting on baseY
+    return (x-8) + ',' + (baseY-h) + ' ' + (x+8) + ',' + (baseY-h) + ' ' + x + ',' + baseY;
+  }
+
+  function render(){
+    // linear
+    var lx = xOf(Math.max(1, lin.guess));
+    el.linBar.setAttribute('width', lin.guess > 0 ? Math.max(0, lx - X0) : 0);
+    el.linMark.setAttribute('points', triangle(lx, LIN_Y - 2, 14));
+    el.linMark.setAttribute('opacity', lin.guess > 0 ? 1 : 0);
+
+    // binary: the blue band is everything still possible
+    var bl = xOf(bin.lo), br = xOf(bin.hi);
+    el.binRange.setAttribute('x', bl);
+    el.binRange.setAttribute('width', Math.max(2, br - bl));
+    el.binL.setAttribute('x1', bl); el.binL.setAttribute('x2', bl);
+    el.binR.setAttribute('x1', br); el.binR.setAttribute('x2', br);
+    if(bin.guess > 0){
+      var mx = xOf(bin.mid);
+      el.binMark.setAttribute('points', triangle(mx, BIN_Y - 2, 14));
+      el.binMark.setAttribute('opacity', 1);
+    } else {
+      el.binMark.setAttribute('opacity', 0);
+    }
+
+    document.getElementById('linearCount').textContent = lin.guess;
+    document.getElementById('binaryCount').textContent = bin.guess;
+  }
+
+  function showFlag(){
+    var x = xOf(secret);
+    el.flag.setAttribute('transform', 'translate(' + x + ',0)');
+    el.flagText.textContent = String(secret);
+    var w = Math.max(52, 18 + String(secret).length * 11);
+    el.flagBox.setAttribute('x', -w/2);
+    el.flagBox.setAttribute('width', w);
+    el.flag.setAttribute('opacity', 1);
+  }
+
+  /* ---------------- narration ---------------------------------------------- */
+  var readEl = document.getElementById('readout');
+  function say(html){ readEl.innerHTML = html; }
+
+  function idleText(){
+    return 'Somewhere between 1 and ' + N.toLocaleString('en-US') + ' is a secret number. Watch how ' +
+           'many guesses each method needs to find it.';
+  }
+
+  function finishText(){
+    if(winner === 'binary'){
+      return '<b>Binary found it in ' + bin.guess + ' guesses.</b> Linear would need up to ' +
+        N.toLocaleString('en-US') + ' in the worst case. Every guess, binary throws away half of ' +
+        'what’s left — the same halving you get folding a sheet of paper over and over, just used to ' +
+        'shrink a search instead of grow a stack.';
+    }
+    return 'Linear got lucky this time — the secret number happened to be near the start. Race again ' +
+      'and watch what happens when it isn’t.';
+  }
+
+  /* ---------------- the race ------------------------------------------------ */
+  var btn = document.getElementById('raceBtn');
+  var linSub = document.getElementById('linearSub');
+  var binSub = document.getElementById('binarySub');
+
+  function startRace(){
+    secret = 1 + Math.floor(Math.random() * N);
+    lin = { guess:0, done:false };
+    bin = { lo:1, hi:N, mid:0, guess:0, done:false };
+    acc = 0; stepSec = STEP_SEC; fastForward = false; winner = null;
+    running = true;
+    el.flag.setAttribute('opacity', 0);
+    el.binNote.textContent = '';
+    el.linNote.textContent = '';
+    linSub.textContent = 'checking 1, 2, 3, … in order';
+    binSub.textContent = 'halving what’s left, every time';
+    btn.disabled = true;
+    btn.textContent = 'Racing…';
+    render();
+    say('Linear: 0 guesses so far. Binary: 0 guesses so far.');
+  }
+
+  function oneStep(){
+    var firstFinisher = null;
+
+    if(!lin.done){
+      lin.guess++;
+      if(lin.guess === secret){ lin.done = true; firstFinisher = 'linear'; }
+    }
+    if(!bin.done){
+      bin.guess++;
+      bin.mid = Math.floor((bin.lo + bin.hi) / 2);
+      if(bin.mid === secret){
+        bin.done = true;
+        // binary wins ties: both landed on the same tick, and halving is the point
+        firstFinisher = 'binary';
+      } else if(bin.mid < secret){
+        bin.lo = bin.mid + 1;
+      } else {
+        bin.hi = bin.mid - 1;
+      }
+    }
+
+    if(winner === null){
+      say('Linear: ' + lin.guess + ' guesses so far. Binary: ' + bin.guess + ' guesses so far.');
+    }
+
+    if(winner === null && firstFinisher){
+      winner = firstFinisher;
+      say(finishText());
+      if(winner === 'binary'){
+        binSub.textContent = 'found it — range shrank to one number';
+        el.binNote.textContent = 'FOUND IT';
+      } else {
+        linSub.textContent = 'found it early — the secret was near the start';
+        el.linNote.textContent = 'FOUND IT';
+      }
+    }
+
+    if(bin.done && !lin.done && !fastForward){
+      // let the crawl finish so the size of the gap is actually visible
+      fastForward = true;
+      var remaining = Math.max(1, secret - lin.guess);
+      stepSec = Math.min(STEP_SEC, FF_SEC / remaining);
+      el.linNote.textContent = 'FAST-FORWARDING…';
+      linSub.textContent = 'still crawling — fast-forwarded so you can watch';
+    }
+    if(lin.done && el.linNote.textContent !== 'FOUND IT'){
+      el.linNote.textContent = 'FOUND IT';
+      linSub.textContent = 'needed ' + lin.guess.toLocaleString('en-US') + ' guesses to reach it';
+    }
+    if(bin.done && el.binNote.textContent !== 'FOUND IT'){
+      el.binNote.textContent = 'FOUND IT';
+      binSub.textContent = 'found it in ' + bin.guess + ' guesses';
+    }
+
+    if(lin.done && bin.done){
+      running = false;
+      showFlag();
+      btn.disabled = false;
+      btn.textContent = 'Race again';
+    }
+  }
+
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    if(running){
+      acc += dt;
+      var budget = 400;   // never lock the page up on a long fast-forward
+      while(acc >= stepSec && running && budget-- > 0){
+        acc -= stepSec;
+        oneStep();
+      }
+      render();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------------- controls ------------------------------------------------ */
+  btn.addEventListener('click', startRace);
+
+  document.getElementById('nSlider').addEventListener('input', function(e){
+    if(running) return;
+    N = parseInt(e.target.value, 10);
+    document.getElementById('nLabel').textContent = N.toLocaleString('en-US');
+    document.getElementById('rangeTag').textContent = 'Somewhere in 1 … ' + N.toLocaleString('en-US');
+    bin = { lo:1, hi:N, mid:0, guess:0, done:false };
+    lin = { guess:0, done:false };
+    el.flag.setAttribute('opacity', 0);
+    el.binNote.textContent = ''; el.linNote.textContent = '';
+    linSub.textContent = 'checks 1, 2, 3, … in order';
+    binSub.textContent = 'halves what’s left, every time';
+    btn.textContent = 'Pick a secret number and race';
+    drawTicks();
+    render();
+    say(idleText());
+  });
+
+  buildScene();
+  bin.hi = N;
+  render();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
