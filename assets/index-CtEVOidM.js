@@ -8,7 +8,7 @@
           <span class="text-sm font-semibold tracking-tight text-ink">Janyaa Interactive</span>
         </div>
         <a href="#simulations"
-           class="rounded-lg border border-border px-3.5 py-2 text-sm text-dim transition hover:border-green hover:text-green">
+           class="rounded-lg border border-border px-3.5 py-2 text-sm text-dim transition hover:border-blue hover:text-blue">
           Browse simulations
         </a>
       </nav>
@@ -22,9 +22,9 @@
         </p>
       </div>
     </header>`}function d(e,t){return`
-    <article class="card-sheen group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-panel p-6 transition duration-300 hover:-translate-y-1 hover:border-green/60 hover:shadow-glow">
+    <article class="card-sheen group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-panel p-6 transition duration-300 hover:-translate-y-1 hover:border-blue/60 hover:shadow-glow">
       <div class="flex items-start justify-between gap-4">
-        <span class="font-mono text-xs text-dim transition group-hover:text-orange">${String(t+1).padStart(2,`0`)}</span>
+        <span class="font-mono text-xs text-dim transition group-hover:text-blue">${String(t+1).padStart(2,`0`)}</span>
         <div class="flex flex-wrap justify-end gap-1.5">${(e.tags??[]).map(e=>`<span class="rounded-md border border-border bg-paper px-2 py-0.5 text-[11px] font-medium text-dim">${i(e)}</span>`).join(``)}</div>
       </div>
 
@@ -36,16 +36,16 @@
 
       <div class="mt-6 flex items-center gap-2">
         <button type="button" data-launch="${i(e.id)}"
-                class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:bg-green group-hover:text-panel">
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition group-hover:bg-blue group-hover:text-panel">
           Launch ${s}
         </button>
         <a href="${i(r(e.file))}" target="_blank" rel="noopener"
            title="Open in a new tab"
-           class="inline-flex items-center justify-center rounded-lg border border-border p-2.5 text-dim transition hover:border-orange hover:text-orange">
+           class="inline-flex items-center justify-center rounded-lg border border-border p-2.5 text-dim transition hover:border-blue hover:text-blue">
           ${c}<span class="sr-only">Open ${i(e.title)} in a new tab</span>
         </a>
       </div>
-    </article>`}function f(){let e=`rounded bg-paper px-1.5 py-0.5 font-mono text-xs text-green`;return`
+    </article>`}function f(){let e=`rounded bg-paper px-1.5 py-0.5 font-mono text-xs text-blue`;return`
     <div class="rounded-2xl border border-dashed border-border bg-panel p-10 text-center">
       <p class="text-base font-medium text-ink">No simulations found</p>
       <p class="mx-auto mt-2 max-w-md text-sm leading-relaxed text-dim">
@@ -68,7 +68,7 @@
     <footer class="border-t border-border">
       <div class="mx-auto max-w-6xl px-6 py-8 text-sm text-dim">
         <a href="https://janyaa.org/" target="_blank" rel="noopener"
-           class="transition hover:text-orange">
+           class="transition hover:text-blue">
           Developed by the Palo Alto Youth Chapter
         </a>
       </div>
@@ -81,11 +81,11 @@
             <h2 id="sim-modal-title" class="truncate text-sm font-semibold text-ink"></h2>
             <div class="flex shrink-0 items-center gap-2">
               <a id="sim-modal-open" href="#" target="_blank" rel="noopener"
-                 class="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-dim transition hover:border-orange hover:text-orange">
+                 class="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-dim transition hover:border-blue hover:text-blue">
                 ${c} New tab
               </a>
               <button type="button" data-close
-                      class="inline-flex items-center gap-2 rounded-lg bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-green hover:text-panel">
+                      class="inline-flex items-center gap-2 rounded-lg bg-paper px-3 py-1.5 text-xs font-medium text-ink transition hover:bg-blue hover:text-panel">
                 ${l} Close
               </button>
             </div>

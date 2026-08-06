@@ -7,8 +7,8 @@
 <title>Why one dead bulb doesn't kill the strand anymore — Janyaa Interactive</title>
 <style>
   :root{
-    --paper:#F4F1E8; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
-    --orange:#D97706; --border:#E4E1D6; --dim:#6B6B63; --green:#1F4A2E;
+    --paper:#F5F5F4; --panel:#FFFFFF; --ink:#1A1A1A; --red:#E0453E; --blue:#2B6CD4;
+    --border:#E3E3E1; --dim:#6B6B6B;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -22,7 +22,7 @@
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
      margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#33312C}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#333333}
   .stand b{color:var(--ink)}
 
   .decks{display:grid;grid-template-columns:1fr 1fr;gap:22px}
@@ -34,16 +34,16 @@
   .deck-head h2{font-family:var(--display);font-size:19px;margin:0;letter-spacing:-.02em;text-transform:uppercase}
   .deck-head .tag{font-family:var(--label);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 
-  .scene{background:#EAE7DE;padding:16px}
+  .scene{background:#EAEAE8;padding:16px}
   .frame{border:2px solid var(--ink);background:#fff}
   .frame svg{display:block;width:100%;height:auto}
 
-  .status{border-top:3px solid var(--ink);padding:14px 16px;background:#FBFAF7}
+  .status{border-top:3px solid var(--ink);padding:14px 16px;background:#FAFAFA}
   .status .cap{font-family:var(--label);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
                color:var(--dim);margin:0 0 6px}
   .status .big{font-family:var(--display);font-size:clamp(24px,4.4vw,36px);line-height:1;letter-spacing:-.03em}
   .status .big.up{color:var(--red)}
-  .status .big.same{color:var(--green)}
+  .status .big.same{color:var(--blue)}
   .status .big.dark{color:var(--dim)}
 
   .panel{border:3px solid var(--ink);background:#fff;margin:26px 0 0;padding:18px 20px}
@@ -59,7 +59,7 @@
   .resbox .cap{font-family:var(--label);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
                color:var(--dim);margin:0 0 6px;line-height:1.5}
   .resbox .val{font-family:var(--display);font-size:26px;line-height:1;letter-spacing:-.02em;color:var(--red)}
-  .resbox .hint{font-size:12.5px;line-height:1.45;color:#4A473F;margin-top:7px}
+  .resbox .hint{font-size:12.5px;line-height:1.45;color:#4A4A4A;margin-top:7px}
 
   .runrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
   button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
@@ -72,7 +72,7 @@
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
   .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
-        font-size:13.5px;line-height:1.6;color:#4A473F;max-width:76ch}
+        font-size:13.5px;line-height:1.6;color:#4A4A4A;max-width:76ch}
   .foot b{color:var(--ink)}
 
   details.advanced{margin-top:20px;border:3px solid var(--ink);background:#fff}
@@ -81,11 +81,11 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B382F}
-  details.advanced .adv-body code{font-family:var(--label);background:#F4F1E8;padding:1px 5px;border-radius:2px;font-size:12.5px}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#3B3B3B}
+  details.advanced .adv-body code{font-family:var(--label);background:#F5F5F4;padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
-  details.advanced th{background:#F4F1E8;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  details.advanced th{background:#F5F5F4;font-family:var(--label);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
 
   svg text{font-family:var(--label);font-size:10px;letter-spacing:.06em;fill:var(--ink)}
   .bulb{cursor:pointer}
@@ -255,16 +255,16 @@
   function drawBulb(parent, cx, cy, r, brightness, isDead, onClick, name){
     var g = mk('g',{'class':'bulb',role:'button',tabindex:'0','aria-label':name},parent);
     if(!isDead && brightness > 105){
-      mk('circle',{cx:cx,cy:cy,r:r+5,fill:'#D97706',opacity:Math.min(0.5,(brightness-100)/100)},g);
+      mk('circle',{cx:cx,cy:cy,r:r+5,fill:'#E0453E',opacity:Math.min(0.5,(brightness-100)/100)},g);
     }
     mk('circle',{cx:cx,cy:cy,r:r,
-                 fill:isDead ? '#EFECE3' : '#D97706',
+                 fill:isDead ? '#EFEFED' : '#2B6CD4',
                  'fill-opacity':isDead ? 1 : glowOpacity(brightness),
-                 stroke:isDead ? '#6B6B63' : '#1A1A1A',
+                 stroke:isDead ? '#6B6B6B' : '#1A1A1A',
                  'stroke-width':isDead ? 2 : 2.5},g);
     if(isDead){
-      mk('line',{x1:cx-r*0.5,y1:cy-r*0.5,x2:cx+r*0.5,y2:cy+r*0.5,stroke:'#6B6B63','stroke-width':2},g);
-      mk('line',{x1:cx+r*0.5,y1:cy-r*0.5,x2:cx-r*0.5,y2:cy+r*0.5,stroke:'#6B6B63','stroke-width':2},g);
+      mk('line',{x1:cx-r*0.5,y1:cy-r*0.5,x2:cx+r*0.5,y2:cy+r*0.5,stroke:'#6B6B6B','stroke-width':2},g);
+      mk('line',{x1:cx+r*0.5,y1:cy-r*0.5,x2:cx-r*0.5,y2:cy+r*0.5,stroke:'#6B6B6B','stroke-width':2},g);
     } else {
       mk('path',{d:'M'+(cx-r*0.4)+','+(cy+r*0.25)+' L'+cx+','+(cy-r*0.3)+' L'+(cx+r*0.4)+','+(cy+r*0.25),
                  fill:'none',stroke:'#1A1A1A','stroke-width':1.6},g);
@@ -307,7 +307,7 @@
     mk('polyline',{points:'286,'+Y+' 300,'+Y+' 300,200 20,200 20,'+Y+' 40,'+Y,
                    fill:'none',stroke:'#1A1A1A','stroke-width':3,'stroke-linejoin':'round'},g);
     battery(g, 20, 152, false);
-    label(160, 224, 'ONE LOOP THROUGH EVERY BULB', {'text-anchor':'middle',fill:'#6B6B63'}, g);
+    label(160, 224, 'ONE LOOP THROUGH EVERY BULB', {'text-anchor':'middle',fill:'#6B6B6B'}, g);
 
     if(useIcons){
       xs(n).forEach(function(x, i){
@@ -322,10 +322,10 @@
         function(){ deadSeries = (deadSeries === 0 ? null : 0); update('series'); },
         'The one bulb that fails, in the series strand');
       var restB = deadSeries === null ? 100 : (shunt ? surgePercent(n) : 0);
-      mk('rect',{x:104,y:Y-15,width:170,height:30,fill:'#D97706',
+      mk('rect',{x:104,y:Y-15,width:170,height:30,fill:'#2B6CD4',
                  'fill-opacity':glowOpacity(restB),stroke:'#1A1A1A','stroke-width':2.5},g);
       label(189, Y+4, '+ ' + (n-1) + ' MORE BULBS', {'text-anchor':'middle'}, g);
-      label(66, Y+34, 'CLICK ME', {'text-anchor':'middle',fill:'#6B6B63'}, g);
+      label(66, Y+34, 'CLICK ME', {'text-anchor':'middle',fill:'#6B6B6B'}, g);
     }
   }
 
@@ -340,7 +340,7 @@
     mk('line',{x1:20,y1:BOT,x2:34,y2:BOT,stroke:'#1A1A1A','stroke-width':3},g);
     mk('line',{x1:20,y1:TOP,x2:20,y2:BOT,stroke:'#1A1A1A','stroke-width':3},g);
     battery(g, 20, MID, false);
-    label(160, 224, 'A PRIVATE PATH FOR EVERY BULB', {'text-anchor':'middle',fill:'#6B6B63'}, g);
+    label(160, 224, 'A PRIVATE PATH FOR EVERY BULB', {'text-anchor':'middle',fill:'#6B6B6B'}, g);
 
     if(useIcons){
       xs(n).forEach(function(x, i){
@@ -355,10 +355,10 @@
       drawBulb(g, 66, MID, 13, parallelBrightness(0), dead,
         function(){ deadParallel = (deadParallel === 0 ? null : 0); update('parallel'); },
         'The one bulb that fails, in the parallel strand');
-      mk('rect',{x:104,y:MID-15,width:170,height:30,fill:'#D97706',
+      mk('rect',{x:104,y:MID-15,width:170,height:30,fill:'#2B6CD4',
                  'fill-opacity':glowOpacity(100),stroke:'#1A1A1A','stroke-width':2.5},g);
       label(189, MID+4, '+ ' + (n-1) + ' MORE BULBS', {'text-anchor':'middle'}, g);
-      label(66, MID+34, 'CLICK ME', {'text-anchor':'middle',fill:'#6B6B63'}, g);
+      label(66, MID+34, 'CLICK ME', {'text-anchor':'middle',fill:'#6B6B6B'}, g);
     }
   }
 
