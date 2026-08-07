@@ -15,7 +15,7 @@
     --strip:#FFEDD5;   /* status and result strips — pale sage */
     --inert:#E5E7EB;   /* empty meters, idle cells */
     --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#EA580C; --green:#4F7E63; --amber:#D97706;
+    --red:#DC2626; --blue:#C2703D; --green:#4F7E63; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -81,7 +81,7 @@
 </head>
 <body>
 <div class="wrap">
-  <p class="kicker">Janyaa Interactive · Maths meets physics meets computers</p>
+  <p class="kicker">Maths meets physics meets computers</p>
   <h1>Double the size.<br>Four times the skin.<br><em>Eight times</em> the insides.</h1>
   <p class="stand">Growing something bigger does not scale it up evenly. Its outside grows by the
   square, its inside grows by the cube, and those two never keep pace. <b>This one mismatch decides
@@ -237,7 +237,7 @@
     svg.appendChild(ghost);
 
     // three visible faces
-    poly(svg, [pt(origin,0,0,k), pt(origin,k,0,k), pt(origin,k,k,k), pt(origin,0,k,k)], '#EA580C'); // top
+    poly(svg, [pt(origin,0,0,k), pt(origin,k,0,k), pt(origin,k,k,k), pt(origin,0,k,k)], '#C2703D'); // top
     poly(svg, [pt(origin,0,0,0), pt(origin,k,0,0), pt(origin,k,0,k), pt(origin,0,0,k)], '#DC2626'); // right
     poly(svg, [pt(origin,0,0,0), pt(origin,0,k,0), pt(origin,0,k,k), pt(origin,0,0,k)], '#A83831'); // left
 
@@ -306,7 +306,7 @@
     var fillH = Math.min(mh, (k/6)*mh);
     var fill=document.createElementNS(ns,'rect');
     fill.setAttribute('x',mx);fill.setAttribute('y',20+mh-fillH);fill.setAttribute('width',36);fill.setAttribute('height',fillH);
-    fill.setAttribute('fill', k>=4 ? '#DC2626' : (k>=2 ? '#111827' : '#EA580C'));
+    fill.setAttribute('fill', k>=4 ? '#DC2626' : (k>=2 ? '#111827' : '#C2703D'));
     svg.appendChild(fill);
     var lab=document.createElementNS(ns,'text');
     lab.setAttribute('x',214);lab.setAttribute('y',132);lab.setAttribute('text-anchor','middle');

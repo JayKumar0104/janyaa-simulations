@@ -15,7 +15,7 @@
     --strip:#FFEDD5;   /* status and result strips — pale sage */
     --inert:#E5E7EB;   /* empty meters, idle cells */
     --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#EA580C; --green:#4F7E63; --amber:#D97706;
+    --red:#DC2626; --blue:#C2703D; --green:#4F7E63; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -91,7 +91,7 @@
 </head>
 <body>
 <div class="wrap">
-  <p class="kicker">Janyaa Interactive · Electronics · Computer workshop</p>
+  <p class="kicker">Electronics · Computer workshop</p>
   <h1>Same 5 volts.<br><em>4.8&times;</em> the speed.</h1>
   <p class="stand">Plug the same phone into a wall charger and into a laptop's USB port. Both push
   with <b>exactly the same 5 volts</b> — the number printed on the plug. Yet one fills the battery
@@ -224,7 +224,7 @@
 
     // --- voltage bar (identical on both panels) ---
     mk('rect',{x:24,y:BAR_TOP,width:40,height:BAR_H,fill:'#E4DDD0',stroke:'#111827','stroke-width':2},svg);
-    mk('rect',{x:24,y:BAR_TOP,width:40,height:BAR_H,fill:'#EA580C'},svg);
+    mk('rect',{x:24,y:BAR_TOP,width:40,height:BAR_H,fill:'#C2703D'},svg);
     mk('rect',{x:24,y:BAR_TOP,width:40,height:BAR_H,fill:'none',stroke:'#111827','stroke-width':2},svg);
     label(44,BAR_BOT+18,'VOLTS',{'text-anchor':'middle'},svg);
     label(44,BAR_BOT+34,'5',{'text-anchor':'middle','class':'num'},svg);
@@ -242,7 +242,7 @@
     var phone = mk('g',{},svg);
     mk('rect',{x:160,y:78,width:110,height:188,rx:12,fill:'#fff',stroke:'#111827','stroke-width':3},phone);
     mk('rect',{x:172,y:SCREEN_TOP,width:86,height:SCREEN_H,fill:'#E4DDD0',stroke:'#111827','stroke-width':2},phone);
-    var fill = mk('rect',{id:batteryId,x:174,y:SCREEN_BOT-2,width:82,height:0,fill:'#EA580C'},phone);
+    var fill = mk('rect',{id:batteryId,x:174,y:SCREEN_BOT-2,width:82,height:0,fill:'#C2703D'},phone);
     mk('rect',{x:172,y:SCREEN_TOP,width:86,height:SCREEN_H,fill:'none',stroke:'#111827','stroke-width':2},phone);
     mk('circle',{cx:215,cy:85,r:3,fill:'#111827'},phone);
     label(215,284,'PHONE BATTERY',{'text-anchor':'middle',fill:'#4B5563'},phone);

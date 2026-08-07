@@ -15,10 +15,13 @@
 
       <div class="relative mx-auto max-w-6xl px-6 pb-20 pt-12 sm:pb-24 sm:pt-16">
         <h1 class="animate-fade-up text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-          Janyaa Interactive
+          Interactive STEM simulations for hands-on, intuitive learning.
         </h1>
         <p class="mt-4 max-w-2xl animate-fade-up text-lg leading-relaxed text-dim">
-          Interactive STEM simulations for hands-on workshops.
+          Meant to sit inside a hands-on workshop, not replace one — built for the moments a
+          breadboard or a stopwatch can't quite show, like why a GPU tears through the exact AI
+          workload that stalls a CPU. Each sim turns that invisible mechanism into something you
+          can trigger, watch, and rerun until it clicks.
         </p>
       </div>
     </header>`}function d(e,t){return`

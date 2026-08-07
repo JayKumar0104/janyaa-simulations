@@ -15,7 +15,7 @@
     --strip:#FFEDD5;   /* status and result strips — pale sage */
     --inert:#E5E7EB;   /* empty meters, idle cells */
     --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#EA580C; --green:#4F7E63; --amber:#D97706;
+    --red:#DC2626; --blue:#C2703D; --green:#4F7E63; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -81,7 +81,7 @@
 </head>
 <body>
 <div class="wrap">
-  <p class="kicker">Janyaa Interactive · Physics workshop</p>
+  <p class="kicker">Physics workshop</p>
   <h1>The right rhythm,<br>not the hardest <em>push</em>.</h1>
   <p class="stand">Everyone has pushed someone on a swing. Shove at random and almost nothing happens.
   Find the beat and the same small pushes send them soaring. <b>The strength of every push below is
@@ -243,7 +243,7 @@
     // the rider
     mk('line',{x1:PIVOT_X,y1:SEAT_Y-8,x2:PIVOT_X,y2:SEAT_Y-52,stroke:'#111827','stroke-width':7,
                'stroke-linecap':'round'},s);
-    mk('circle',{cx:PIVOT_X,cy:SEAT_Y-66,r:15,fill:'#EA580C',stroke:'#111827','stroke-width':3},s);
+    mk('circle',{cx:PIVOT_X,cy:SEAT_Y-66,r:15,fill:'#C2703D',stroke:'#111827','stroke-width':3},s);
     mk('line',{x1:PIVOT_X,y1:SEAT_Y-40,x2:PIVOT_X-21,y2:SEAT_Y-16,stroke:'#111827','stroke-width':5,
                'stroke-linecap':'round'},s);
     mk('line',{x1:PIVOT_X,y1:SEAT_Y-2,x2:PIVOT_X+34,y2:SEAT_Y+18,stroke:'#111827','stroke-width':6,
@@ -280,7 +280,7 @@
     label(68, 26, 'HOW HIGH', {'text-anchor':'middle','class':'cap'}, gauge);
     label(68, 40, 'IT GETS',  {'text-anchor':'middle','class':'cap'}, gauge);
     mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'#E5E7EB'},gauge);
-    el.gaugeFill = mk('rect',{x:G_X,y:G_BOT,width:G_W,height:0,fill:'#EA580C'},gauge);
+    el.gaugeFill = mk('rect',{x:G_X,y:G_BOT,width:G_W,height:0,fill:'#C2703D'},gauge);
     mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'none',stroke:'#111827','stroke-width':3},gauge);
     mk('line',{x1:G_X-10,y1:G_TOP,x2:G_X+G_W+10,y2:G_TOP,stroke:'#DC2626','stroke-width':3,
                'stroke-dasharray':'5 4'},gauge);
@@ -304,7 +304,7 @@
     for(rr = 0.3; rr <= 2.0001; rr += 0.005){
       d += (d ? ' L' : 'M') + cx(rr).toFixed(1) + ' ' + cy(response(rr)).toFixed(1);
     }
-    mk('path',{d:d,fill:'none',stroke:'#EA580C','stroke-width':4,'stroke-linejoin':'round'},curve);
+    mk('path',{d:d,fill:'none',stroke:'#C2703D','stroke-width':4,'stroke-linejoin':'round'},curve);
 
     mk('line',{x1:cx(1),y1:C_Y0,x2:cx(1),y2:C_Y1-6,stroke:'#DC2626','stroke-width':2,
                'stroke-dasharray':'5 4'},curve);
@@ -379,7 +379,7 @@
     var h = frac * G_H;
     el.gaugeFill.setAttribute('height', h.toFixed(1));
     el.gaugeFill.setAttribute('y', (G_BOT - h).toFixed(1));
-    el.gaugeFill.setAttribute('fill', frac > 0.92 ? '#4F7E63' : '#EA580C');
+    el.gaugeFill.setAttribute('fill', frac > 0.92 ? '#4F7E63' : '#C2703D');
     el.gaugeWord.textContent = heightWord(frac);
 
     requestAnimationFrame(frame);

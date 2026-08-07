@@ -15,7 +15,7 @@
     --strip:#FFEDD5;   /* status and result strips — pale sage */
     --inert:#E5E7EB;   /* empty meters, idle cells */
     --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#EA580C; --green:#4F7E63; --amber:#D97706;
+    --red:#DC2626; --blue:#C2703D; --green:#4F7E63; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -101,7 +101,7 @@
 </head>
 <body>
 <div class="wrap">
-  <p class="kicker">Janyaa Interactive · Electronics · Physics workshop</p>
+  <p class="kicker">Electronics · Physics workshop</p>
   <h1>One bulb dies.<br>Who <em>else</em> goes dark?</h1>
   <p class="stand">Old string lights had one famous flaw: a single dead bulb killed the whole strand.
   Modern ones mostly don't — and the reason is <b>a tiny hidden wire inside every bulb's base</b>.
@@ -265,7 +265,7 @@
       mk('circle',{cx:cx,cy:cy,r:r+5,fill:'#DC2626',opacity:Math.min(0.5,(brightness-100)/100)},g);
     }
     mk('circle',{cx:cx,cy:cy,r:r,
-                 fill:isDead ? '#E4DDD0' : '#EA580C',
+                 fill:isDead ? '#E4DDD0' : '#C2703D',
                  'fill-opacity':isDead ? 1 : glowOpacity(brightness),
                  stroke:isDead ? '#4B5563' : '#111827',
                  'stroke-width':isDead ? 2 : 2.5},g);
@@ -329,7 +329,7 @@
         function(){ deadSeries = (deadSeries === 0 ? null : 0); update('series'); },
         'The one bulb that fails, in the series strand');
       var restB = deadSeries === null ? 100 : (shunt ? surgePercent(n) : 0);
-      mk('rect',{x:104,y:Y-15,width:170,height:30,fill:'#EA580C',
+      mk('rect',{x:104,y:Y-15,width:170,height:30,fill:'#C2703D',
                  'fill-opacity':glowOpacity(restB),stroke:'#111827','stroke-width':2.5},g);
       label(189, Y+4, '+ ' + (n-1) + ' MORE BULBS', {'text-anchor':'middle'}, g);
       label(66, Y+34, 'CLICK ME', {'text-anchor':'middle',fill:'#4B5563'}, g);
@@ -362,7 +362,7 @@
       drawBulb(g, 66, MID, 13, parallelBrightness(0), dead,
         function(){ deadParallel = (deadParallel === 0 ? null : 0); update('parallel'); },
         'The one bulb that fails, in the parallel strand');
-      mk('rect',{x:104,y:MID-15,width:170,height:30,fill:'#EA580C',
+      mk('rect',{x:104,y:MID-15,width:170,height:30,fill:'#C2703D',
                  'fill-opacity':glowOpacity(100),stroke:'#111827','stroke-width':2.5},g);
       label(189, MID+4, '+ ' + (n-1) + ' MORE BULBS', {'text-anchor':'middle'}, g);
       label(66, MID+34, 'CLICK ME', {'text-anchor':'middle',fill:'#4B5563'}, g);

@@ -15,7 +15,7 @@
     --strip:#FFEDD5;   /* status and result strips — pale sage */
     --inert:#E5E7EB;   /* empty meters, idle cells */
     --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#EA580C; --green:#4F7E63; --amber:#D97706;
+    --red:#DC2626; --blue:#C2703D; --green:#4F7E63; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -96,7 +96,7 @@
 </head>
 <body>
 <div class="wrap">
-  <p class="kicker">Janyaa Interactive · Computers · Maths</p>
+  <p class="kicker">Computers · Maths</p>
   <h1>Halving your way<br>to the <em>answer</em>.</h1>
   <p class="stand">A number is hidden somewhere between 1 and 1000. One searcher checks every number
   in order: 1, 2, 3, 4… The other only ever guesses the middle of what's left, asks "higher or lower?",
@@ -251,10 +251,10 @@
     mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#E5E7EB',stroke:'#111827','stroke-width':2},svg);
 
     var bracket = mk('g',{id:'binaryBracket'},svg);
-    el.binRange = mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#EA580C'},bracket);
+    el.binRange = mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#C2703D'},bracket);
     el.binL = mk('line',{x1:X0,y1:BIN_Y-9,x2:X0,y2:BIN_Y+BIN_H+9,stroke:'#111827','stroke-width':4},bracket);
     el.binR = mk('line',{x1:X1,y1:BIN_Y-9,x2:X1,y2:BIN_Y+BIN_H+9,stroke:'#111827','stroke-width':4},bracket);
-    el.binMark = mk('polygon',{points:'0,0 0,0 0,0',fill:'#EA580C',stroke:'#111827','stroke-width':2,
+    el.binMark = mk('polygon',{points:'0,0 0,0 0,0',fill:'#C2703D',stroke:'#111827','stroke-width':2,
                                opacity:0},bracket);
     mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'none',stroke:'#111827','stroke-width':2},svg);
     el.binNote = label(X1, 248, '', {'text-anchor':'end','class':'cap'}, svg);
