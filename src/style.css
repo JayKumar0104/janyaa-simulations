@@ -18,23 +18,23 @@
   }
 
   ::selection {
-    @apply bg-blue/30 text-ink;
+    @apply bg-orange/30 text-ink;
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-blue ring-offset-2 ring-offset-paper;
+    @apply outline-none ring-2 ring-orange ring-offset-2 ring-offset-paper;
   }
 }
 
 @layer components {
-  /* Faint grid, plus a sky wash bleeding into sage behind the hero — the same
-     two tints the sims use for artwork mats and result strips. */
+  /* Faint grid, plus a green wash bleeding into soft orange behind the hero —
+     the same two tints the sims use for artwork mats and result strips. */
   .hero-backdrop {
     background-image:
-      radial-gradient(52rem 30rem at 78% -6rem, rgb(216 227 236 / 0.95), transparent 68%),
-      radial-gradient(46rem 26rem at 12% -4rem, rgb(231 239 227 / 0.95), transparent 66%),
-      linear-gradient(to right, rgb(94 90 82 / 0.07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(94 90 82 / 0.07) 1px, transparent 1px);
+      radial-gradient(52rem 30rem at 78% -6rem, rgb(220 252 231 / 0.95), transparent 68%),
+      radial-gradient(46rem 26rem at 12% -4rem, rgb(255 237 213 / 0.95), transparent 66%),
+      linear-gradient(to right, rgb(75 85 99 / 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(75 85 99 / 0.07) 1px, transparent 1px);
     background-size:
       100% 100%,
       100% 100%,
@@ -43,7 +43,7 @@
   }
 
   .card-sheen {
-    background-image: linear-gradient(135deg, rgb(216 227 236 / 0.5), transparent 46%);
+    background-image: linear-gradient(135deg, rgb(220 252 231 / 0.5), transparent 46%);
   }
 }
 

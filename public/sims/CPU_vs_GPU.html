@@ -8,14 +8,14 @@
 <style>
   :root{
     /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
-    --paper:#EDE7DC;   /* page background — warm sand   */
-    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
-    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
-    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
-    --strip:#E7EFE3;   /* status and result strips — pale sage */
-    --inert:#DCD5C7;   /* empty meters, idle cells */
-    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
-    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
+    --paper:#F0FDF4;   /* page background — warm sand   */
+    --panel:#FFFFFF;   /* cards, boards, panels — ivory */
+    --scene:#DCFCE7;   /* mat around each artwork — pale sky  */
+    --canvas:#FFFFFF;  /* inside the artwork frame — soft warm white */
+    --strip:#FFEDD5;   /* status and result strips — pale sage */
+    --inert:#E5E7EB;   /* empty meters, idle cells */
+    --border:#BBF7D0; --ink:#111827; --dim:#4B5563;
+    --red:#DC2626; --blue:#EA580C; --green:#16A34A; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -29,7 +29,7 @@
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
      margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:52ch;margin:0 0 34px;color:#3D3A33}
+  .stand{font-size:17px;line-height:1.5;max-width:52ch;margin:0 0 34px;color:#111827}
   .stand b{color:var(--ink)}
 
   /* ---- the question strip ---- */
@@ -107,7 +107,7 @@
   @media (max-width:700px){ .modes{grid-template-columns:1fr} }
   .mode{border:2px solid var(--ink);background:var(--panel);padding:13px 15px;text-align:left;cursor:pointer;font-family:var(--body)}
   .mode b{display:block;font-family:var(--display);font-size:14px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:5px}
-  .mode span{font-size:13px;line-height:1.45;color:#4A463E}
+  .mode span{font-size:13px;line-height:1.45;color:#111827}
   .mode[aria-pressed="true"]{background:var(--ink);color:#fff}
   .mode[aria-pressed="true"] span{color:#D8D2C6}
   .runrow{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;align-items:center}
@@ -122,7 +122,7 @@
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
   .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
-        font-size:13.5px;line-height:1.6;color:#4A463E;max-width:74ch}
+        font-size:13.5px;line-height:1.6;color:#111827;max-width:74ch}
   .foot b{color:var(--ink)}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
   .lane,.cpu-alu,.rowctl,.blk{transition:background .12s linear}
@@ -132,7 +132,7 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#111827}
   details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}

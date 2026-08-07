@@ -8,14 +8,14 @@
 <style>
   :root{
     /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
-    --paper:#EDE7DC;   /* page background — warm sand   */
-    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
-    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
-    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
-    --strip:#E7EFE3;   /* status and result strips — pale sage */
-    --inert:#DCD5C7;   /* empty meters, idle cells */
-    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
-    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
+    --paper:#F0FDF4;   /* page background — warm sand   */
+    --panel:#FFFFFF;   /* cards, boards, panels — ivory */
+    --scene:#DCFCE7;   /* mat around each artwork — pale sky  */
+    --canvas:#FFFFFF;  /* inside the artwork frame — soft warm white */
+    --strip:#FFEDD5;   /* status and result strips — pale sage */
+    --inert:#E5E7EB;   /* empty meters, idle cells */
+    --border:#BBF7D0; --ink:#111827; --dim:#4B5563;
+    --red:#DC2626; --blue:#EA580C; --green:#16A34A; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -29,7 +29,7 @@
   h1{font-family:var(--display);font-size:clamp(30px,6vw,56px);line-height:.96;letter-spacing:-.035em;
      margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:58ch;margin:0 0 30px;color:#3D3A33}
+  .stand{font-size:17px;line-height:1.5;max-width:58ch;margin:0 0 30px;color:#111827}
   .stand b{color:var(--ink)}
 
   .board{border:3px solid var(--ink);background:var(--panel)}
@@ -58,7 +58,7 @@
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
   .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
-        font-size:13.5px;line-height:1.6;color:#4A463E;max-width:76ch}
+        font-size:13.5px;line-height:1.6;color:#111827;max-width:76ch}
   .foot b{color:var(--ink)}
 
   details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
@@ -67,7 +67,7 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#111827}
   details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
@@ -220,51 +220,51 @@
   var el = {};
 
   function buildSwing(){
-    mk('rect',{width:620,height:340,fill:'#FBF9F4'},scene);
+    mk('rect',{width:620,height:340,fill:'#FFFFFF'},scene);
 
     // ---- frame ----
-    var f = mk('g',{stroke:'#1A1A1A','stroke-width':7,'stroke-linecap':'round',fill:'none'},scene);
+    var f = mk('g',{stroke:'#111827','stroke-width':7,'stroke-linecap':'round',fill:'none'},scene);
     mk('line',{x1:200,y1:GROUND,x2:250,y2:PIVOT_Y},f);
     mk('line',{x1:300,y1:GROUND,x2:250,y2:PIVOT_Y},f);
     mk('line',{x1:420,y1:GROUND,x2:470,y2:PIVOT_Y},f);
     mk('line',{x1:520,y1:GROUND,x2:470,y2:PIVOT_Y},f);
     mk('line',{x1:238,y1:PIVOT_Y,x2:482,y2:PIVOT_Y},f);
-    mk('line',{x1:20,y1:GROUND,x2:600,y2:GROUND,stroke:'#1A1A1A','stroke-width':4},scene);
+    mk('line',{x1:20,y1:GROUND,x2:600,y2:GROUND,stroke:'#111827','stroke-width':4},scene);
 
     // ---- the arc the seat sweeps, so the size of the swing is readable ----
-    el.arc = mk('path',{fill:'none',stroke:'#D6CEBF','stroke-width':3,'stroke-dasharray':'6 6'},scene);
+    el.arc = mk('path',{fill:'none',stroke:'#BBF7D0','stroke-width':3,'stroke-dasharray':'6 6'},scene);
 
     // ---- rider + ropes, rotated about the pivot as one piece ----
     var s = mk('g',{},scene);
-    mk('line',{x1:PIVOT_X-19,y1:PIVOT_Y,x2:PIVOT_X-19,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':4},s);
-    mk('line',{x1:PIVOT_X+19,y1:PIVOT_Y,x2:PIVOT_X+19,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':4},s);
-    mk('rect',{x:PIVOT_X-30,y:SEAT_Y-6,width:60,height:11,fill:'#B0731C',
-               stroke:'#1A1A1A','stroke-width':3},s);
+    mk('line',{x1:PIVOT_X-19,y1:PIVOT_Y,x2:PIVOT_X-19,y2:SEAT_Y-6,stroke:'#111827','stroke-width':4},s);
+    mk('line',{x1:PIVOT_X+19,y1:PIVOT_Y,x2:PIVOT_X+19,y2:SEAT_Y-6,stroke:'#111827','stroke-width':4},s);
+    mk('rect',{x:PIVOT_X-30,y:SEAT_Y-6,width:60,height:11,fill:'#D97706',
+               stroke:'#111827','stroke-width':3},s);
     // the rider
-    mk('line',{x1:PIVOT_X,y1:SEAT_Y-8,x2:PIVOT_X,y2:SEAT_Y-52,stroke:'#1A1A1A','stroke-width':7,
+    mk('line',{x1:PIVOT_X,y1:SEAT_Y-8,x2:PIVOT_X,y2:SEAT_Y-52,stroke:'#111827','stroke-width':7,
                'stroke-linecap':'round'},s);
-    mk('circle',{cx:PIVOT_X,cy:SEAT_Y-66,r:15,fill:'#2B6CD4',stroke:'#1A1A1A','stroke-width':3},s);
-    mk('line',{x1:PIVOT_X,y1:SEAT_Y-40,x2:PIVOT_X-21,y2:SEAT_Y-16,stroke:'#1A1A1A','stroke-width':5,
+    mk('circle',{cx:PIVOT_X,cy:SEAT_Y-66,r:15,fill:'#EA580C',stroke:'#111827','stroke-width':3},s);
+    mk('line',{x1:PIVOT_X,y1:SEAT_Y-40,x2:PIVOT_X-21,y2:SEAT_Y-16,stroke:'#111827','stroke-width':5,
                'stroke-linecap':'round'},s);
-    mk('line',{x1:PIVOT_X,y1:SEAT_Y-2,x2:PIVOT_X+34,y2:SEAT_Y+18,stroke:'#1A1A1A','stroke-width':6,
+    mk('line',{x1:PIVOT_X,y1:SEAT_Y-2,x2:PIVOT_X+34,y2:SEAT_Y+18,stroke:'#111827','stroke-width':6,
                'stroke-linecap':'round'},s);
-    mk('line',{x1:PIVOT_X+34,y1:SEAT_Y+18,x2:PIVOT_X+48,y2:SEAT_Y+12,stroke:'#1A1A1A','stroke-width':6,
+    mk('line',{x1:PIVOT_X+34,y1:SEAT_Y+18,x2:PIVOT_X+48,y2:SEAT_Y+12,stroke:'#111827','stroke-width':6,
                'stroke-linecap':'round'},s);
     el.swing = s;
 
     // ---- the pusher ----
     var p = mk('g',{},scene);
-    mk('line',{x1:120,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':6,'stroke-linecap':'round'},p);
-    mk('line',{x1:150,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#1A1A1A','stroke-width':6,'stroke-linecap':'round'},p);
-    mk('line',{x1:132,y1:SEAT_Y-6,x2:132,y2:SEAT_Y-58,stroke:'#1A1A1A','stroke-width':7,'stroke-linecap':'round'},p);
-    mk('circle',{cx:132,cy:SEAT_Y-73,r:15,fill:'#2E7D5B',stroke:'#1A1A1A','stroke-width':3},p);
-    el.arm  = mk('line',{x1:132,y1:SEAT_Y-46,x2:180,y2:SEAT_Y-22,stroke:'#1A1A1A','stroke-width':6,
+    mk('line',{x1:120,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#111827','stroke-width':6,'stroke-linecap':'round'},p);
+    mk('line',{x1:150,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#111827','stroke-width':6,'stroke-linecap':'round'},p);
+    mk('line',{x1:132,y1:SEAT_Y-6,x2:132,y2:SEAT_Y-58,stroke:'#111827','stroke-width':7,'stroke-linecap':'round'},p);
+    mk('circle',{cx:132,cy:SEAT_Y-73,r:15,fill:'#16A34A',stroke:'#111827','stroke-width':3},p);
+    el.arm  = mk('line',{x1:132,y1:SEAT_Y-46,x2:180,y2:SEAT_Y-22,stroke:'#111827','stroke-width':6,
                          'stroke-linecap':'round'},p);
-    el.hand = mk('circle',{cx:180,cy:SEAT_Y-22,r:9,fill:'#2E7D5B',stroke:'#1A1A1A','stroke-width':3},p);
+    el.hand = mk('circle',{cx:180,cy:SEAT_Y-22,r:9,fill:'#16A34A',stroke:'#111827','stroke-width':3},p);
     el.puff = mk('g',{opacity:0},p);
-    mk('line',{x1:0,y1:-12,x2:16,y2:-12,stroke:'#D2443D','stroke-width':3,'stroke-linecap':'round'},el.puff);
-    mk('line',{x1:0,y1:0,  x2:22,y2:0,  stroke:'#D2443D','stroke-width':3,'stroke-linecap':'round'},el.puff);
-    mk('line',{x1:0,y1:12, x2:16,y2:12, stroke:'#D2443D','stroke-width':3,'stroke-linecap':'round'},el.puff);
+    mk('line',{x1:0,y1:-12,x2:16,y2:-12,stroke:'#DC2626','stroke-width':3,'stroke-linecap':'round'},el.puff);
+    mk('line',{x1:0,y1:0,  x2:22,y2:0,  stroke:'#DC2626','stroke-width':3,'stroke-linecap':'round'},el.puff);
+    mk('line',{x1:0,y1:12, x2:16,y2:12, stroke:'#DC2626','stroke-width':3,'stroke-linecap':'round'},el.puff);
     label(132, SEAT_Y+58, 'YOU', {'text-anchor':'middle','class':'cap'}, p);
 
     el.beat = label(600, 28, '', {'text-anchor':'end','class':'cap'}, scene);
@@ -276,13 +276,13 @@
   var G_X = 38, G_W = 60, G_TOP = 58, G_BOT = 288, G_H = G_BOT - G_TOP;
 
   function buildGauge(){
-    mk('rect',{width:136,height:340,fill:'#FBF9F4'},gauge);
+    mk('rect',{width:136,height:340,fill:'#FFFFFF'},gauge);
     label(68, 26, 'HOW HIGH', {'text-anchor':'middle','class':'cap'}, gauge);
     label(68, 40, 'IT GETS',  {'text-anchor':'middle','class':'cap'}, gauge);
-    mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'#DCD5C7'},gauge);
-    el.gaugeFill = mk('rect',{x:G_X,y:G_BOT,width:G_W,height:0,fill:'#2B6CD4'},gauge);
-    mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'none',stroke:'#1A1A1A','stroke-width':3},gauge);
-    mk('line',{x1:G_X-10,y1:G_TOP,x2:G_X+G_W+10,y2:G_TOP,stroke:'#D2443D','stroke-width':3,
+    mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'#E5E7EB'},gauge);
+    el.gaugeFill = mk('rect',{x:G_X,y:G_BOT,width:G_W,height:0,fill:'#EA580C'},gauge);
+    mk('rect',{x:G_X,y:G_TOP,width:G_W,height:G_H,fill:'none',stroke:'#111827','stroke-width':3},gauge);
+    mk('line',{x1:G_X-10,y1:G_TOP,x2:G_X+G_W+10,y2:G_TOP,stroke:'#DC2626','stroke-width':3,
                'stroke-dasharray':'5 4'},gauge);
     label(68, G_TOP-8, 'HIGHEST POSSIBLE', {'text-anchor':'middle','class':'cap','font-size':9}, gauge);
     el.gaugeWord = label(68, G_BOT+24, '', {'text-anchor':'middle','class':'cap'}, gauge);
@@ -296,26 +296,26 @@
   function cy(a){  return C_Y0 - (a / PEAK) * (C_Y0 - C_Y1); }
 
   function buildCurve(){
-    mk('rect',{width:620,height:240,fill:'#FBF9F4'},curve);
-    mk('line',{x1:C_X0,y1:C_Y0,x2:C_X1,y2:C_Y0,stroke:'#1A1A1A','stroke-width':3},curve);
-    mk('line',{x1:C_X0,y1:C_Y0,x2:C_X0,y2:C_Y1-6,stroke:'#1A1A1A','stroke-width':3},curve);
+    mk('rect',{width:620,height:240,fill:'#FFFFFF'},curve);
+    mk('line',{x1:C_X0,y1:C_Y0,x2:C_X1,y2:C_Y0,stroke:'#111827','stroke-width':3},curve);
+    mk('line',{x1:C_X0,y1:C_Y0,x2:C_X0,y2:C_Y1-6,stroke:'#111827','stroke-width':3},curve);
 
     var d = '', rr;
     for(rr = 0.3; rr <= 2.0001; rr += 0.005){
       d += (d ? ' L' : 'M') + cx(rr).toFixed(1) + ' ' + cy(response(rr)).toFixed(1);
     }
-    mk('path',{d:d,fill:'none',stroke:'#2B6CD4','stroke-width':4,'stroke-linejoin':'round'},curve);
+    mk('path',{d:d,fill:'none',stroke:'#EA580C','stroke-width':4,'stroke-linejoin':'round'},curve);
 
-    mk('line',{x1:cx(1),y1:C_Y0,x2:cx(1),y2:C_Y1-6,stroke:'#D2443D','stroke-width':2,
+    mk('line',{x1:cx(1),y1:C_Y0,x2:cx(1),y2:C_Y1-6,stroke:'#DC2626','stroke-width':2,
                'stroke-dasharray':'5 4'},curve);
-    label(cx(1), 22, 'THE SWING’S OWN RHYTHM', {'text-anchor':'middle','class':'cap',fill:'#D2443D'}, curve);
+    label(cx(1), 22, 'THE SWING’S OWN RHYTHM', {'text-anchor':'middle','class':'cap',fill:'#DC2626'}, curve);
     label(C_X0, C_Y0 + 22, 'SLOWER', {'class':'cap'}, curve);
     label(C_X1, C_Y0 + 22, 'FASTER', {'text-anchor':'end','class':'cap'}, curve);
     label(14, C_Y1 + 6, 'HIGH', {'class':'cap'}, curve);
     label(14, C_Y0 - 4, 'LOW',  {'class':'cap'}, curve);
 
-    el.curveDot = mk('circle',{cx:cx(r),cy:cy(response(r)),r:8,fill:'#D2443D',
-                               stroke:'#1A1A1A','stroke-width':3},curve);
+    el.curveDot = mk('circle',{cx:cx(r),cy:cy(response(r)),r:8,fill:'#DC2626',
+                               stroke:'#111827','stroke-width':3},curve);
   }
 
   /* ---------------- narration ---------------------------------------------- */
@@ -379,7 +379,7 @@
     var h = frac * G_H;
     el.gaugeFill.setAttribute('height', h.toFixed(1));
     el.gaugeFill.setAttribute('y', (G_BOT - h).toFixed(1));
-    el.gaugeFill.setAttribute('fill', frac > 0.92 ? '#2E7D5B' : '#2B6CD4');
+    el.gaugeFill.setAttribute('fill', frac > 0.92 ? '#16A34A' : '#EA580C');
     el.gaugeWord.textContent = heightWord(frac);
 
     requestAnimationFrame(frame);
