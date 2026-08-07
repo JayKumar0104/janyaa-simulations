@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Local-only, never push
+pitch_docs/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
