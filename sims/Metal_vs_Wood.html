@@ -8,14 +8,14 @@
 <style>
   :root{
     /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
-    --paper:#EDE7DC;   /* page background — warm sand   */
-    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
-    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
-    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
-    --strip:#E7EFE3;   /* status and result strips — pale sage */
-    --inert:#DCD5C7;   /* empty meters, idle cells */
-    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
-    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
+    --paper:#F0FDF4;   /* page background — warm sand   */
+    --panel:#FFFFFF;   /* cards, boards, panels — ivory */
+    --scene:#DCFCE7;   /* mat around each artwork — pale sky  */
+    --canvas:#FFFFFF;  /* inside the artwork frame — soft warm white */
+    --strip:#FFEDD5;   /* status and result strips — pale sage */
+    --inert:#E5E7EB;   /* empty meters, idle cells */
+    --border:#BBF7D0; --ink:#111827; --dim:#4B5563;
+    --red:#DC2626; --blue:#EA580C; --green:#16A34A; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -26,7 +26,7 @@
   .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#3D3A33}
+  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#111827}
   .stand b{color:var(--ink)}
 
   .banner{border:3px solid var(--ink);background:var(--blue);color:#fff;padding:15px 20px;margin-bottom:24px}
@@ -65,7 +65,7 @@
   :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
   .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.6em}
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
-  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#4A463E;max-width:76ch}
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#111827;max-width:76ch}
   .foot b{color:var(--ink)}
   details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
   details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
@@ -73,7 +73,7 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#111827}
   details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
@@ -99,21 +99,21 @@
       <div class="deck-head"><h2 id="leftName">Wood</h2><span class="tag">poor heat conductor</span></div>
       <div class="stage"><div class="frame">
         <svg id="svgL" viewBox="0 0 420 320" role="img" aria-label="A hand touching a wooden block with slow heat flow">
-          <rect width="420" height="320" fill="#FBF9F4"/>
-          <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#1A1A1A" stroke-width="3"/>
+          <rect width="420" height="320" fill="#FFFFFF"/>
+          <rect x="40" y="120" width="200" height="150" id="blockL" fill="#C6A06A" stroke="#111827" stroke-width="3"/>
           <!-- thermometer -->
-          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#1A1A1A" stroke-width="2.5"/>
-          <circle cx="74" cy="248" r="13" fill="#D2443D" stroke="#1A1A1A" stroke-width="2.5"/>
-          <rect x="70" y="196" width="8" height="50" fill="#D2443D"/>
-          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#1A1A1A" id="thermL">20 °C</text>
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#111827" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#DC2626" stroke="#111827" stroke-width="2.5"/>
+          <rect x="70" y="196" width="8" height="50" fill="#DC2626"/>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#111827" id="thermL">20 °C</text>
           <!-- hand -->
           <g id="handL">
-            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#1A1A1A" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#5E5A52">your hand</text>
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#111827" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#4B5563">your hand</text>
           </g>
           <!-- heat arrows -->
           <g id="arrowsL"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#5E5A52" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#4B5563" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -127,18 +127,18 @@
       <div class="deck-head"><h2 id="rightName">Steel</h2><span class="tag">excellent heat conductor</span></div>
       <div class="stage"><div class="frame">
         <svg id="svgR" viewBox="0 0 420 320" role="img" aria-label="A hand touching a steel block with fast heat flow">
-          <rect width="420" height="320" fill="#FBF9F4"/>
-          <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#1A1A1A" stroke-width="3"/>
-          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#1A1A1A" stroke-width="2.5"/>
-          <circle cx="74" cy="248" r="13" fill="#D2443D" stroke="#1A1A1A" stroke-width="2.5"/>
-          <rect x="70" y="196" width="8" height="50" fill="#D2443D"/>
-          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#1A1A1A" id="thermR">20 °C</text>
+          <rect width="420" height="320" fill="#FFFFFF"/>
+          <rect x="40" y="120" width="200" height="150" id="blockR" fill="#B9BDC2" stroke="#111827" stroke-width="3"/>
+          <rect x="66" y="150" width="16" height="90" fill="#fff" stroke="#111827" stroke-width="2.5"/>
+          <circle cx="74" cy="248" r="13" fill="#DC2626" stroke="#111827" stroke-width="2.5"/>
+          <rect x="70" y="196" width="8" height="50" fill="#DC2626"/>
+          <text x="96" y="180" font-family="Courier New, monospace" font-size="13" fill="#111827" id="thermR">20 °C</text>
           <g id="handR">
-            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#1A1A1A" stroke-width="3"/>
-            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#5E5A52">your hand</text>
+            <path d="M240 150 q40 -14 74 0 l0 60 q-34 14 -74 0 z" fill="#E8B48C" stroke="#111827" stroke-width="3"/>
+            <text x="330" y="145" font-family="Courier New, monospace" font-size="12" fill="#4B5563">your hand</text>
           </g>
           <g id="arrowsR"></g>
-          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#5E5A52" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
+          <text x="140" y="296" font-family="Courier New, monospace" font-size="12" fill="#4B5563" text-anchor="middle">HEAT LEAVING YOUR SKIN</text>
         </svg>
       </div></div>
       <div class="feel">
@@ -224,13 +224,13 @@
 
   function feelWord(skinT){
     var d = skinT - BODY;
-    if(d <= -9)  return { w:'feels: freezing',   c:'#2B6CD4' };
-    if(d <= -4)  return { w:'feels: cold',       c:'#2B6CD4' };
-    if(d <= -1.2)return { w:'feels: cool',       c:'#2B6CD4' };
-    if(d <   1.2)return { w:'feels: neutral',    c:'#5E5A52' };
-    if(d <   4)  return { w:'feels: warm',       c:'#D2443D' };
-    if(d <   9)  return { w:'feels: hot',        c:'#D2443D' };
-    return             { w:'feels: burning',     c:'#D2443D' };
+    if(d <= -9)  return { w:'feels: freezing',   c:'#2563EB' };
+    if(d <= -4)  return { w:'feels: cold',       c:'#2563EB' };
+    if(d <= -1.2)return { w:'feels: cool',       c:'#2563EB' };
+    if(d <   1.2)return { w:'feels: neutral',    c:'#4B5563' };
+    if(d <   4)  return { w:'feels: warm',       c:'#DC2626' };
+    if(d <   9)  return { w:'feels: hot',        c:'#DC2626' };
+    return             { w:'feels: burning',     c:'#DC2626' };
   }
 
   // ---------- heat-flow arrows ----------
@@ -248,7 +248,7 @@
       var p = document.createElementNS(ns,'path');
       p.setAttribute('d','M '+x+' '+y+' l '+(dir*16)+' 0 M '+(x+dir*16)+' '+y+
                         ' l '+(-dir*6)+' -5 M '+(x+dir*16)+' '+y+' l '+(-dir*6)+' 5');
-      p.setAttribute('stroke', into ? '#D2443D' : '#2B6CD4');
+      p.setAttribute('stroke', into ? '#DC2626' : '#2563EB');
       p.setAttribute('stroke-width','3'); p.setAttribute('fill','none');
       p.setAttribute('stroke-linecap','round');
       g.appendChild(p);
@@ -275,8 +275,8 @@
     var wl = document.getElementById('wordL'), wr = document.getElementById('wordR');
     wl.textContent = fl.w; wl.style.color = fl.c;
     wr.textContent = fr.w; wr.style.color = fr.c;
-    sl.style.color = fl.c === '#5E5A52' ? '#1A1A1A' : fl.c;
-    sr.style.color = fr.c === '#5E5A52' ? '#1A1A1A' : fr.c;
+    sl.style.color = fl.c === '#4B5563' ? '#111827' : fl.c;
+    sr.style.color = fr.c === '#4B5563' ? '#111827' : fr.c;
 
     var targetL = contactTemp(MATERIALS.wood.e, st.blockT);
     var targetR = contactTemp(right.e, st.blockT);

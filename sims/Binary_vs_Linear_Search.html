@@ -8,14 +8,14 @@
 <style>
   :root{
     /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
-    --paper:#EDE7DC;   /* page background — warm sand   */
-    --panel:#FFFCF6;   /* cards, boards, panels — ivory */
-    --scene:#D8E3EC;   /* mat around each artwork — pale sky  */
-    --canvas:#FBF9F4;  /* inside the artwork frame — soft warm white */
-    --strip:#E7EFE3;   /* status and result strips — pale sage */
-    --inert:#DCD5C7;   /* empty meters, idle cells */
-    --border:#D6CEBF; --ink:#1A1A1A; --dim:#5E5A52;
-    --red:#D2443D; --blue:#2B6CD4; --green:#2E7D5B; --amber:#B0731C;
+    --paper:#F0FDF4;   /* page background — warm sand   */
+    --panel:#FFFFFF;   /* cards, boards, panels — ivory */
+    --scene:#DCFCE7;   /* mat around each artwork — pale sky  */
+    --canvas:#FFFFFF;  /* inside the artwork frame — soft warm white */
+    --strip:#FFEDD5;   /* status and result strips — pale sage */
+    --inert:#E5E7EB;   /* empty meters, idle cells */
+    --border:#BBF7D0; --ink:#111827; --dim:#4B5563;
+    --red:#DC2626; --blue:#EA580C; --green:#16A34A; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -29,7 +29,7 @@
   h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;
      margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:58ch;margin:0 0 30px;color:#3D3A33}
+  .stand{font-size:17px;line-height:1.5;max-width:58ch;margin:0 0 30px;color:#111827}
   .stand b{color:var(--ink)}
 
   .board{border:3px solid var(--ink);background:var(--panel)}
@@ -66,7 +66,7 @@
   button.go{font-family:var(--display);text-transform:uppercase;font-size:15px;letter-spacing:-.01em;
             background:var(--blue);color:#fff;border:3px solid var(--ink);padding:13px 24px;cursor:pointer}
   button.go:hover{background:var(--ink)}
-  button.go[disabled]{background:var(--inert);color:#6C665B;cursor:default}
+  button.go[disabled]{background:var(--inert);color:#6B7280;cursor:default}
   :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 
   .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;
@@ -74,7 +74,7 @@
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
 
   .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;
-        font-size:13.5px;line-height:1.6;color:#4A463E;max-width:76ch}
+        font-size:13.5px;line-height:1.6;color:#111827;max-width:76ch}
   .foot b{color:var(--ink)}
 
   details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
@@ -83,7 +83,7 @@
   details.advanced summary::-webkit-details-marker{display:none}
   details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
   details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#403C35}
+  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#111827}
   details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
   details.advanced table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
   details.advanced th,details.advanced td{border:1px solid var(--border);padding:6px 8px;text-align:left}
@@ -224,39 +224,39 @@
 
   function buildScene(){
     while(svg.firstChild) svg.removeChild(svg.firstChild);
-    mk('rect',{width:960,height:262,fill:'#FBF9F4'},svg);
+    mk('rect',{width:960,height:262,fill:'#FFFFFF'},svg);
 
     // ---- linear lane ----
     label(X0, 22, 'LINEAR — CHECKS EVERY NUMBER IN ORDER', {'class':'cap'}, svg);
-    mk('rect',{x:X0,y:LIN_Y,width:W,height:LIN_H,fill:'#DCD5C7',stroke:'#1A1A1A','stroke-width':2},svg);
-    el.linBar = mk('rect',{x:X0,y:LIN_Y,width:0,height:LIN_H,fill:'#D2443D'},svg);
-    mk('rect',{x:X0,y:LIN_Y,width:W,height:LIN_H,fill:'none',stroke:'#1A1A1A','stroke-width':2},svg);
-    el.linMark = mk('polygon',{id:'linearMarker',points:'0,0 0,0 0,0',fill:'#D2443D',
-                               stroke:'#1A1A1A','stroke-width':2},svg);
+    mk('rect',{x:X0,y:LIN_Y,width:W,height:LIN_H,fill:'#E5E7EB',stroke:'#111827','stroke-width':2},svg);
+    el.linBar = mk('rect',{x:X0,y:LIN_Y,width:0,height:LIN_H,fill:'#DC2626'},svg);
+    mk('rect',{x:X0,y:LIN_Y,width:W,height:LIN_H,fill:'none',stroke:'#111827','stroke-width':2},svg);
+    el.linMark = mk('polygon',{id:'linearMarker',points:'0,0 0,0 0,0',fill:'#DC2626',
+                               stroke:'#111827','stroke-width':2},svg);
 
     // ---- the number line ----
-    mk('line',{x1:X0,y1:AXIS_Y,x2:X1,y2:AXIS_Y,stroke:'#1A1A1A','stroke-width':3},svg);
+    mk('line',{x1:X0,y1:AXIS_Y,x2:X1,y2:AXIS_Y,stroke:'#111827','stroke-width':3},svg);
     el.ticks = mk('g',{},svg);
 
     // ---- secret-number flag, revealed at the end ----
     el.flag = mk('g',{opacity:0},svg);
-    mk('line',{x1:0,y1:AXIS_Y-30,x2:0,y2:AXIS_Y,stroke:'#2E7D5B','stroke-width':3},el.flag);
-    mk('circle',{cx:0,cy:AXIS_Y,r:7,fill:'#2E7D5B',stroke:'#1A1A1A','stroke-width':2.5},el.flag);
-    el.flagBox = mk('rect',{x:-34,y:AXIS_Y-48,width:68,height:20,fill:'#2E7D5B',
-                            stroke:'#1A1A1A','stroke-width':2},el.flag);
+    mk('line',{x1:0,y1:AXIS_Y-30,x2:0,y2:AXIS_Y,stroke:'#16A34A','stroke-width':3},el.flag);
+    mk('circle',{cx:0,cy:AXIS_Y,r:7,fill:'#16A34A',stroke:'#111827','stroke-width':2.5},el.flag);
+    el.flagBox = mk('rect',{x:-34,y:AXIS_Y-48,width:68,height:20,fill:'#16A34A',
+                            stroke:'#111827','stroke-width':2},el.flag);
     el.flagText = label(0, AXIS_Y-34, '', {'text-anchor':'middle',fill:'#fff'}, el.flag);
 
     // ---- binary lane ----
     label(X0, 176, 'BINARY — ALWAYS GUESSES THE MIDDLE OF WHAT IS LEFT', {'class':'cap'}, svg);
-    mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#DCD5C7',stroke:'#1A1A1A','stroke-width':2},svg);
+    mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#E5E7EB',stroke:'#111827','stroke-width':2},svg);
 
     var bracket = mk('g',{id:'binaryBracket'},svg);
-    el.binRange = mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#2B6CD4'},bracket);
-    el.binL = mk('line',{x1:X0,y1:BIN_Y-9,x2:X0,y2:BIN_Y+BIN_H+9,stroke:'#1A1A1A','stroke-width':4},bracket);
-    el.binR = mk('line',{x1:X1,y1:BIN_Y-9,x2:X1,y2:BIN_Y+BIN_H+9,stroke:'#1A1A1A','stroke-width':4},bracket);
-    el.binMark = mk('polygon',{points:'0,0 0,0 0,0',fill:'#2B6CD4',stroke:'#1A1A1A','stroke-width':2,
+    el.binRange = mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'#EA580C'},bracket);
+    el.binL = mk('line',{x1:X0,y1:BIN_Y-9,x2:X0,y2:BIN_Y+BIN_H+9,stroke:'#111827','stroke-width':4},bracket);
+    el.binR = mk('line',{x1:X1,y1:BIN_Y-9,x2:X1,y2:BIN_Y+BIN_H+9,stroke:'#111827','stroke-width':4},bracket);
+    el.binMark = mk('polygon',{points:'0,0 0,0 0,0',fill:'#EA580C',stroke:'#111827','stroke-width':2,
                                opacity:0},bracket);
-    mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'none',stroke:'#1A1A1A','stroke-width':2},svg);
+    mk('rect',{x:X0,y:BIN_Y,width:W,height:BIN_H,fill:'none',stroke:'#111827','stroke-width':2},svg);
     el.binNote = label(X1, 248, '', {'text-anchor':'end','class':'cap'}, svg);
     el.linNote = label(X1, 22, '', {'text-anchor':'end','class':'cap'}, svg);
 
@@ -268,7 +268,7 @@
     var marks = [1, Math.round(N*0.25), Math.round(N*0.5), Math.round(N*0.75), N];
     marks.forEach(function(v, i){
       var x = xOf(v);
-      mk('line',{x1:x,y1:AXIS_Y-7,x2:x,y2:AXIS_Y+7,stroke:'#1A1A1A','stroke-width':2},el.ticks);
+      mk('line',{x1:x,y1:AXIS_Y-7,x2:x,y2:AXIS_Y+7,stroke:'#111827','stroke-width':2},el.ticks);
       label(x, AXIS_Y+26, String(v),
             {'text-anchor': i===0 ? 'start' : (i===4 ? 'end' : 'middle')}, el.ticks);
     });
