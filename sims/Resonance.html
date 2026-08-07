@@ -10,12 +10,12 @@
     /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
     --paper:#F0FDF4;   /* page background — warm sand   */
     --panel:#FFFFFF;   /* cards, boards, panels — ivory */
-    --scene:#DCFCE7;   /* mat around each artwork — pale sky  */
+    --scene:#DBEAFE;   /* mat around each artwork — pale sky  */
     --canvas:#FFFFFF;  /* inside the artwork frame — soft warm white */
     --strip:#FFEDD5;   /* status and result strips — pale sage */
     --inert:#E5E7EB;   /* empty meters, idle cells */
-    --border:#BBF7D0; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#EA580C; --green:#16A34A; --amber:#D97706;
+    --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
+    --red:#DC2626; --blue:#EA580C; --green:#4F7E63; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -232,7 +232,7 @@
     mk('line',{x1:20,y1:GROUND,x2:600,y2:GROUND,stroke:'#111827','stroke-width':4},scene);
 
     // ---- the arc the seat sweeps, so the size of the swing is readable ----
-    el.arc = mk('path',{fill:'none',stroke:'#BBF7D0','stroke-width':3,'stroke-dasharray':'6 6'},scene);
+    el.arc = mk('path',{fill:'none',stroke:'#DCFCE7','stroke-width':3,'stroke-dasharray':'6 6'},scene);
 
     // ---- rider + ropes, rotated about the pivot as one piece ----
     var s = mk('g',{},scene);
@@ -257,10 +257,10 @@
     mk('line',{x1:120,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#111827','stroke-width':6,'stroke-linecap':'round'},p);
     mk('line',{x1:150,y1:GROUND,x2:132,y2:SEAT_Y-6,stroke:'#111827','stroke-width':6,'stroke-linecap':'round'},p);
     mk('line',{x1:132,y1:SEAT_Y-6,x2:132,y2:SEAT_Y-58,stroke:'#111827','stroke-width':7,'stroke-linecap':'round'},p);
-    mk('circle',{cx:132,cy:SEAT_Y-73,r:15,fill:'#16A34A',stroke:'#111827','stroke-width':3},p);
+    mk('circle',{cx:132,cy:SEAT_Y-73,r:15,fill:'#4F7E63',stroke:'#111827','stroke-width':3},p);
     el.arm  = mk('line',{x1:132,y1:SEAT_Y-46,x2:180,y2:SEAT_Y-22,stroke:'#111827','stroke-width':6,
                          'stroke-linecap':'round'},p);
-    el.hand = mk('circle',{cx:180,cy:SEAT_Y-22,r:9,fill:'#16A34A',stroke:'#111827','stroke-width':3},p);
+    el.hand = mk('circle',{cx:180,cy:SEAT_Y-22,r:9,fill:'#4F7E63',stroke:'#111827','stroke-width':3},p);
     el.puff = mk('g',{opacity:0},p);
     mk('line',{x1:0,y1:-12,x2:16,y2:-12,stroke:'#DC2626','stroke-width':3,'stroke-linecap':'round'},el.puff);
     mk('line',{x1:0,y1:0,  x2:22,y2:0,  stroke:'#DC2626','stroke-width':3,'stroke-linecap':'round'},el.puff);
@@ -379,7 +379,7 @@
     var h = frac * G_H;
     el.gaugeFill.setAttribute('height', h.toFixed(1));
     el.gaugeFill.setAttribute('y', (G_BOT - h).toFixed(1));
-    el.gaugeFill.setAttribute('fill', frac > 0.92 ? '#16A34A' : '#EA580C');
+    el.gaugeFill.setAttribute('fill', frac > 0.92 ? '#4F7E63' : '#EA580C');
     el.gaugeWord.textContent = heightWord(frac);
 
     requestAnimationFrame(frame);
