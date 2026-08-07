@@ -15,7 +15,7 @@
     --strip:#FFEDD5;   /* status and result strips — pale sage */
     --inert:#E5E7EB;   /* empty meters, idle cells */
     --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#EA580C; --green:#4F7E63; --amber:#D97706;
+    --red:#DC2626; --blue:#C2703D; --green:#4F7E63; --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -95,7 +95,7 @@
 </head>
 <body>
 <div class="wrap">
-  <p class="kicker">Janyaa Interactive · Electronics · Computer workshop</p>
+  <p class="kicker">Electronics · Computer workshop</p>
   <h1>Unplugged.<br>And still <em>ready to bite</em>.</h1>
   <p class="stand">Inside every computer's power supply is a part whose whole job is
   <b>holding onto electricity</b>. Pulling the plug does not empty it. Watch the meter after you
@@ -265,7 +265,7 @@
   // empty channel behind the fill
   mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'#E4DDD0'},capG);
   var voltageFill = mk('rect',{id:'voltageFill',x:FILL_X,y:FILL_BOT,width:FILL_W,height:0,
-                               fill:'#EA580C'},capG);
+                               fill:'#C2703D'},capG);
   mk('rect',{x:FILL_X,y:FILL_BOT-FILL_MAX,width:FILL_W,height:FILL_MAX,fill:'none',
              stroke:'#111827','stroke-width':1.5},capG);
   label(332,170,'CAPACITOR',{'text-anchor':'start'},capG);

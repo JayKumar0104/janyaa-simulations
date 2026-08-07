@@ -1,15 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 
 /*
- * Fresh light palette built around soft surfaces with orange, muted green,
- * and light-blue accents, rather than shades of white, so no surface ever
- * sits white-on-white: a pale-green page, pure-white cards, a light-blue mat
- * behind artwork, and soft-orange result strips. Accents are orange
- * (buttons/active states), a muted sage green (borders/positive highlights),
- * and red (danger) — kept deliberately low-saturation so nothing reads as
- * neon. `theme.colors` is replaced rather than extended, so slate/amber/
- * emerald/etc. simply do not exist as utilities any more. These values
- * mirror the exact tokens used inline in every public/sims/*.html file.
+ * Minimalist light palette: white and black carry most of the interface
+ * (cards, borders, hover shadow), so the soft pale-green/light-blue/
+ * soft-orange surface tints and the muted terracotta/sage accents read as
+ * deliberate touches rather than the whole show. Every hue here is kept
+ * low-saturation on purpose — nothing should read as neon. `theme.colors` is
+ * replaced rather than extended, so slate/amber/emerald/etc. simply do not
+ * exist as utilities any more. These values mirror the exact tokens used
+ * inline in every public/sims/*.html file.
  */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -32,7 +31,7 @@ export default {
       border: '#DCFCE7',
 
       red: '#DC2626',
-      orange: '#EA580C',
+      orange: '#C2703D',
       green: '#4F7E63',
     },
     extend: {
@@ -50,7 +49,7 @@ export default {
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
       boxShadow: {
-        glow: '0 0 0 1px rgb(234 88 12 / 0.35), 0 18px 50px -12px rgb(234 88 12 / 0.28)',
+        glow: '0 0 0 1px rgb(0 0 0 / 0.25), 0 18px 50px -12px rgb(0 0 0 / 0.28)',
         card: '0 1px 2px rgb(75 85 99 / 0.06), 0 10px 24px -16px rgb(75 85 99 / 0.35)',
       },
       keyframes: {
