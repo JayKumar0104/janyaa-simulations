@@ -1,14 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 
 /*
- * Fresh light palette built around soft green surfaces with orange accents,
- * rather than shades of white, so no surface ever sits white-on-white: a
- * pale-green page, pure-white cards, a soft-green mat behind artwork, and
- * soft-orange result strips. Accents are orange (buttons/active states),
- * green (interactive/success), and red (danger). `theme.colors` is replaced
- * rather than extended, so slate/amber/emerald/etc. simply do not exist as
- * utilities any more. These values mirror the exact tokens used inline in
- * every public/sims/*.html file.
+ * Fresh light palette built around soft surfaces with orange, muted green,
+ * and light-blue accents, rather than shades of white, so no surface ever
+ * sits white-on-white: a pale-green page, pure-white cards, a light-blue mat
+ * behind artwork, and soft-orange result strips. Accents are orange
+ * (buttons/active states), a muted sage green (borders/positive highlights),
+ * and red (danger) — kept deliberately low-saturation so nothing reads as
+ * neon. `theme.colors` is replaced rather than extended, so slate/amber/
+ * emerald/etc. simply do not exist as utilities any more. These values
+ * mirror the exact tokens used inline in every public/sims/*.html file.
  */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -22,17 +23,17 @@ export default {
       /* Surfaces, borders and body copy. */
       paper: '#F0FDF4',
       panel: '#FFFFFF',
-      scene: '#DCFCE7',
+      scene: '#DBEAFE',
       canvas: '#FFFFFF',
       strip: '#FFEDD5',
       inert: '#E5E7EB',
       ink: '#111827',
       dim: '#4B5563',
-      border: '#BBF7D0',
+      border: '#DCFCE7',
 
       red: '#DC2626',
       orange: '#EA580C',
-      green: '#16A34A',
+      green: '#4F7E63',
     },
     extend: {
       fontFamily: {
