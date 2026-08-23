@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title">
+  <title id="title">PRISM mark</title>
+  <rect width="180" height="180" rx="42" fill="#F0FDF4" />
+  <path d="M111 0h69v69l-69-69Z" fill="#DBEAFE" />
+  <path d="M180 111v69h-69l69-69Z" fill="#FFEDD5" />
+  <rect x="13" y="13" width="154" height="154" rx="33" fill="none" stroke="#4F7E63" stroke-width="6" />
+  <path d="M58 137V43h34c25 0 42 15 42 38 0 24-17 39-42 39H75v17H58Zm17-34h17c15 0 24-8 24-22 0-13-9-21-24-21H75v43Z" fill="#111827" />
+  <path d="m122 118 25 25" stroke="#C2703D" stroke-width="7" stroke-linecap="round" />
+</svg>

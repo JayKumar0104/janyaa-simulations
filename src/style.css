@@ -14,6 +14,7 @@
   }
 
   body {
+    min-width: 320px;
     @apply bg-paper text-dim antialiased;
   }
 
@@ -27,13 +28,36 @@
 }
 
 @layer components {
-  /* Faint grid, plus a light-blue wash bleeding into soft orange behind the
-     hero — the same two tints the sims use for artwork mats and result
-     strips. */
+  .site-nav {
+    @apply sticky top-0 z-40 border-b border-border bg-paper/90;
+    backdrop-filter: blur(16px);
+  }
+
+  .brand-lockup {
+    @apply inline-flex items-center gap-3 rounded-lg;
+  }
+
+  .prism-mark {
+    @apply relative inline-flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border border-green bg-panel text-sm font-bold text-green shadow-card;
+  }
+
+  .prism-mark::after {
+    content: '';
+    @apply absolute -bottom-2 -right-2 h-5 w-5 rotate-45 bg-strip;
+  }
+
+  .nav-link {
+    @apply inline-flex rounded-lg px-3 py-2 text-sm font-medium text-dim transition hover:bg-panel hover:text-ink;
+  }
+
+  .hero-card {
+    box-shadow: 0 24px 70px -44px rgb(17 24 39 / 0.42);
+  }
+
   .hero-backdrop {
     background-image:
-      radial-gradient(52rem 30rem at 78% -6rem, rgb(219 234 254 / 0.95), transparent 68%),
-      radial-gradient(46rem 26rem at 12% -4rem, rgb(255 237 213 / 0.95), transparent 66%),
+      radial-gradient(52rem 30rem at 92% -6rem, rgb(219 234 254 / 0.88), transparent 68%),
+      radial-gradient(46rem 26rem at 8% -4rem, rgb(255 237 213 / 0.88), transparent 66%),
       linear-gradient(to right, rgb(75 85 99 / 0.07) 1px, transparent 1px),
       linear-gradient(to bottom, rgb(75 85 99 / 0.07) 1px, transparent 1px);
     background-size:
@@ -43,8 +67,214 @@
       64px 64px;
   }
 
-  .card-sheen {
-    background-image: linear-gradient(135deg, rgb(219 234 254 / 0.5), transparent 46%);
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-dim;
+  }
+
+  .eyebrow::before {
+    content: '';
+    @apply h-1.5 w-1.5 rounded-full bg-orange;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ink px-5 py-3 text-sm font-semibold text-panel transition hover:bg-green;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-green/30 bg-panel/75 px-5 py-3 text-sm font-semibold text-ink transition hover:border-green hover:bg-panel;
+  }
+
+  .hero-stats {
+    @apply grid self-stretch overflow-hidden rounded-2xl border border-green/20 bg-panel/80;
+  }
+
+  .stat-block {
+    @apply flex flex-col justify-center border-b border-border px-6 py-6 last:border-b-0;
+  }
+
+  .stat-block strong {
+    @apply text-4xl font-semibold tracking-tight text-ink;
+  }
+
+  .stat-block span {
+    @apply mt-1 text-sm text-dim;
+  }
+
+  .section-shell {
+    @apply mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8;
+  }
+
+  .section-heading {
+    @apply max-w-3xl;
+  }
+
+  .section-heading h2,
+  .about-card h2 {
+    @apply mt-3 text-3xl font-semibold tracking-tight text-ink sm:text-4xl;
+  }
+
+  .section-heading > p:last-child {
+    @apply mt-3 text-base leading-relaxed text-dim sm:text-lg;
+  }
+
+  .method-card {
+    @apply rounded-2xl border border-green/20 bg-panel p-6 shadow-card;
+  }
+
+  .method-number {
+    @apply inline-flex h-9 w-9 items-center justify-center rounded-lg bg-scene font-mono text-xs font-bold text-ink;
+  }
+
+  .method-card h3 {
+    @apply mt-5 text-sm font-bold uppercase tracking-[0.14em] text-ink;
+  }
+
+  .method-card p {
+    @apply mt-2 text-sm leading-relaxed text-dim;
+  }
+
+  .library-section {
+    @apply border-y border-green/20 bg-panel/70;
+  }
+
+  .filter-button {
+    @apply rounded-full border border-green/25 bg-panel px-4 py-2 text-sm font-medium text-dim transition hover:border-green hover:text-ink;
+  }
+
+  .filter-button[aria-pressed='true'] {
+    @apply border-ink bg-ink text-panel;
+  }
+
+  .simulation-card {
+    @apply flex min-h-full flex-col rounded-2xl border border-green/20 bg-panel p-5 shadow-card transition duration-300 hover:-translate-y-0.5 hover:border-orange/60;
+  }
+
+  .track-pill {
+    @apply rounded-full border border-green/20 bg-paper px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-dim;
+  }
+
+  .simulation-card h3 {
+    @apply mt-4 text-lg font-semibold tracking-tight text-ink;
+  }
+
+  .card-question {
+    @apply mt-3 text-base font-semibold leading-snug text-ink;
+  }
+
+  .card-description {
+    @apply mt-3 flex-1 text-sm leading-relaxed text-dim;
+  }
+
+  .launch-button {
+    @apply inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-scene px-4 py-2.5 text-sm font-semibold text-ink transition hover:bg-green hover:text-panel;
+  }
+
+  .external-button {
+    @apply inline-flex items-center justify-center rounded-xl border border-green/25 p-2.5 text-dim transition hover:border-orange hover:text-ink;
+  }
+
+  .process-track {
+    @apply flex flex-col items-stretch gap-3;
+  }
+
+  .process-step {
+    @apply rounded-2xl border border-green/20 bg-panel p-5 shadow-card;
+  }
+
+  .process-step > span {
+    @apply font-mono text-xs font-bold text-dim;
+  }
+
+  .process-step h3 {
+    @apply mt-3 text-sm font-bold uppercase tracking-[0.13em] text-ink;
+  }
+
+  .process-step p {
+    @apply mt-3 text-sm leading-relaxed text-dim;
+  }
+
+  .process-arrow {
+    @apply h-5 text-center text-lg leading-5 text-green;
+  }
+
+  .process-arrow::before {
+    content: '↓';
+  }
+
+  .verification-principle {
+    @apply mt-6 rounded-2xl border border-orange/30 bg-strip/60 px-5 py-4 text-sm leading-relaxed text-ink sm:text-base;
+  }
+
+  .verification-principle span {
+    @apply mr-1 font-semibold;
+  }
+
+  .about-card {
+    @apply grid gap-8 rounded-[2rem] border border-green/20 bg-scene/55 p-7 shadow-card sm:p-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14;
+  }
+
+  .status-note {
+    @apply rounded-xl border border-green/20 bg-panel/70 p-4 text-sm;
+  }
+
+  .status-note strong {
+    @apply text-ink;
+  }
+
+  .footer-link {
+    @apply rounded-sm transition hover:text-ink;
+  }
+
+  .modal-action {
+    @apply inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-medium text-dim transition hover:border-orange hover:text-ink;
+  }
+
+  .modal-close {
+    @apply inline-flex items-center gap-2 rounded-lg bg-scene px-3 py-2 text-xs font-medium text-ink transition hover:bg-green hover:text-panel;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .stat-block {
+    @apply border-b-0 border-r px-5 last:border-r-0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .process-track {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto
+      minmax(0, 1fr);
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .process-arrow {
+    @apply self-center;
+  }
+
+  .process-arrow::before {
+    content: '→';
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

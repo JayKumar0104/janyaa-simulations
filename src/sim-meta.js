@@ -7,112 +7,127 @@
  * -> `CPU_vs_GPU`). Anything omitted here falls back to the sim's own
  * <title> and <meta name="description">.
  *
- * Titles are set here because each sim's own <title> carries a
- * "— Janyaa Interactive" suffix that is redundant on this page.
+ * Titles, investigation questions, descriptions, and track tags live here so
+ * the landing page stays concise without duplicating catalog data elsewhere.
  */
 export const simMeta = {
   Binary_vs_Linear_Search: {
     title: 'Binary vs Linear Search',
+    question: 'Why is repeatedly halving a search so much faster?',
     description:
-      'Races a searcher that checks 1, 2, 3 in order against one that halves the remaining range every guess, over the same hidden number in a list of up to 1000.',
+      'Compare checking values in order with halving the remaining range while searching the same list.',
     tags: ['Computers', 'Maths'],
   },
 
   Cable_Heat: {
     title: 'Cable Heat',
+    question: 'Why does a charging cable get warm?',
     description:
-      "Sets a charging cable's wire thickness, length, and current, then shows how much of the charger's 5 V actually reaches the phone and how warm the cable gets along the way.",
+      'Vary wire thickness, length, and current to see how resistance produces voltage drop and heat.',
     tags: ['Electronics', 'Physics'],
   },
 
   Capacitor_Discharge: {
     title: 'Capacitor Discharge',
+    question: 'Why can a capacitor retain charge after power is removed?',
     description:
-      'Charges a power-supply capacitor to 400 V and tracks how much charge is left after the plug is pulled, with a bleed resistor that can be switched in or out mid-discharge.',
+      'Unplug a charged power-supply capacitor and compare its decay with and without a bleed resistor.',
     tags: ['Electronics', 'Computers'],
   },
 
   CPU_vs_GPU: {
     title: 'CPU vs GPU',
+    question: 'Why are GPUs so useful for highly parallel workloads?',
     description:
-      'Sends one instruction to a 4-unit CPU and a 128-unit GPU of the same chip size, comparing them on repeated identical arithmetic and on work where each item needs its own decision.',
+      'Compare a few flexible CPU units with many GPU units on parallel arithmetic and branching work.',
     tags: ['Computers'],
   },
 
   Memory_Hierarchy: {
     title: 'Memory Hierarchy',
+    question: 'Why does data location change CPU waiting time so dramatically?',
     description:
-      'Times a CPU fetch from L1 cache down to a hard drive, restated at one second per nanosecond, with a cache hit-rate slider that recalculates the average wait per lookup.',
+      'Scale fetch delays from L1 cache to hard drive and see how cache hit rate changes average wait.',
     tags: ['Computers'],
   },
 
   Metal_vs_Wood: {
     title: 'Metal vs Wood',
+    question: 'Why can two materials at the same temperature feel different?',
     description:
-      'Holds a wood block and a steel, aluminium, stone, or foam block at the same set temperature, then reports the thermometer reading and the rate each one draws heat from a hand.',
+      'Hold materials at one temperature while comparing how quickly each draws heat from your hand.',
     tags: ['Physics'],
   },
 
   Password_Crack_Time: {
     title: 'Password Crack Time',
+    question: 'Why can one extra character change brute-force search time so dramatically?',
     description:
-      'Sets a password length and character set, then reports in plain words how long an attacker guessing a billion times a second needs to try every possibility, against milestones up to the age of the universe.',
+      'Change password length and character set to see how the number of possible guesses grows.',
     tags: ['Computers', 'Maths'],
   },
 
   PC_Bottleneck: {
     title: 'PC Bottleneck',
+    question: 'Which component should you actually upgrade?',
     description:
-      'Pairs a CPU that prepares 45 frames per second with a GPU that draws 120, and recalculates the final frame rate as either component is upgraded by 50%.',
+      'Compare CPU and GPU frame limits, then upgrade either component to find the real bottleneck.',
     tags: ['Computers'],
   },
 
   Resonance: {
     title: 'Resonance',
+    question: 'Why can timing matter more than push strength?',
     description:
-      "Pushes a swing at rhythms from half to twice its own, with every push the same strength, so the sharp peak that appears only when the rhythms match is the swing's doing rather than the pusher's.",
+      "Keep every push equally strong while changing its rhythm around a swing's natural frequency.",
     tags: ['Physics'],
   },
 
   Square_Cube_Law: {
     title: 'Square-Cube Law',
+    question: 'What changes when an object is scaled up proportionally?',
     description:
-      "Scales a cube's edge length with a slider and tracks surface area rising with the square while volume rises with the cube, applied to leg stress and to melting ice.",
+      'Scale an object and track how surface area and volume grow at different rates.',
     tags: ['Maths', 'Physics'],
   },
 
   Series_vs_Parallel: {
     title: 'Series vs Parallel',
+    question: 'Why does one failure affect series and parallel circuits differently?',
     description:
-      'Fails one bulb in a series strand and in a parallel strand, with a shunt switch that closes the series loop again and makes every surviving bulb burn brighter than before.',
+      'Fail one bulb in each circuit, then use a shunt to see how the current paths change.',
     tags: ['Electronics', 'Physics'],
   },
 
   SSD_vs_HDD: {
     title: 'SSD vs HDD',
+    question: 'Why can an SSD handle shocks differently from a hard drive?',
     description:
-      'Applies a desk nudge, a knock off a chair, and a waist-height drop to a powered hard drive and an SSD, comparing a head flying 5 nm above the platter with a drive that has no moving parts.',
+      'Apply three impacts to a powered hard drive and an SSD while comparing their internal structures.',
     tags: ['Computers'],
   },
 
   Twos_Complement: {
     title: "Two's Complement",
+    question: 'How can the same bits represent different values?',
     description:
-      "Compares two ways of reading the same 4 bits to show why whether an addition 'overflowed' depends entirely on how those bits are interpreted.",
+      'Read the same four bits as unsigned and two’s-complement values, then compare overflow.',
     tags: ['Computers', 'Maths'],
   },
 
   Variable_Swap: {
     title: 'Variable Swap',
+    question: "Why doesn't the obvious way to swap two variables work?",
     description:
-      "Steps one line at a time through a four-line program that tries to swap two numbers and destroys one of them, then fixes it with a third box that catches the value before it is overwritten.",
+      'Step through a failed swap, then preserve the overwritten value with a temporary variable.',
     tags: ['Computers'],
   },
 
   USB_Charging: {
     title: 'USB Charging',
+    question: 'Why can equal-voltage ports charge a phone at different rates?',
     description:
-      'Charges two phone batteries from a 2.4 A wall charger and a 0.5 A laptop port held at the same 5 V, so the fill rates differ only by the current each port allows.',
+      'Compare two 5 V sources with different current limits while watching identical batteries fill.',
     tags: ['Electronics', 'Computers'],
   },
 }

@@ -59,7 +59,7 @@ function readSims() {
 
 function simsManifest() {
   return {
-    name: 'janyaa-sims-manifest',
+    name: 'prism-sims-manifest',
     resolveId: (id) => (id === VIRTUAL_ID ? RESOLVED_ID : null),
     load: (id) =>
       id === RESOLVED_ID
