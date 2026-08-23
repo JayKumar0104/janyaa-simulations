@@ -201,7 +201,7 @@ function builtToGrowSection() {
     [
       '01',
       'Specify',
-      'Define the workshop question, hidden mechanism, technical model, meaningful variables, assumptions, simplifications, and intended takeaway.',
+      'Define the workshop question, hidden mechanism, technical model, variables, and intended takeaway.',
     ],
     [
       '02',
@@ -211,7 +211,7 @@ function builtToGrowSection() {
     [
       '03',
       'Verify',
-      'Human review checks the mathematics or technical model, assumptions, simplifications, and resulting simulation behavior.',
+      'Check the technical model, assumptions, simplifications, and simulation behavior.',
     ],
     [
       '04',
@@ -246,6 +246,10 @@ function builtToGrowSection() {
         <span>Human verification stays central.</span>
         AI reduces implementation friction; it does not replace technical verification.
       </p>
+
+      <a href="https://github.com/JayKumar0104/janyaa-simulations" target="_blank" rel="noopener" class="source-link">
+        View the open-source project <span aria-hidden="true">→</span><span class="sr-only"> (opens in a new tab)</span>
+      </a>
     </section>`
 }
 
@@ -259,8 +263,8 @@ function aboutSection() {
         </div>
         <div class="space-y-4 text-base leading-relaxed text-dim">
           <p>Hands-on workshops provide the real system and physical context.</p>
-          <p>Some important mechanisms, however, are too small, too fast, abstract, internal, or distributed to observe directly. PRISM is designed to expose those mechanisms interactively rather than replace the physical experience.</p>
-          <p class="status-note"><strong>Current status:</strong> ${catalog.length} functioning simulations demonstrate the method across several STEM areas. Educational-impact validation is a future, local evaluation step.</p>
+          <p>Some important mechanisms, however, are too small, too fast, too abstract, internal to the system, or distributed across multiple components to observe directly. PRISM is designed to expose those mechanisms interactively rather than replace the physical experience.</p>
+          <p class="status-note"><strong>Working proof of concept:</strong> ${catalog.length} functioning simulations demonstrate the method across multiple STEM areas. <strong>Next step:</strong> evaluate conceptual understanding and transfer in our workshops.</p>
         </div>
       </div>
     </section>`

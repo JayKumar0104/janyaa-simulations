@@ -209,6 +209,18 @@
     @apply mr-1 font-semibold;
   }
 
+  .source-link {
+    @apply mt-5 inline-flex items-center gap-2 rounded-lg text-sm font-semibold text-ink underline decoration-green/40 underline-offset-4 transition hover:decoration-green;
+  }
+
+  .source-link > span[aria-hidden='true'] {
+    @apply no-underline transition-transform;
+  }
+
+  .source-link:hover > span[aria-hidden='true'] {
+    @apply translate-x-0.5;
+  }
+
   .about-card {
     @apply grid gap-8 rounded-[2rem] border border-green/20 bg-scene/55 p-7 shadow-card sm:p-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14;
   }
