@@ -174,7 +174,7 @@ function librarySection() {
           <p>${catalog.length} working simulations across computing, electronics, physics, and math.</p>
         </div>
 
-        <div class="mt-8 flex flex-col gap-4 border-b border-green/20 pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div class="mt-8 flex flex-col gap-4 border-b border-orange/20 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div class="flex flex-wrap gap-2" role="group" aria-label="Filter simulations by STEM track">
             ${FILTERS.map(
               (filter) => `
