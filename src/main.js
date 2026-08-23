@@ -64,7 +64,7 @@ function headerSection() {
                 Making hidden STEM mechanisms visible.
               </p>
               <p class="mt-4 max-w-2xl text-base leading-relaxed text-dim sm:text-lg">
-                PRISM pairs hands-on STEM workshops with targeted interactive simulations for mechanisms that physical activities cannot show directly. Students predict, manipulate the relevant variable, observe the result, and explain why it happened.
+                PRISM pairs hands-on STEM workshops with targeted interactive simulations for mechanisms that are difficult to observe directly in the physical activity. Students predict, manipulate the relevant variable, observe the result, and explain why it happened.
               </p>
               <div class="mt-7 flex flex-wrap gap-3">
                 <a href="#simulations" class="button-primary">Explore simulations ${ICON_LAUNCH}</a>
