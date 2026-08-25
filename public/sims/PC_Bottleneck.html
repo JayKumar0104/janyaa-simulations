@@ -3,19 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Models a CPU-GPU assembly line to show why upgrading the wrong PC part doesn't improve performance.">
-<title>Why the expensive upgrade did nothing — PRISM</title>
+<meta name="description" content="Explore how the workload changes whether the CPU or GPU limits a PC's frame throughput.">
+<title>What slows this PC down? It depends — PRISM</title>
 <style>
   :root{
-    /* Surfaces: four distinct pale tints so nothing sits white-on-white. */
-    --paper:#F0FDF4;   /* page background — warm sand   */
-    --panel:#FFFFFF;   /* cards, boards, panels — ivory */
-    --scene:#DBEAFE;   /* mat around each artwork — pale sky  */
-    --canvas:#FFFFFF;  /* inside the artwork frame — soft warm white */
-    --strip:#FFEDD5;   /* status and result strips — pale sage */
-    --inert:#E5E7EB;   /* empty meters, idle cells */
-    --border:#DCFCE7; --ink:#111827; --dim:#4B5563;
-    --red:#DC2626; --blue:#C2703D; --green:#4F7E63; --amber:#D97706;
+    --paper:#F0FDF4;
+    --panel:#FFFFFF;
+    --scene:#DBEAFE;
+    --canvas:#FFFFFF;
+    --strip:#FFEDD5;
+    --inert:#E5E7EB;
+    --border:#DCFCE7;
+    --ink:#111827;
+    --dim:#4B5563;
+    --red:#DC2626;
+    --orange:#C2703D;
+    --green:#4F7E63;
+    --amber:#D97706;
     --display:"Arial Black","Helvetica Neue",Helvetica,Arial,sans-serif;
     --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --label:"Courier New",ui-monospace,monospace;
@@ -24,226 +28,427 @@
   body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
   .wrap{max-width:1060px;margin:0 auto;padding:36px 20px 80px}
   .kicker{font-family:var(--label);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
-  h1{font-family:var(--display);font-size:clamp(30px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
+  h1{font-family:var(--display);font-size:clamp(31px,6vw,58px);line-height:.94;letter-spacing:-.035em;margin:0 0 18px;text-transform:uppercase}
   h1 em{font-style:normal;color:var(--red)}
-  .stand{font-size:17px;line-height:1.5;max-width:56ch;margin:0 0 30px;color:#111827}
+  .stand{font-size:17px;line-height:1.5;max-width:64ch;margin:0 0 26px;color:var(--ink)}
   .stand b{color:var(--ink)}
 
+  .workload{border:3px solid var(--ink);background:var(--panel);padding:18px 20px;margin-bottom:24px}
+  .workload h2{font-family:var(--display);font-size:clamp(20px,3vw,28px);line-height:1.05;letter-spacing:-.02em;margin:0 0 7px;text-transform:uppercase}
+  .workload .prompt{font-size:14px;line-height:1.45;color:var(--dim);margin:0 0 15px}
+  .workload-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .workload-option{position:relative;display:block;cursor:pointer}
+  .workload-option input{position:absolute;opacity:0;width:1px;height:1px}
+  .workload-card{display:flex;align-items:center;min-height:86px;border:2px solid var(--ink);background:var(--canvas);padding:13px 14px;transition:background-color .15s ease,transform .15s ease}
+  .workload-card b{display:block;font-family:var(--display);font-size:14px;line-height:1.25;text-transform:uppercase;letter-spacing:-.01em}
+  .workload-option:hover .workload-card{background:var(--scene);transform:translateY(-1px)}
+  .workload-option input:checked + .workload-card{background:var(--strip);box-shadow:inset 0 -6px 0 var(--orange)}
+  .workload-option input:focus-visible + .workload-card{outline:3px solid var(--orange);outline-offset:3px}
+  .workload-option input:checked + .workload-card b::after{content:"  ✓";color:var(--green)}
+  .model-note{font-family:var(--label);font-size:11px;line-height:1.4;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin:15px 0 10px}
+  .capacities{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:10px}
+  .capacity{border:2px solid var(--ink);background:var(--scene);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .capacity.gpu{background:var(--strip)}
+  .capacity span{font-family:var(--label);font-size:10.5px;line-height:1.35;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  .capacity strong{font-family:var(--display);font-size:clamp(21px,3.6vw,31px);white-space:nowrap;letter-spacing:-.035em}
+  .min-symbol{align-self:center;font-family:var(--label);font-size:10px;line-height:1.25;text-align:center;text-transform:uppercase;color:var(--dim);max-width:10ch}
+  .workload-context{font-size:13.5px;line-height:1.52;margin:11px 0 0;padding-left:12px;border-left:5px solid var(--green);max-width:88ch}
+  .task-shift{font-family:var(--label);font-size:11.5px;line-height:1.45;letter-spacing:.05em;text-transform:uppercase;background:var(--paper);border:2px solid var(--green);padding:9px 11px;margin:11px 0 0}
+
   .board{border:3px solid var(--ink);background:var(--panel)}
-  .board-head{border-bottom:3px solid var(--ink);padding:13px 18px;
-              font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+  .board-head{border-bottom:3px solid var(--ink);padding:13px 18px;font-family:var(--label);font-size:10.5px;line-height:1.4;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
   .scene{background:var(--scene);padding:16px}
   .scene .frame{border:2px solid var(--ink);background:var(--canvas)}
   svg{display:block;width:100%;height:auto}
 
   .fps{border-top:3px solid var(--ink);padding:18px;text-align:center;background:var(--strip)}
-  .fps .cap{font-family:var(--label);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .fps .cap{font-family:var(--label);font-size:10.5px;line-height:1.4;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
   .fps .val{font-family:var(--display);font-size:clamp(44px,10vw,86px);line-height:.9;letter-spacing:-.045em}
-  .fps .who{font-family:var(--label);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin-top:10px;color:var(--red)}
-
-  .panel{border:3px solid var(--ink);background:var(--panel);margin-top:24px;padding:18px 20px}
-  .panel h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 14px}
-  .sliders{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-  @media (max-width:700px){ .sliders{grid-template-columns:1fr} }
-  .slider label{display:block;font-family:var(--label);font-size:10.5px;letter-spacing:.12em;
-                text-transform:uppercase;color:var(--dim);margin-bottom:8px}
-  .slider label b{color:var(--ink);font-family:var(--display);font-size:16px}
-  input[type=range]{width:100%;height:26px}
-  #cpuRate{accent-color:var(--blue)}
-  #gpuRate{accent-color:var(--blue)}
+  .fps .unit{font-size:.31em;letter-spacing:.02em;margin-left:6px}
+  .fps .who{font-family:var(--label);font-size:12.5px;line-height:1.4;letter-spacing:.08em;text-transform:uppercase;margin-top:11px;color:var(--red)}
+  .prediction{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .prediction-label{font-family:var(--label);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin-right:2px}
+  button{font:inherit}
+  .predict-choice,.reveal{border:2px solid var(--ink);background:var(--panel);min-height:42px;padding:9px 13px;cursor:pointer;font-family:var(--label);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .predict-choice:hover,.reveal:hover{background:var(--ink);color:#fff}
+  .predict-choice[aria-pressed="true"]{background:var(--scene);box-shadow:inset 0 -4px 0 var(--green);font-weight:700}
+  .predict-choice:disabled,.reveal:disabled{cursor:default;opacity:.55;background:var(--inert);color:var(--dim)}
+  .prediction-note{font-size:12px;line-height:1.4;color:var(--dim);margin:9px auto 0;min-height:1.4em}
 
   .shop{margin-top:24px;border:3px solid var(--ink);background:var(--panel);padding:18px 20px}
   .shop h3{font-family:var(--label);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 6px}
-  .shop p.intro{font-size:15px;line-height:1.55;margin:0 0 16px;max-width:64ch}
-  .buys{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-  @media (max-width:700px){ .buys{grid-template-columns:1fr} }
-  button.buy{border:3px solid var(--ink);background:var(--panel);padding:15px 16px;cursor:pointer;
-             font-family:var(--body);text-align:left}
-  button.buy b{display:block;font-family:var(--display);font-size:15px;text-transform:uppercase;
-               letter-spacing:-.01em;margin-bottom:5px}
-  button.buy span{font-size:13px;line-height:1.45;color:#111827}
+  .shop p.intro{font-size:15px;line-height:1.55;margin:0 0 16px;max-width:72ch}
+  .buys{display:grid;grid-template-columns:1fr 1fr auto;gap:12px}
+  button.buy{border:3px solid var(--ink);background:var(--panel);padding:15px 16px;cursor:pointer;font-family:var(--body);text-align:left}
+  button.buy b{display:block;font-family:var(--display);font-size:15px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:5px}
+  button.buy span{font-size:13px;line-height:1.45;color:var(--ink)}
   button.buy:hover{background:var(--ink)}
-  button.buy:hover b, button.buy:hover span{color:#fff}
-  button.ghost{font-family:var(--label);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-               background:transparent;border:2px solid var(--ink);padding:14px 16px;cursor:pointer}
-  :focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+  button.buy:hover b,button.buy:hover span{color:#fff}
+  button.buy:disabled{cursor:default;background:var(--inert);opacity:.65}
+  button.buy:disabled b,button.buy:disabled span{color:var(--dim)}
+  button.ghost{font-family:var(--label);font-size:11px;line-height:1.35;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:2px solid var(--ink);padding:14px 16px;cursor:pointer}
+  button.ghost:hover{background:var(--scene)}
+  :focus-visible{outline:3px solid var(--orange);outline-offset:3px}
   .readout{margin-top:16px;border-top:2px solid var(--ink);padding-top:14px;font-size:15px;line-height:1.55;min-height:3.6em}
   .readout b{font-family:var(--display);text-transform:uppercase;letter-spacing:-.01em}
-  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:#111827;max-width:76ch}
+
+  details.explore,details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
+  details.explore summary,details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);font-size:10.5px;line-height:1.4;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
+  details.explore summary::-webkit-details-marker,details.advanced summary::-webkit-details-marker{display:none}
+  details.explore summary::before,details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
+  details.explore[open] summary::before,details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
+  .explore-body,.adv-body{padding:16px 18px 18px;border-top:2px solid var(--ink)}
+  .sliders{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .slider label{display:block;font-family:var(--label);font-size:10.5px;line-height:1.45;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .slider label b{color:var(--ink);font-family:var(--display);font-size:16px}
+  input[type=range]{width:100%;height:30px}
+  #cpuRate{accent-color:var(--orange)}
+  #gpuRate{accent-color:var(--green)}
+  .slider-help{font-size:13px;line-height:1.5;color:var(--dim);margin:12px 0 0}
+
+  .foot{margin-top:30px;border-top:2px solid var(--ink);padding-top:16px;font-size:13.5px;line-height:1.6;color:var(--ink);max-width:82ch}
   .foot b{color:var(--ink)}
-  details.advanced{margin-top:20px;border:3px solid var(--ink);background:var(--panel)}
-  details.advanced summary{cursor:pointer;padding:13px 18px;font-family:var(--label);
-    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);list-style:none}
-  details.advanced summary::-webkit-details-marker{display:none}
-  details.advanced summary::before{content:"+ ";color:var(--red);font-family:var(--display)}
-  details.advanced[open] summary::before{content:"\2212 ";color:var(--red);font-family:var(--display)}
-  details.advanced .adv-body{padding:2px 18px 18px;border-top:2px solid var(--ink);font-size:14px;line-height:1.6;color:#111827}
-  details.advanced .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  .adv-body{font-size:14px;line-height:1.65;color:var(--ink)}
+  .adv-body h4{font-family:var(--display);font-size:14px;text-transform:uppercase;letter-spacing:-.01em;margin:18px 0 5px}
+  .adv-body h4:first-child{margin-top:0}
+  .adv-body p{margin:6px 0 12px}
+  .formula{border:2px solid var(--ink);background:var(--paper);padding:13px 15px;margin:10px 0;font-family:var(--label);font-size:clamp(15px,3vw,20px);overflow-x:auto}
+  .adv-body code{font-family:var(--label);background:var(--paper);padding:1px 5px;border-radius:2px;font-size:12.5px}
+
+  @media (max-width:760px){
+    .wrap{padding:26px 14px 58px}
+    .workload{padding:15px}
+    .workload-options{grid-template-columns:1fr}
+    .workload-card{min-height:58px}
+    .capacities{grid-template-columns:1fr}
+    .min-symbol{max-width:none;padding:1px 0}
+    .scene{padding:8px}
+    .buys,.sliders{grid-template-columns:1fr}
+    button.ghost{min-height:48px}
+  }
+  @media (max-width:440px){
+    .capacity{align-items:flex-start;flex-direction:column;gap:5px}
+    .prediction{align-items:stretch}
+    .prediction-label{flex-basis:100%;margin:0 0 1px}
+    .predict-choice,.reveal{flex:1 1 30%}
+    .fps{padding:16px 10px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<main class="wrap">
   <p class="kicker">Computer workshop</p>
-  <h1>You bought a faster<br>graphics card. Nothing<br><em>happened</em>.</h1>
-  <p class="stand">A computer building a game frame is an assembly line: the processor sets the scene
-  up, the graphics card draws it. <b>A line only moves as fast as its slowest station</b> — so upgrading
-  the fast one buys you exactly nothing, no matter what it cost.</p>
+  <h1>What slows this PC<br>down? <em>It depends.</em></h1>
+  <p class="stand">A CPU and GPU form a frame-building assembly line. The slow station sets the pace,
+  but which station is slow depends on <b>what you ask the same PC to do</b>.</p>
 
-  <div class="board">
-    <div class="board-head">Frames moving down the line, live</div>
+  <section class="workload" aria-labelledby="workloadTitle">
+    <h2 id="workloadTitle">What are you using the PC for?</h2>
+    <p class="prompt">Choose a workload, compare its effective stage capacities, then predict the limiting part.</p>
+    <div class="workload-options" role="radiogroup" aria-labelledby="workloadTitle">
+      <label class="workload-option">
+        <input type="radio" name="workload" value="highRefresh" checked>
+        <span class="workload-card"><b>1080p / high-refresh gaming</b></span>
+      </label>
+      <label class="workload-option">
+        <input type="radio" name="workload" value="fourK">
+        <span class="workload-card"><b>4K / graphics-heavy gaming</b></span>
+      </label>
+      <label class="workload-option">
+        <input type="radio" name="workload" value="strategy">
+        <span class="workload-card"><b>CPU-heavy simulation / strategy workload</b></span>
+      </label>
+    </div>
+
+    <p class="model-note">Illustrative simplified model — not hardware benchmarks.</p>
+    <div class="capacities" aria-label="Effective throughput capacities under the selected workload">
+      <div class="capacity cpu">
+        <span>CPU effective capacity<br>under this workload</span>
+        <strong id="cpuPresetCap">95 FPS</strong>
+      </div>
+      <div class="min-symbol" aria-hidden="true">Slower stage sets the pace</div>
+      <div class="capacity gpu">
+        <span>GPU effective capacity<br>under this workload</span>
+        <strong id="gpuPresetCap">150 FPS</strong>
+      </div>
+    </div>
+    <p class="workload-context" id="workloadContext">At a high target frame rate, the CPU must prepare game and scene work very frequently. These rates apply only to this illustrative workload.</p>
+    <p class="task-shift" id="taskShift" role="status" aria-live="polite" hidden></p>
+  </section>
+
+  <section class="board" aria-labelledby="boardTitle">
+    <div class="board-head" id="boardTitle">Frames moving down the line — <span id="boardWorkload">1080p / high-refresh gaming</span></div>
     <div class="scene"><div class="frame">
       <svg id="scene" viewBox="0 0 940 300" role="img"
-           aria-label="An assembly line where the CPU prepares frames and the GPU draws them, with a queue between">
+           aria-label="A two-stage assembly line where the CPU prepares frames and the GPU draws them, with a waiting area between them.">
         <rect width="940" height="300" fill="#FFFFFF"/>
 
-        <!-- belt -->
         <rect x="150" y="150" width="640" height="10" fill="#E5E7EB" stroke="#111827" stroke-width="2"/>
         <g id="beltTicks"></g>
 
-        <!-- CPU station -->
         <rect x="24" y="86" width="126" height="140" fill="#C2703D" stroke="#111827" stroke-width="3"/>
         <text x="87" y="126" font-family="Arial Black, sans-serif" font-size="19" fill="#fff" text-anchor="middle">CPU</text>
         <text x="87" y="146" font-family="Courier New, monospace" font-size="10" fill="#fff" text-anchor="middle">SETS UP</text>
         <text x="87" y="160" font-family="Courier New, monospace" font-size="10" fill="#fff" text-anchor="middle">THE SCENE</text>
-        <text id="cpuState" x="87" y="196" font-family="Arial Black, sans-serif" font-size="13"
-              fill="#fff" text-anchor="middle">BUSY</text>
+        <text id="cpuState" x="87" y="196" font-family="Arial Black, sans-serif" font-size="13" fill="#fff" text-anchor="middle">BUSY</text>
 
-        <!-- GPU station -->
         <rect x="790" y="86" width="126" height="140" fill="#111827" stroke="#111827" stroke-width="3"/>
         <text x="853" y="126" font-family="Arial Black, sans-serif" font-size="19" fill="#fff" text-anchor="middle">GPU</text>
         <text x="853" y="146" font-family="Courier New, monospace" font-size="10" fill="#fff" text-anchor="middle">DRAWS</text>
         <text x="853" y="160" font-family="Courier New, monospace" font-size="10" fill="#fff" text-anchor="middle">THE PIXELS</text>
-        <text id="gpuState" x="853" y="196" font-family="Arial Black, sans-serif" font-size="13"
-              fill="#fff" text-anchor="middle">BUSY</text>
+        <text id="gpuState" x="853" y="196" font-family="Arial Black, sans-serif" font-size="13" fill="#fff" text-anchor="middle">BUSY</text>
 
-        <!-- queue zone marker -->
         <line x1="640" y1="120" x2="640" y2="190" stroke="#111827" stroke-width="2" stroke-dasharray="5 5"/>
         <text x="716" y="112" font-family="Courier New, monospace" font-size="11" fill="#4B5563" text-anchor="middle">WAITING AREA</text>
 
-        <!-- frames in transit -->
         <g id="frames"></g>
 
-        <!-- idle / stall banners -->
-        <text id="cpuBanner" x="87" y="252" font-family="Courier New, monospace" font-size="12"
-              fill="#DC2626" text-anchor="middle"></text>
-        <text id="gpuBanner" x="853" y="252" font-family="Courier New, monospace" font-size="12"
-              fill="#DC2626" text-anchor="middle"></text>
+        <text id="cpuBanner" x="87" y="252" font-family="Courier New, monospace" font-size="12" fill="#DC2626" text-anchor="middle"></text>
+        <text id="gpuBanner" x="853" y="252" font-family="Courier New, monospace" font-size="12" fill="#DC2626" text-anchor="middle"></text>
       </svg>
     </div></div>
 
     <div class="fps">
-      <div class="cap">Frames per second you actually get</div>
-      <div class="val" id="fpsVal">45</div>
-      <div class="who" id="fpsWho">the CPU is the bottleneck</div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h3>The two parts</h3>
-    <div class="sliders">
-      <div class="slider">
-        <label for="cpuRate">CPU can prepare → <b id="cpuVal">45</b> frames/sec</label>
-        <input type="range" id="cpuRate" min="10" max="250" step="5" value="45">
+      <div class="cap">System throughput in this simplified model</div>
+      <div class="val"><span id="fpsVal">95</span><span class="unit">FPS</span></div>
+      <div class="who" id="fpsWho" aria-live="polite">Which part is limiting performance?</div>
+      <div class="prediction" aria-label="Choose a prediction">
+        <span class="prediction-label">Audience prediction:</span>
+        <button type="button" class="predict-choice" data-prediction="cpu" aria-pressed="false">CPU</button>
+        <button type="button" class="predict-choice" data-prediction="gpu" aria-pressed="false">GPU</button>
+        <button type="button" class="reveal" id="reveal">Reveal model</button>
       </div>
-      <div class="slider">
-        <label for="gpuRate">GPU can draw → <b id="gpuVal">120</b> frames/sec</label>
-        <input type="range" id="gpuRate" min="10" max="250" step="5" value="120">
-      </div>
+      <p class="prediction-note" id="predictionNote">Pick CPU or GPU. The answer stays hidden until you run an upgrade or reveal it.</p>
     </div>
-  </div>
+  </section>
 
-  <div class="shop">
-    <h3>Now go shopping</h3>
-    <p class="intro">You have money for one upgrade. Both cost the same. Pick one and watch the big
-    number at the top — not the part you upgraded.</p>
+  <section class="shop" aria-labelledby="shopTitle">
+    <h3 id="shopTitle">Run the equal-cost upgrade experiment</h3>
+    <p class="intro">You can afford one upgrade. Both choices cost the same and multiply that stage’s
+    effective capacity by 1.5. Watch the system FPS, then reset and try the other part.</p>
     <div class="buys">
-      <button class="buy" id="buyGpu"><b>Upgrade the GPU</b><span>+50% drawing speed. The exciting box with the fans on it.</span></button>
-      <button class="buy" id="buyCpu"><b>Upgrade the CPU</b><span>+50% setup speed. The boring square one.</span></button>
-      <button class="ghost" id="reset">Undo my purchases</button>
+      <button type="button" class="buy" id="buyGpu"><b>Upgrade the GPU</b><span>1.5× effective drawing capacity for this workload.</span></button>
+      <button type="button" class="buy" id="buyCpu"><b>Upgrade the CPU</b><span>1.5× effective setup capacity for this workload.</span></button>
+      <button type="button" class="ghost" id="reset">Reset this workload</button>
     </div>
-    <div class="readout" id="readout" role="status" aria-live="polite">Right now the CPU can only prepare 45 frames a second, and the GPU can draw 120. Guess which upgrade helps before you click.</div>
-  </div>
+    <div class="readout" id="readout" role="status" aria-live="polite">Make a CPU or GPU prediction. Then upgrade one stage and watch the system FPS — not just that stage’s capacity.</div>
+  </section>
 
-  <p class="foot"><b>Why this idea is worth more than the demo.</b> Once you can see the slow station,
-  you stop guessing about upgrades: you find the part that is always busy while the others wait, and
-  you fix that one. The same reasoning works on a checkout queue, a group project, and a kitchen. It
-  also explains why a top-end graphics card in an old machine disappoints people so reliably.
-  <b>Simplified:</b> real frame rendering overlaps several stages at once and the two parts talk back
-  and forth, so a real bottleneck is rarely this clean — but the rule that the slowest stage sets the
-  pace is exactly right.</p>
-
-  <details class="advanced">
-    <summary>For the curious — the real idea behind this</summary>
-    <div class="adv-body">
-      <p>This is a case of a general rule in computer science called <b>Amdahl's Law</b>: if a task is
-      split into stages, the overall speed can never beat the speed of the slowest stage — you can make
-      every other stage instant and the total time barely changes. Formally, if a fraction
-      <code>p</code> of a job can be sped up by a factor of <code>s</code>, the best possible overall
-      speedup is <code>1 / ((1-p) + p/s)</code>. It's the same reason a relay race's time is set by its
-      slowest runner, not the average of all four.</p>
-      <p>Real GPU pipelines don't wait for one frame to fully finish before starting the next — they
-      overlap several frames "in flight" at once (called pipelining), which is why real bottlenecks are
-      messier than this clean two-station model, but the core rule doesn't change.</p>
+  <details class="explore">
+    <summary>Explore manually — adjust effective capacities</summary>
+    <div class="explore-body">
+      <div class="sliders">
+        <div class="slider">
+          <label for="cpuRate">CPU effective capacity under this workload → <b id="cpuVal">95</b> FPS</label>
+          <input type="range" id="cpuRate" min="10" max="250" step="2.5" value="95">
+        </div>
+        <div class="slider">
+          <label for="gpuRate">GPU effective capacity under this workload → <b id="gpuVal">150</b> FPS</label>
+          <input type="range" id="gpuRate" min="10" max="250" step="2.5" value="150">
+        </div>
+      </div>
+      <p class="slider-help">The sliders are for exploration; Reset returns to the selected workload preset. If the answer is still hidden, changing a slider keeps it hidden.</p>
     </div>
   </details>
-</div>
+
+  <p class="foot"><b>The lesson is task-dependent.</b> CPU and GPU numbers here are not universal hardware
+  ratings. They are effective throughput capacities under the selected workload. The assembly-line
+  analogy is useful because changing the job can change how long each station needs — and therefore
+  which station limits the line.</p>
+
+  <details class="advanced">
+    <summary>Advanced — model, analogy, and Amdahl’s Law</summary>
+    <div class="adv-body">
+      <h4>The simplified two-stage throughput model</h4>
+      <div class="formula" aria-label="R system of T equals the minimum of R CPU of T and R GPU of T">
+        R<sub>system</sub>(T) = min(R<sub>CPU</sub>(T), R<sub>GPU</sub>(T))
+      </div>
+      <p><code>T</code> is the selected workload. The system can only deliver frames as quickly as the
+      slower stage can handle this particular workload. Both CPU and GPU effective capacities depend
+      on <code>T</code>, so changing the workload can change the limiting stage.</p>
+
+      <h4>Why the assembly line fits</h4>
+      <p>The CPU prepares work and the GPU draws it, like two stations on a line. If one station can
+      handle fewer frames per second, work either piles up before it or the other station waits. As a
+      secondary intuition: widening one part of a restricted flow path does not help much if another
+      restriction still sets the pace. Fluid flow is an analogy here, not a claim of mathematical identity.</p>
+
+      <h4>Related, but different: Amdahl’s Law</h4>
+      <div class="formula" aria-label="S equals one divided by the quantity one minus p plus p divided by s">
+        S = 1 / ((1-p) + p/s)
+      </div>
+      <p>Amdahl’s Law describes the limit on overall speedup when only part of a workload is accelerated:
+      <code>p</code> is the accelerated fraction and <code>s</code> is that fraction’s speedup. It is a
+      related lesson about limited gains, but it is <b>not</b> the minimum-capacity equation used by this demo.</p>
+
+      <h4>Reality check</h4>
+      <p>Real games overlap many stages and vary by scene, engine, settings, drivers, target frame rate,
+      and hardware. This clean model is for reasoning about bottlenecks, not predicting benchmark results.</p>
+    </div>
+  </details>
+</main>
 
 <script>
 (function(){
   "use strict";
-  var ns='http://www.w3.org/2000/svg';
 
-  var BASE_CPU = 45, BASE_GPU = 120;
+  var ns = 'http://www.w3.org/2000/svg';
+  var UPGRADE_MULTIPLIER = 1.5;
+  var WORKLOADS = {
+    highRefresh: {
+      label: '1080p / high-refresh gaming',
+      cpu: 95,
+      gpu: 150,
+      context: 'At a high target frame rate, the CPU must prepare game and scene work very frequently. These rates apply only to this illustrative workload.'
+    },
+    fourK: {
+      label: '4K / graphics-heavy gaming',
+      cpu: 95,
+      gpu: 65,
+      context: '4K contains about four times as many pixels per frame as 1080p. In a graphics-heavy workload, that often increases GPU work much more than CPU work, so the limiting stage can shift toward the GPU. Real results depend on the game, settings, hardware, and target frame rate.'
+    },
+    strategy: {
+      label: 'CPU-heavy simulation / strategy workload',
+      cpu: 60,
+      gpu: 140,
+      context: 'Simulation, AI, and strategy updates can add substantial CPU work even when the GPU has drawing capacity available. These rates apply only to this illustrative workload.'
+    }
+  };
+
   var st = {
-    cpu: BASE_CPU, gpu: BASE_GPU,
-    boughtCpu:false, boughtGpu:false,
-    frames: [],           // {x, id}
+    workload: 'highRefresh',
+    cpu: WORKLOADS.highRefresh.cpu,
+    gpu: WORKLOADS.highRefresh.gpu,
+    bought: null,
+    prediction: null,
+    answerVisible: false,
+    frames: [],
     queue: 0,
-    cpuAcc: 0, gpuAcc: 0,
-    cpuIdle: 0, gpuIdle: 0, elapsed: 0,
+    cpuAcc: 0,
+    gpuAcc: 0,
+    cpuIdle: 0,
+    gpuIdle: 0,
+    elapsed: 0,
     nextId: 1
   };
 
-  var BELT_X0 = 150, BELT_X1 = 640, QUEUE_X0 = 646, QUEUE_X1 = 786;
+  var BELT_X0 = 150;
+  var BELT_X1 = 640;
+  var QUEUE_X1 = 786;
   var QUEUE_CAP = 8;
-  var TRAVEL_SEC = 1.1;          // seconds for a frame to cross the belt
+  var TRAVEL_SEC = 1.1;
   var framesG = document.getElementById('frames');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var loopActive = false;
+  var last = performance.now();
 
-  // belt ticks
+  function formatRate(value){
+    return Math.abs(value - Math.round(value)) < 0.001 ? String(Math.round(value)) : value.toFixed(1);
+  }
+
+  function systemRate(cpu, gpu){
+    return Math.min(cpu, gpu);
+  }
+
+  function limitingStage(cpu, gpu){
+    if(cpu < gpu) return 'cpu';
+    if(gpu < cpu) return 'gpu';
+    return 'balanced';
+  }
+
+  function stageLabel(stage){
+    if(stage === 'cpu') return 'CPU';
+    if(stage === 'gpu') return 'GPU';
+    return 'neither stage';
+  }
+
+  function say(html){
+    document.getElementById('readout').innerHTML = html;
+  }
+
   var beltTicks = document.getElementById('beltTicks');
-  for(var i=0;i<26;i++){
-    var t = document.createElementNS(ns,'line');
-    t.setAttribute('x1', 156 + i*25); t.setAttribute('y1', 150);
-    t.setAttribute('x2', 156 + i*25); t.setAttribute('y2', 160);
-    t.setAttribute('stroke','#111827'); t.setAttribute('stroke-width','1');
-    beltTicks.appendChild(t);
+  for(var tickIndex = 0; tickIndex < 26; tickIndex++){
+    var tick = document.createElementNS(ns, 'line');
+    tick.setAttribute('x1', 156 + tickIndex * 25);
+    tick.setAttribute('y1', 150);
+    tick.setAttribute('x2', 156 + tickIndex * 25);
+    tick.setAttribute('y2', 160);
+    tick.setAttribute('stroke', '#111827');
+    tick.setAttribute('stroke-width', '1');
+    beltTicks.appendChild(tick);
   }
 
   function drawFrames(){
     while(framesG.firstChild) framesG.removeChild(framesG.firstChild);
-    // in transit
-    st.frames.forEach(function(f){
-      var r = document.createElementNS(ns,'rect');
-      r.setAttribute('x', f.x - 13); r.setAttribute('y', 124);
-      r.setAttribute('width', 26); r.setAttribute('height', 26);
-      r.setAttribute('fill','#fff'); r.setAttribute('stroke','#111827'); r.setAttribute('stroke-width','2.5');
-      framesG.appendChild(r);
+
+    st.frames.forEach(function(frameItem){
+      var frameRect = document.createElementNS(ns, 'rect');
+      frameRect.setAttribute('x', frameItem.x - 13);
+      frameRect.setAttribute('y', 124);
+      frameRect.setAttribute('width', 26);
+      frameRect.setAttribute('height', 26);
+      frameRect.setAttribute('fill', '#fff');
+      frameRect.setAttribute('stroke', '#111827');
+      frameRect.setAttribute('stroke-width', '2.5');
+      framesG.appendChild(frameRect);
     });
-    // queued, stacked up against the GPU
-    for(var q=0;q<Math.min(QUEUE_CAP, Math.floor(st.queue)); q++){
-      var r2 = document.createElementNS(ns,'rect');
-      r2.setAttribute('x', QUEUE_X1 - 26 - q*17); r2.setAttribute('y', 124);
-      r2.setAttribute('width', 26); r2.setAttribute('height', 26);
-      r2.setAttribute('fill','#DC2626'); r2.setAttribute('stroke','#111827'); r2.setAttribute('stroke-width','2.5');
-      framesG.appendChild(r2);
+
+    for(var queueIndex = 0; queueIndex < Math.min(QUEUE_CAP, Math.floor(st.queue)); queueIndex++){
+      var queuedRect = document.createElementNS(ns, 'rect');
+      queuedRect.setAttribute('x', QUEUE_X1 - 26 - queueIndex * 17);
+      queuedRect.setAttribute('y', 124);
+      queuedRect.setAttribute('width', 26);
+      queuedRect.setAttribute('height', 26);
+      queuedRect.setAttribute('fill', '#DC2626');
+      queuedRect.setAttribute('stroke', '#111827');
+      queuedRect.setAttribute('stroke-width', '2.5');
+      framesG.appendChild(queuedRect);
+    }
+  }
+
+  function setStationText(cpuState, gpuState, cpuBanner, gpuBanner){
+    document.getElementById('cpuState').textContent = st.answerVisible ? cpuState : 'RUNNING';
+    document.getElementById('gpuState').textContent = st.answerVisible ? gpuState : 'RUNNING';
+    document.getElementById('cpuBanner').textContent = st.answerVisible ? cpuBanner : '';
+    document.getElementById('gpuBanner').textContent = st.answerVisible ? gpuBanner : '';
+  }
+
+  function renderReducedMotionSnapshot(){
+    st.frames = [];
+    if(st.cpu > st.gpu){
+      st.queue = 5;
+      setStationText('WAITING', 'BUSY', 'WAITING ON GPU', '');
+    } else if(st.gpu > st.cpu){
+      st.queue = 0;
+      st.frames = [{x: 470, id: 0}];
+      setStationText('BUSY', 'WAITING', '', 'WAITING FOR CPU');
+    } else {
+      st.queue = 2;
+      setStationText('BUSY', 'BUSY', '', '');
+    }
+    drawFrames();
+  }
+
+  function resetFlow(){
+    st.frames = [];
+    st.queue = 0;
+    st.cpuAcc = 0;
+    st.gpuAcc = 0;
+    st.cpuIdle = 0;
+    st.gpuIdle = 0;
+    st.elapsed = 0;
+    st.nextId = 1;
+    if(reducedMotion.matches) renderReducedMotionSnapshot();
+    else {
+      setStationText('BUSY', 'WAITING', '', '');
+      drawFrames();
     }
   }
 
   function step(dt){
     st.elapsed += dt;
 
-    // --- CPU produces, unless the waiting area is full ---
     var cpuBlocked = st.queue >= QUEUE_CAP;
     if(cpuBlocked){
       st.cpuIdle += dt;
@@ -251,24 +456,21 @@
       st.cpuAcc += st.cpu * dt;
       while(st.cpuAcc >= 1){
         st.cpuAcc -= 1;
-        st.frames.push({ x: BELT_X0, id: st.nextId++ });
+        st.frames.push({x: BELT_X0, id: st.nextId++});
         if(st.queue >= QUEUE_CAP) break;
       }
     }
 
-    // --- frames travel the belt ---
     var speed = (BELT_X1 - BELT_X0) / TRAVEL_SEC;
-    for(var i=st.frames.length-1;i>=0;i--){
-      st.frames[i].x += speed * dt;
-      if(st.frames[i].x >= BELT_X1){
-        st.frames.splice(i,1);
+    for(var frameIndex = st.frames.length - 1; frameIndex >= 0; frameIndex--){
+      st.frames[frameIndex].x += speed * dt;
+      if(st.frames[frameIndex].x >= BELT_X1){
+        st.frames.splice(frameIndex, 1);
         st.queue = Math.min(QUEUE_CAP, st.queue + 1);
       }
     }
-    // keep the on-belt population sane if the CPU is far ahead
     if(st.frames.length > 40) st.frames.splice(0, st.frames.length - 40);
 
-    // --- GPU consumes from the queue ---
     if(st.queue > 0){
       st.gpuAcc += st.gpu * dt;
       while(st.gpuAcc >= 1 && st.queue > 0){
@@ -280,97 +482,235 @@
       st.gpuAcc = 0;
     }
 
-    // --- labels ---
-    document.getElementById('cpuState').textContent = cpuBlocked ? 'STALLED' : 'BUSY';
-    document.getElementById('gpuState').textContent = st.queue > 0 ? 'BUSY' : 'WAITING';
-
-    var cpuIdlePct = st.elapsed > 0.5 ? Math.round(st.cpuIdle/st.elapsed*100) : 0;
-    var gpuIdlePct = st.elapsed > 0.5 ? Math.round(st.gpuIdle/st.elapsed*100) : 0;
-    document.getElementById('cpuBanner').textContent = cpuIdlePct > 3 ? ('IDLE ' + cpuIdlePct + '% OF THE TIME') : '';
-    document.getElementById('gpuBanner').textContent = gpuIdlePct > 3 ? ('IDLE ' + gpuIdlePct + '% OF THE TIME') : '';
-
+    var cpuIdlePct = st.elapsed > 0.5 ? Math.round(st.cpuIdle / st.elapsed * 100) : 0;
+    var gpuIdlePct = st.elapsed > 0.5 ? Math.round(st.gpuIdle / st.elapsed * 100) : 0;
+    setStationText(
+      cpuBlocked ? 'STALLED' : 'BUSY',
+      st.queue > 0 ? 'BUSY' : 'WAITING',
+      cpuIdlePct > 3 ? 'IDLE ' + cpuIdlePct + '% OF THE TIME' : '',
+      gpuIdlePct > 3 ? 'IDLE ' + gpuIdlePct + '% OF THE TIME' : ''
+    );
     drawFrames();
   }
 
-  function refreshTop(){
-    var fps = Math.min(st.cpu, st.gpu);
-    document.getElementById('fpsVal').textContent = fps;
-    var who = document.getElementById('fpsWho');
-    if(st.cpu < st.gpu)       who.textContent = 'the CPU is the bottleneck';
-    else if(st.gpu < st.cpu)  who.textContent = 'the GPU is the bottleneck';
-    else                      who.textContent = 'perfectly balanced';
-    document.getElementById('cpuVal').textContent = st.cpu;
-    document.getElementById('gpuVal').textContent = st.gpu;
-    document.getElementById('cpuRate').value = st.cpu;
-    document.getElementById('gpuRate').value = st.gpu;
-  }
-
-  function resetCounters(){
-    st.cpuIdle = 0; st.gpuIdle = 0; st.elapsed = 0;
-  }
-
-  function say(html){ document.getElementById('readout').innerHTML = html; }
-
-  // ---------- shopping ----------
-  function buy(which){
-    var before = Math.min(st.cpu, st.gpu);
-    if(which === 'gpu'){
-      if(st.boughtGpu){ say('You already upgraded the graphics card. Buying it twice will not help either.'); return; }
-      st.boughtGpu = true;
-      st.gpu = Math.round(st.gpu * 1.5);
-    } else {
-      if(st.boughtCpu){ say('You already upgraded the processor.'); return; }
-      st.boughtCpu = true;
-      st.cpu = Math.round(st.cpu * 1.5);
-    }
-    var after = Math.min(st.cpu, st.gpu);
-    refreshTop(); resetCounters();
-
-    var partName = which === 'gpu' ? 'graphics card' : 'processor';
-    if(after === before){
-      say('<b>Nothing happened.</b> You made the ' + partName + ' 50% faster and your frame rate is ' +
-          'still ' + after + '. It was never the slow one \u2014 it was already sitting idle waiting for work. ' +
-          'Look at the line: the queue did not change.');
-    } else {
-      var gain = Math.round((after - before)/before*100);
-      say('<b>Frame rate went ' + before + ' \u2192 ' + after + '.</b> Up ' + gain + '%. You upgraded the ' +
-          'station that everything else was waiting on, so the whole line sped up. ' +
-          (Math.min(st.cpu,st.gpu) === st.gpu
-            ? 'Notice the bottleneck has now moved to the graphics card \u2014 that is what always happens next.'
-            : 'The processor is still the limit, so there is more to gain there.'));
-    }
-  }
-
-  document.getElementById('buyGpu').addEventListener('click', function(){ buy('gpu'); });
-  document.getElementById('buyCpu').addEventListener('click', function(){ buy('cpu'); });
-  document.getElementById('reset').addEventListener('click', function(){
-    st.cpu = BASE_CPU; st.gpu = BASE_GPU; st.boughtCpu = false; st.boughtGpu = false;
-    st.frames = []; st.queue = 0; st.cpuAcc = 0; st.gpuAcc = 0;
-    refreshTop(); resetCounters();
-    say('Back to the original build: CPU 45, GPU 120. Try the other upgrade this time.');
-  });
-
-  document.getElementById('cpuRate').addEventListener('input', function(e){
-    st.cpu = +e.target.value; refreshTop(); resetCounters();
-    say('CPU set to ' + st.cpu + ' frames/sec. Watch where the pile of red frames builds up \u2014 ' +
-        'it always builds in front of the slow station.');
-  });
-  document.getElementById('gpuRate').addEventListener('input', function(e){
-    st.gpu = +e.target.value; refreshTop(); resetCounters();
-    say('GPU set to ' + st.gpu + ' frames/sec. If the waiting area is empty, the graphics card is ' +
-        'starving \u2014 it can draw faster than anything is arriving.');
-  });
-
-  // ---------- loop ----------
-  var last = performance.now();
   function frame(now){
-    var dt = Math.min(0.05, (now - last)/1000); last = now;
+    if(reducedMotion.matches){
+      loopActive = false;
+      renderReducedMotionSnapshot();
+      return;
+    }
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
     step(dt);
     requestAnimationFrame(frame);
   }
 
-  refreshTop();
-  requestAnimationFrame(frame);
+  function startAnimation(){
+    if(loopActive || reducedMotion.matches){
+      if(reducedMotion.matches) renderReducedMotionSnapshot();
+      return;
+    }
+    loopActive = true;
+    last = performance.now();
+    requestAnimationFrame(frame);
+  }
+
+  function updatePredictionControls(){
+    var predictionButtons = document.querySelectorAll('.predict-choice');
+    predictionButtons.forEach(function(button){
+      var selected = button.getAttribute('data-prediction') === st.prediction;
+      button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      button.disabled = st.answerVisible;
+    });
+    document.getElementById('reveal').disabled = st.answerVisible;
+
+    var note = document.getElementById('predictionNote');
+    if(st.answerVisible){
+      note.textContent = 'Model answer shown. Change workloads to compare, or Reset for another prediction.';
+    } else if(st.prediction){
+      note.textContent = 'Prediction saved: ' + stageLabel(st.prediction) + '. Run an upgrade to test it, or reveal the model.';
+    } else {
+      note.textContent = 'Pick CPU or GPU. The answer stays hidden until you run an upgrade or reveal it.';
+    }
+  }
+
+  function refresh(){
+    var fps = systemRate(st.cpu, st.gpu);
+    var bottleneck = limitingStage(st.cpu, st.gpu);
+    var workload = WORKLOADS[st.workload];
+    document.getElementById('fpsVal').textContent = formatRate(fps);
+    document.getElementById('cpuVal').textContent = formatRate(st.cpu);
+    document.getElementById('gpuVal').textContent = formatRate(st.gpu);
+    document.getElementById('cpuPresetCap').textContent = formatRate(st.cpu) + ' FPS';
+    document.getElementById('gpuPresetCap').textContent = formatRate(st.gpu) + ' FPS';
+    document.getElementById('cpuRate').value = st.cpu;
+    document.getElementById('gpuRate').value = st.gpu;
+    document.getElementById('boardWorkload').textContent = workload.label;
+    document.getElementById('workloadContext').textContent = workload.context;
+
+    var answer = document.getElementById('fpsWho');
+    if(!st.answerVisible){
+      answer.textContent = 'Which part is limiting performance?';
+    } else if(bottleneck === 'cpu'){
+      answer.textContent = 'CPU-limited under this workload';
+    } else if(bottleneck === 'gpu'){
+      answer.textContent = 'GPU-limited under this workload';
+    } else {
+      answer.textContent = 'Balanced in this simplified model';
+    }
+
+    var purchaseMade = st.bought !== null;
+    document.getElementById('buyCpu').disabled = purchaseMade;
+    document.getElementById('buyGpu').disabled = purchaseMade;
+    updatePredictionControls();
+    document.getElementById('scene').setAttribute('aria-label',
+      'A two-stage assembly line for ' + workload.label + '. CPU effective capacity ' +
+      formatRate(st.cpu) + ' frames per second; GPU effective capacity ' +
+      formatRate(st.gpu) + ' frames per second.');
+    if(reducedMotion.matches) renderReducedMotionSnapshot();
+  }
+
+  function predictionResult(originalBottleneck){
+    if(!st.prediction) return '';
+    if(originalBottleneck === 'balanced'){
+      return ' The stages were balanced before the upgrade, so neither was uniquely limiting.';
+    }
+    if(st.prediction === originalBottleneck){
+      return ' Your ' + stageLabel(st.prediction) + ' prediction matched the model.';
+    }
+    return ' Your ' + stageLabel(st.prediction) + ' prediction did not match the model.';
+  }
+
+  function buy(which){
+    if(st.bought !== null) return;
+
+    var beforeCpu = st.cpu;
+    var beforeGpu = st.gpu;
+    var beforeSystem = systemRate(beforeCpu, beforeGpu);
+    var originalBottleneck = limitingStage(beforeCpu, beforeGpu);
+    var beforePart = which === 'cpu' ? beforeCpu : beforeGpu;
+
+    st[which] = Math.round(st[which] * UPGRADE_MULTIPLIER * 10) / 10;
+    st.bought = which;
+    st.answerVisible = true;
+
+    var afterSystem = systemRate(st.cpu, st.gpu);
+    var afterBottleneck = limitingStage(st.cpu, st.gpu);
+    var afterPart = st[which];
+    var chosenName = stageLabel(which);
+    var predictionText = predictionResult(originalBottleneck);
+
+    resetFlow();
+    refresh();
+
+    if(Math.abs(afterSystem - beforeSystem) < 0.001){
+      var paceVerb = originalBottleneck === 'balanced' ? ' now sets' : ' still sets';
+      say('<b>No system gain: ' + formatRate(beforeSystem) + ' → ' + formatRate(afterSystem) + ' FPS.</b> ' +
+        chosenName + ' capacity rose ' + formatRate(beforePart) + ' → ' + formatRate(afterPart) +
+        ' FPS, but the ' + stageLabel(afterBottleneck) + paceVerb + ' the minimum for this workload.' + predictionText);
+      return;
+    }
+
+    var gain = Math.round((afterSystem - beforeSystem) / beforeSystem * 100);
+    var moved = afterBottleneck !== originalBottleneck
+      ? ' The limiting stage has now shifted to the ' + stageLabel(afterBottleneck) + '.'
+      : ' The ' + stageLabel(afterBottleneck) + ' remains the limiting stage.';
+    say('<b>System throughput: ' + formatRate(beforeSystem) + ' → ' + formatRate(afterSystem) +
+      ' FPS (+' + gain + '%).</b> The ' + chosenName + ' was the slower stage, so accelerating it raised the minimum.' +
+      moved + predictionText);
+  }
+
+  function setWorkload(key){
+    var keepAnswerVisible = st.answerVisible;
+    var workload = WORKLOADS[key];
+    st.workload = key;
+    st.cpu = workload.cpu;
+    st.gpu = workload.gpu;
+    st.bought = null;
+    st.prediction = null;
+    st.answerVisible = keepAnswerVisible;
+    resetFlow();
+    refresh();
+    var taskShift = document.getElementById('taskShift');
+    taskShift.hidden = false;
+    taskShift.textContent = 'Same hardware idea. Different workload. Different bottleneck.';
+    say('<b>Same hardware idea. Different workload. Different bottleneck.</b> Rates and purchases reset to the ' +
+      workload.label + ' preset.' + (keepAnswerVisible
+        ? ' The model answer stays visible so you can compare the relationship.'
+        : ' Make a new prediction before you upgrade.'));
+  }
+
+  function resetWorkload(){
+    var workload = WORKLOADS[st.workload];
+    st.cpu = workload.cpu;
+    st.gpu = workload.gpu;
+    st.bought = null;
+    st.prediction = null;
+    st.answerVisible = false;
+    resetFlow();
+    refresh();
+    document.getElementById('taskShift').hidden = true;
+    say('Reset to ' + workload.label + ': CPU ' + formatRate(st.cpu) + ' FPS, GPU ' +
+      formatRate(st.gpu) + ' FPS. Make a fresh prediction.');
+  }
+
+  function adjustManually(which, value){
+    st[which] = value;
+    st.bought = null;
+    resetFlow();
+    refresh();
+    var message = 'Manual setting: CPU ' + formatRate(st.cpu) + ' FPS, GPU ' + formatRate(st.gpu) +
+      ' FPS, so system throughput is min(' + formatRate(st.cpu) + ', ' + formatRate(st.gpu) +
+      ') = ' + formatRate(systemRate(st.cpu, st.gpu)) + ' FPS.';
+    if(!st.answerVisible) message += ' Keep your bottleneck prediction, then upgrade or reveal.';
+    say(message);
+  }
+
+  document.querySelectorAll('input[name="workload"]').forEach(function(input){
+    input.addEventListener('change', function(event){
+      if(event.target.checked) setWorkload(event.target.value);
+    });
+  });
+
+  document.querySelectorAll('.predict-choice').forEach(function(button){
+    button.addEventListener('click', function(){
+      if(st.answerVisible) return;
+      st.prediction = button.getAttribute('data-prediction');
+      updatePredictionControls();
+      say('Prediction saved: <b>' + stageLabel(st.prediction) + '</b>. Now test it with either equal-cost upgrade; the result will reveal the model answer.');
+    });
+  });
+
+  document.getElementById('reveal').addEventListener('click', function(){
+    if(st.answerVisible) return;
+    st.answerVisible = true;
+    refresh();
+    var bottleneck = limitingStage(st.cpu, st.gpu);
+    say('<b>Model revealed: ' + stageLabel(bottleneck) + ' is limiting.</b> For this workload, min(' +
+      formatRate(st.cpu) + ', ' + formatRate(st.gpu) + ') = ' +
+      formatRate(systemRate(st.cpu, st.gpu)) + ' FPS.' + predictionResult(bottleneck));
+  });
+
+  document.getElementById('buyGpu').addEventListener('click', function(){ buy('gpu'); });
+  document.getElementById('buyCpu').addEventListener('click', function(){ buy('cpu'); });
+  document.getElementById('reset').addEventListener('click', resetWorkload);
+  document.getElementById('cpuRate').addEventListener('input', function(event){
+    adjustManually('cpu', Number(event.target.value));
+  });
+  document.getElementById('gpuRate').addEventListener('input', function(event){
+    adjustManually('gpu', Number(event.target.value));
+  });
+
+  if(typeof reducedMotion.addEventListener === 'function'){
+    reducedMotion.addEventListener('change', function(){
+      resetFlow();
+      startAnimation();
+    });
+  }
+
+  refresh();
+  resetFlow();
+  startAnimation();
 })();
 </script>
 </body>
